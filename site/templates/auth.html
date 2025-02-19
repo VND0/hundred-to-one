@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Авторизация</title>
+</head>
+<body>
+<button id="switcher">Регистрация/авторизация</button>
+<form id="login" method="post">
+    <label for="email-inp">Почта</label>
+    <input id="email-inp" type="email">
+    <br>
+    <br>
+    <label for="passwd-inp">Пароль</label>
+    <input id="passwd-inp" type="password">
+    <input type="submit" value="Войти">
+</form>
+<form id="register" method="post">
+    <label for="email-inp">Почта</label>
+    <input id="email-inp" type="email">
+    <br>
+    <br>
+    <label for="username">Ваше имя</label>
+    <input id="username" type="text">
+    <br>
+    <br>
+    <label for="passwd-inp">Пароль</label>
+    <input id="passwd-inp" type="password">
+    <input type="submit" value="Войти">
+</form>
+<script src="{{ url_for("static", filename="scripts/auth.js") }}"></script>
+</body>
+</html>

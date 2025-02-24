@@ -10,25 +10,29 @@
 <button id="switcher">Регистрация/авторизация</button>
 <form id="login" method="post">
     <label for="email-inp">Почта</label>
-    <input id="email-inp" type="email">
+    <input id="email-inp" type="email" name="email">
     <br>
     <br>
     <label for="passwd-inp">Пароль</label>
-    <input id="passwd-inp" type="password">
-    <input type="submit" value="Войти">
+    <input id="passwd-inp" type="password" name="password">
+    <br>
+    <br>
+    <button type="submit" name="action-type" value="login">Войти</button>
 </form>
 <form id="register" method="post">
     <label for="email-inp">Почта</label>
-    <input id="email-inp" type="email">
+    <input id="email-inp" type="email" name="email">
     <br>
     <br>
     <label for="username">Ваше имя</label>
-    <input id="username" type="text">
+    <input id="username" type="text" name="username">
     <br>
     <br>
     <label for="passwd-inp">Пароль</label>
-    <input id="passwd-inp" type="password">
-    <input type="submit" value="Войти">
+    <input id="passwd-inp" type="password" name="password">
+    <br>
+    <br>
+    <button type="submit" name="action-type" value="reg">Зарегистрироваться</button>
 </form>
 <script src="{{ url_for("static", filename="scripts/auth.js") }}"></script>
 </body>

@@ -1,7 +1,7 @@
 import uuid
 
 from flask import Flask, render_template, request, redirect
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from ..database import models, database
 
@@ -31,7 +31,23 @@ def register_user():
     session.commit()
     session.close()
 
-    return redirect("index")
+    return redirect("/")
+
+
+def login_user():
+    form = request.form
+    session = database.Session()
+
+    email = form.get("email")
+    password = form.get("password")
+
+    user = session.query(models.User).filter(models.User.email == email).one_or_none()
+    if not user:
+        return f"User with {email} doesn't exist", 409
+    if not check_password_hash(user.passwd_hash, password):
+        return f"Incorrect password", 409
+
+    return redirect("/")
 
 
 @app.route("/auth", methods=["POST", "GET"])
@@ -41,7 +57,7 @@ def auth():
         if action == "reg":
             return register_user()
         elif action == "login":
-            raise NotImplementedError
+            return login_user()
         else:
             return "Unknown action", 400
 

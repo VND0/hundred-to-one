@@ -1,6 +1,10 @@
 from sqlalchemy import ForeignKey, Table, Column
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
+from flask_login import UserMixin
+
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 class Base(DeclarativeBase):
     pass
@@ -15,16 +19,19 @@ association_table = Table(
 )
 
 
-class User(Base):
+class User(Base, UserMixin):
     __tablename__ = "User"
 
     id: Mapped[str] = mapped_column(primary_key=True)
     username: Mapped[str]
     email: Mapped[str] = mapped_column(unique=True)
-    passwd_hash: Mapped[str]
+    hashed_password: Mapped[str]
 
     questions: Mapped[list["Question"]] = relationship(back_populates="user")
     polls: Mapped[list["Poll"]] = relationship(back_populates="user")
+
+    def check_password(self, password):
+        return check_password_hash(self.hashed_password, password)
 
 
 class Question(Base):

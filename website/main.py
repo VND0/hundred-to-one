@@ -2,7 +2,6 @@ import uuid
 
 from flask import Flask, render_template, request, redirect
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user
-
 from werkzeug.security import generate_password_hash
 
 from ..database import models, database
@@ -49,9 +48,10 @@ def register_user():
 
     session.add(new_user)
     session.commit()
+    login_user(new_user)
     session.close()
 
-    return redirect("/auth")
+    return redirect("/protected")
 
 
 def login_user1():

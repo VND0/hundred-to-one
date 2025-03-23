@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, abort
+from flask import Flask, render_template, request, redirect, abort, Response
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
 from database.cruds.user_crud import get_user_by_id, get_user_by_email, create_user
@@ -24,21 +24,26 @@ def index():
     return render_template("index.html", title="Hundred To One")
 
 
-def handle_registration():
+def handle_registration() -> str | Response:
     form = request.form
 
     email = form.get("email")
     nickname = form.get("nickname")
     password = form.get("password")
+    confirmation = form.get("password-confirmation")
+
+    if password != confirmation:
+        return f"Passwords don't match"
 
     new_user = create_user(nickname, email, password)
     if not new_user:
-        return f"User with email {email} already exist", 409
+        return f"User with email {email} already exist"
 
+    login_user(new_user)
     return redirect("/auth")
 
 
-def handle_login():
+def handle_login() -> str | Response:
     form = request.form
 
     email = form.get("email")
@@ -46,9 +51,9 @@ def handle_login():
 
     user = get_user_by_email(email)
     if not user:
-        return f"User with email {email} doesn't exist", 409
+        return f"User with email {email} doesn't exist"
     if not user.check_password(password):
-        return f"Incorrect password", 409
+        return f"Incorrect password"
 
     login_user(user)
 
@@ -57,18 +62,24 @@ def handle_login():
 
 @app.route("/auth", methods=["POST", "GET"])
 def auth():
+    form_resp = None
+    action_type = "reg"
     if current_user.is_authenticated:
         return redirect("/protected")
     if request.method == "POST":
         action = request.form.get("action-type")
         if action == "reg":
-            return handle_registration()
+            form_resp = handle_registration()
         elif action == "login":
-            return handle_login()
+            action_type = "login"
+            form_resp = handle_login()
         else:
             abort(400, "Unknown action")
 
-    return render_template("auth.html", title="Авторизация")
+    if type(form_resp) is Response:
+        return form_resp
+    else:
+        return render_template("auth.html", title="Авторизация", err=form_resp, action_type=action_type)
 
 
 @app.route("/logout")

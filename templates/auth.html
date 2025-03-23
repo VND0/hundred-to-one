@@ -5,53 +5,56 @@
     <!-- Форма для регистрации и авторизации -->
     <div class="tabs tabs-lift max-w-md mx-auto">
         <!-- Регистрация -->
-        <input type="radio" name="my_tabs_2" class="tab [--tab-bg:bg-green-50]" aria-label="Регистрация" checked/>
-        <form class="tab-content bg-base-200 border-base-300 p-8">
+        <input type="radio" name="my_tabs_2" class="tab [--tab-bg:bg-green-50]" aria-label="Регистрация"
+                {{ "checked" if action_type == "reg" }}/>
+        <form class="tab-content bg-base-200 border-base-300 p-8" method="post">
             <h1 class="text-2xl font-bold mb-6">Добро пожаловать!</h1>
-
+            <input class="hidden" name="action-type" value="reg">
             <label class="floating-label block w-full mb-8">
                 <span>Никнейм</span>
-                <input type="text" placeholder="Никнейм" class="input w-full" required/>
+                <input type="text" placeholder="Никнейм" class="input w-full" name="nickname" required/>
             </label>
 
             <label class="floating-label block mb-8">
                 <span>Почта</span>
-                <input type="email" placeholder="Почта" class="input w-full" required/>
+                <input type="email" placeholder="Почта" class="input w-full" name="email" required/>
             </label>
 
             <label class="floating-label block w-full mb-6">
                 <span>Пароль</span>
-                <input type="password" placeholder="Пароль" class="input w-full" required/>
+                <input type="password" placeholder="Пароль" class="input w-full" name="password" required/>
             </label>
 
             <label class="floating-label block w-full mb-6">
                 <span>Подтверждение пароля</span>
-                <input type="password" placeholder="Подтверждение пароля" class="input w-full" required/>
+                <input type="password" placeholder="Подтверждение пароля" class="input w-full"
+                       name="password-confirmation" required/>
             </label>
-            {% if err %}
+            {% if err and action_type == "reg" %}
                 <div class="w-full mb-6 text-error outline rounded p-1" role="alert">{{ err }}</div>
             {% endif %}
-            <button class="btn btn-primary block w-full"> Зарегистрироваться</button>
+            <button class="btn btn-primary block w-full" type="submit"> Зарегистрироваться</button>
         </form>
 
         <!-- Авторизация -->
-        <input type="radio" name="my_tabs_2" class="tab" aria-label="Авторизация"/>
-        <form class="tab-content border-base-300 bg-base-200 p-8">
+        <input type="radio" name="my_tabs_2" class="tab" aria-label="Авторизация"
+                {{ "checked" if action_type == "login" }}/>
+        <form class="tab-content border-base-300 bg-base-200 p-8" method="post">
             <h1 class="text-2xl font-bold mb-6">С возвращением!</h1>
-
-            <label class="floating-label block mb-8 w-full" >
+            <input class="hidden" name="action-type" value="login">
+            <label class="floating-label block mb-8 w-full">
                 <span>Почта</span>
-                <input type="email" placeholder="Почта" class="input w-full"/>
+                <input type="email" placeholder="Почта" class="input w-full" name="email"/>
             </label>
 
             <label class="floating-label block w-full mb-8">
                 <span>Пароль</span>
-                <input type="password" placeholder="Пароль" class="input w-full"/>
+                <input type="password" placeholder="Пароль" class="input w-full" name="password"/>
             </label>
-            {% if err %}
+            {% if err and action_type == "login" %}
                 <div class="w-full mb-6 text-error outline rounded p-1" role="alert">{{ err }}</div>
             {% endif %}
-            <button class="btn btn-primary block w-full"> Войти в аккаунт</button>
+            <button class="btn btn-primary block w-full" type="submit"> Войти в аккаунт</button>
         </form>
 
     </div>

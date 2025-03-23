@@ -39,6 +39,7 @@ def create_user(username: str, email: str, password: str) -> User | None:
 
         session.add(new_user)
         session.commit()
+        session.refresh(new_user)
 
         return new_user
     finally:

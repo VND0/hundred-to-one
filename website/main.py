@@ -1,24 +1,20 @@
-import uuid
-
 from flask import Flask, render_template, request, redirect
-from flask_login import LoginManager, login_user, login_required, current_user, logout_user
-from werkzeug.security import generate_password_hash
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
-from ..database import models, database
+from ..database.database import create_db_and_tables
+from ..database.cruds.user_crud import get_user_by_id, get_user_by_email, create_user
 
 app = Flask(__name__)
+app.config["SECRET_KEY"] = "1"
 
 login_manager = LoginManager(app)
 login_manager.init_app(app)
 login_manager.login_view = "auth"
 
-app.config["SECRET_KEY"] = "1"
-
 
 @login_manager.user_loader
 def load_user(user_id):
-    session = database.Session()
-    return session.query(models.User).filter(models.User.id == user_id).one_or_none()
+    return get_user_by_id(user_id)
 
 
 @app.get("/")
@@ -28,45 +24,34 @@ def index():
     return render_template("index.html")
 
 
-def register_user():
+def check_registration():
     form = request.form
-    session = database.Session()
 
     email = form.get("email")
     username = form.get("username")
     password = form.get("password")
-    existing_user = session.query(models.User).filter(models.User.email == email).one_or_none()
-    if existing_user:
-        return f"User with {email} already exists.", 409
 
-    new_user = models.User(
-        id=str(uuid.uuid4()),
-        username=username,
-        email=email,
-        hashed_password=generate_password_hash(password)
-    )
+    new_user = create_user(username, email, password)
+    if not new_user:
+        return f"User with email {email} already exist", 409
 
-    session.add(new_user)
-    session.commit()
-    login_user(new_user)
-    session.close()
-
-    return redirect("/protected")
+    return redirect("/auth")
 
 
-def login_user1():
+def check_login():
     form = request.form
-    session = database.Session()
 
     email = form.get("email")
     password = form.get("password")
 
-    user = session.query(models.User).filter(models.User.email == email).one_or_none()
+    user = get_user_by_email(email)
     if not user:
-        return f"User with {email} doesn't exist", 409
+        return f"User with email {email} doesn't exist", 409
     if not user.check_password(password):
         return f"Incorrect password", 409
+
     login_user(user)
+
     return redirect("/protected")
 
 
@@ -77,9 +62,9 @@ def auth():
     if request.method == "POST":
         action = request.form.get("action-type")
         if action == "reg":
-            return register_user()
+            return check_registration()
         elif action == "login":
-            return login_user1()
+            return check_login()
         else:
             return "Unknown action", 400
 
@@ -103,6 +88,6 @@ if __name__ == '__main__':
     app.jinja_env.auto_reload = True
     app.config['TEMPLATES_AUTO_RELOAD'] = True
 
-    models.Base.metadata.create_all(database.engine)
+    create_db_and_tables()
 
     app.run(port=8000, host="0.0.0.0", use_reloader=True)

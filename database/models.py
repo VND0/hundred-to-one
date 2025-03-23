@@ -1,4 +1,4 @@
-from sqlalchemy import ForeignKey, Table, Column
+from sqlalchemy import ForeignKey, Table, Column, String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 from flask_login import UserMixin
@@ -23,15 +23,18 @@ class User(Base, UserMixin):
     __tablename__ = "User"
 
     id: Mapped[str] = mapped_column(primary_key=True)
-    username: Mapped[str]
-    email: Mapped[str] = mapped_column(unique=True)
-    hashed_password: Mapped[str]
+    username: Mapped[str] = mapped_column(String(30), nullable=False)
+    email: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
+    hashed_pwd: Mapped[str] = mapped_column(String(255), nullable=False)
 
-    questions: Mapped[list["Question"]] = relationship(back_populates="user")
-    polls: Mapped[list["Poll"]] = relationship(back_populates="user")
+    questions: Mapped[list["Question"]] = relationship(back_populates="user", lazy="joined")
+    polls: Mapped[list["Poll"]] = relationship(back_populates="user", lazy="joined")
+
+    def set_password(self, password):
+        self.hashed_pwd = generate_password_hash(password)
 
     def check_password(self, password):
-        return check_password_hash(self.hashed_password, password)
+        return check_password_hash(self.hashed_pwd, password)
 
 
 class Question(Base):

@@ -1,16 +1,10 @@
-from sqlalchemy import ForeignKey, Table, Column, String
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-
 from flask_login import UserMixin
-
+from sqlalchemy import ForeignKey, Table, Column, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from .database import Base
 
-class Base(DeclarativeBase):
-    pass
-
-
-# TODO: add length and regex constraints
 association_table = Table(
     "PQ_connection",
     Base.metadata,

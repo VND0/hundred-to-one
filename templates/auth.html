@@ -1,61 +1,74 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<!-- Форма для регистрации и авторизации -->
+<div class="tabs tabs-lift max-w-md mx-auto shadow-lg">
+    <!-- Регистрация -->
+    <input type="radio" name="my_tabs_2" class="tab" aria-label="Регистрация"
+        {{ "checked" if action_type == "registration" }} />
 
-    <!-- Форма для регистрации и авторизации -->
-    <div class="tabs tabs-lift max-w-md mx-auto">
-        <!-- Регистрация -->
-        <input type="radio" name="my_tabs_2" class="tab [--tab-bg:bg-green-50]" aria-label="Регистрация"
-                {{ "checked" if action_type == "reg" }}/>
-        <form class="tab-content bg-base-200 border-base-300 p-8" method="post">
-            <h1 class="text-2xl font-bold mb-6">Добро пожаловать!</h1>
-            <input class="hidden" name="action-type" value="reg">
-            <label class="floating-label block w-full mb-8">
-                <span>Никнейм</span>
-                <input type="text" placeholder="Никнейм" class="input w-full" name="nickname" required/>
-            </label>
+    <form class="tab-content bg-base-300 border-base-300 p-8" id="regForm" method="post">
+        <h1 class="text-2xl font-bold mb-8">Добро пожаловать!</h1>
 
-            <label class="floating-label block mb-8">
-                <span>Почта</span>
-                <input type="email" placeholder="Почта" class="input w-full" name="email" required/>
-            </label>
+        <input class="hidden" name="action-type" value="registration" />
 
-            <label class="floating-label block w-full mb-6">
-                <span>Пароль</span>
-                <input type="password" placeholder="Пароль" class="input w-full" name="password" required/>
-            </label>
+        <label class="floating-label block w-full mb-6">
+            <span>Никнейм</span>
+            <input type="text" placeholder="Никнейм" autocomplete="off" minlength="3" maxlength="20"
+                   class="input w-full" id="nameInput" name="nickname" required />
+        </label>
 
-            <label class="floating-label block w-full mb-6">
-                <span>Подтверждение пароля</span>
-                <input type="password" placeholder="Подтверждение пароля" class="input w-full"
-                       name="password-confirmation" required/>
-            </label>
-            {% if err and action_type == "reg" %}
-                <div class="w-full mb-6 text-error outline rounded p-1" role="alert">{{ err }}</div>
-            {% endif %}
-            <button class="btn btn-primary block w-full" type="submit"> Зарегистрироваться</button>
-        </form>
+        <label class="floating-label block w-full mb-6">
+            <span>Почта</span>
+            <input type="email" placeholder="Почта" autocomplete="off" minlength="8" maxlength="50"
+                   class="input w-full" id="emailRegInput" name="email" required />
+        </label>
 
-        <!-- Авторизация -->
-        <input type="radio" name="my_tabs_2" class="tab" aria-label="Авторизация"
-                {{ "checked" if action_type == "login" }}/>
-        <form class="tab-content border-base-300 bg-base-200 p-8" method="post">
-            <h1 class="text-2xl font-bold mb-6">С возвращением!</h1>
-            <input class="hidden" name="action-type" value="login">
-            <label class="floating-label block mb-8 w-full">
-                <span>Почта</span>
-                <input type="email" placeholder="Почта" class="input w-full" name="email"/>
-            </label>
+        <label class="floating-label block w-full mb-6">
+            <span>Пароль</span>
+            <input type="password" placeholder="Пароль" class="input w-full" id="pwdRegInput" minlength="6"
+                   maxlength="30" name="password" required />
+        </label>
 
-            <label class="floating-label block w-full mb-8">
-                <span>Пароль</span>
-                <input type="password" placeholder="Пароль" class="input w-full" name="password"/>
-            </label>
-            {% if err and action_type == "login" %}
-                <div class="w-full mb-6 text-error outline rounded p-1" role="alert">{{ err }}</div>
-            {% endif %}
-            <button class="btn btn-primary block w-full" type="submit"> Войти в аккаунт</button>
-        </form>
+        <label class="floating-label block w-full mb-6">
+            <span>Подтверждение пароля</span>
+            <input type="password" placeholder="Подтверждение пароля" minlength="6" maxlength="30"
+                   class="input w-full" id="confirmInput" name="password-confirmation" required />
+        </label>
 
-    </div>
+        {% if error and action_type == "registration" %}
+            <div class="w-full mb-6 text-error outline rounded p-1" role="alert">{{ error }}</div>
+        {% endif %}
+
+        <button class="btn btn-primary block w-full" type="submit">Зарегистрироваться</button>
+    </form>
+    
+    <!-- Авторизация -->
+    <input type="radio" name="my_tabs_2" class="tab" aria-label="Авторизация"
+        {{ "checked" if action_type == "login" }} />
+
+    <form class="tab-content bg-base-300 border-base-300 p-8" id="loginForm" method="post">
+        <h1 class="text-2xl font-bold mb-6">С возвращением!</h1>
+
+        <input class="hidden" name="action-type" value="login" />
+
+        <label class="floating-label block w-full mb-6">
+            <span>Почта</span>
+            <input type="email" placeholder="Почта" autocomplete="off" minlength="8" maxlength="50"
+                   class="input w-full" id="emailLoginInput" name="email" required />
+        </label>
+
+        <label class="floating-label block w-full mb-6">
+            <span>Пароль</span>
+            <input type="password" placeholder="Пароль" minlength="6" maxlength="30"
+                   class="input w-full" id="pwdLoginInput" name="password" required />
+        </label>
+
+        {% if error and action_type == "login" %}
+            <div class="w-full mb-6 text-error outline rounded p-1" role="alert">{{ error }}</div>
+        {% endif %}
+
+        <button class="btn btn-primary block w-full" type="submit">Войти в аккаунт</button>
+    </form>
+</div>
 {% endblock %}

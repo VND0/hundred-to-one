@@ -5,9 +5,11 @@ from database.cruds.user_crud import get_user_by_id, get_user_by_email, create_u
 from database.database import create_db_and_tables
 
 app = Flask(__name__)
+
 app.config["SECRET_KEY"] = "1"
-app.jinja_env.auto_reload = True
 app.config['TEMPLATES_AUTO_RELOAD'] = True
+app.jinja_env.auto_reload = True
+
 login_manager = LoginManager(app)
 login_manager.init_app(app)
 
@@ -27,20 +29,21 @@ def index():
 def handle_registration() -> str | Response:
     form = request.form
 
-    email = form.get("email")
     nickname = form.get("nickname")
+    email = form.get("email")
     password = form.get("password")
     confirmation = form.get("password-confirmation")
 
     if password != confirmation:
-        return f"Passwords don't match"
+        return "Пароли не совпадают"
 
     new_user = create_user(nickname, email, password)
     if not new_user:
-        return f"User with email {email} already exist"
+        return f"Пользователь с почтой {email} уже существует"
 
     login_user(new_user)
-    return redirect("/auth")
+
+    return redirect("/protected")
 
 
 def handle_login() -> str | Response:
@@ -51,9 +54,9 @@ def handle_login() -> str | Response:
 
     user = get_user_by_email(email)
     if not user:
-        return f"User with email {email} doesn't exist"
+        return f"Пользователя с почтой {email} не существует"
     if not user.check_password(password):
-        return f"Incorrect password"
+        return f"Неверный пароль"
 
     login_user(user)
 
@@ -62,24 +65,26 @@ def handle_login() -> str | Response:
 
 @app.route("/auth", methods=["POST", "GET"])
 def auth():
-    form_resp = None
-    action_type = "reg"
+    form_response = None
+    action_type = "registration"
+
     if current_user.is_authenticated:
         return redirect("/protected")
+
     if request.method == "POST":
         action = request.form.get("action-type")
-        if action == "reg":
-            form_resp = handle_registration()
+        if action == "registration":
+            form_response = handle_registration()
         elif action == "login":
             action_type = "login"
-            form_resp = handle_login()
+            form_response = handle_login()
         else:
             abort(400, "Unknown action")
 
-    if type(form_resp) is Response:
-        return form_resp
+    if type(form_response) is Response:
+        return form_response
     else:
-        return render_template("auth.html", title="Авторизация", err=form_resp, action_type=action_type)
+        return render_template("auth.html", title="Авторизация", error=form_response, action_type=action_type)
 
 
 @app.route("/logout")
@@ -97,4 +102,4 @@ def protected_route():
 
 if __name__ == '__main__':
     create_db_and_tables()
-    app.run(port=8000, host="0.0.0.0", use_reloader=True)
+    app.run(host="0.0.0.0", port=8080, use_reloader=True)

@@ -17,7 +17,7 @@ class User(Base, UserMixin):
     __tablename__ = "User"
 
     id: Mapped[str] = mapped_column(primary_key=True)
-    username: Mapped[str] = mapped_column(String(30), nullable=False)
+    username: Mapped[str] = mapped_column(String(20), nullable=False)
     email: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
     hashed_pwd: Mapped[str] = mapped_column(String(255), nullable=False)
 

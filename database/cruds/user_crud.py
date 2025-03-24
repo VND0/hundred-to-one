@@ -18,6 +18,7 @@ def get_user_by_email(email: str) -> User | None:
 
 def create_user(username: str, email: str, password: str) -> User | None:
     session = next(sessions)
+
     existing_user = get_user_by_email(email)
     if existing_user:
         return None
@@ -38,6 +39,7 @@ def create_user(username: str, email: str, password: str) -> User | None:
 
 def update_user(email: str, pwd: str, new_name: str = None, new_email: str = None, new_pwd: str = None) -> User | None:
     session = next(sessions)
+
     user = get_user_by_email(email)
     if not (user and user.check_password(pwd)):
         return None
@@ -55,6 +57,7 @@ def update_user(email: str, pwd: str, new_name: str = None, new_email: str = Non
 
 def delete_user(email: str, pwd: str) -> bool:
     session = next(sessions)
+
     user = get_user_by_email(email)
     if not (user and user.check_password(pwd)):
         return False

@@ -22,8 +22,8 @@ def load_user(user_id):
 @app.get("/")
 def index():
     if current_user.is_authenticated:
-        return redirect("/protected")
-    return render_template("index.html", title="Hundred To One")
+        return redirect("/profile")
+    return render_template("index.html", title="Welcome")
 
 
 def handle_registration() -> str | Response:
@@ -43,7 +43,7 @@ def handle_registration() -> str | Response:
 
     login_user(new_user)
 
-    return redirect("/protected")
+    return redirect("/profile")
 
 
 def handle_login() -> str | Response:
@@ -60,7 +60,7 @@ def handle_login() -> str | Response:
 
     login_user(user)
 
-    return redirect("/protected")
+    return redirect("/profile")
 
 
 @app.route("/auth", methods=["POST", "GET"])
@@ -69,7 +69,7 @@ def auth():
     action_type = "registration"
 
     if current_user.is_authenticated:
-        return redirect("/protected")
+        return redirect("/profile")
 
     if request.method == "POST":
         action = request.form.get("action-type")
@@ -91,13 +91,19 @@ def auth():
 @login_required
 def logout():
     logout_user()
-    return redirect("/")
+    return redirect("/auth")
 
 
-@app.get("/protected")
+@app.get("/profile")
 @login_required
-def protected_route():
-    return render_template("protected.html", name=current_user.username, title="Вы авторизованы")
+def user_profile():
+    return render_template("profile.html", title=f"Профиль {current_user.username}")
+
+
+@app.get("/settings")
+@login_required
+def user_settings():
+    return render_template("settings.html", title=f"Настройки {current_user.username}")
 
 
 if __name__ == '__main__':

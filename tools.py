@@ -12,6 +12,20 @@ from models import PasswordsUnmatch, NewUser
 sessions = database.session_generator()
 
 
+def what_happened(e: ValidationError) -> str:
+    errors = []
+    for err_obj in e.errors():
+        loc = err_obj["loc"][0]
+        if "email" in loc:
+            errors.append("Некорректный адрес почты. Разрешена длина [5;100].")
+        elif "passw" in loc:
+            errors.append("Некорректный пароль. Разрешены цифры, латиница и специальные символы, длина - [8;60].")
+        elif "nickname" in loc:
+            errors.append("Разрешенная длина никнейма - [6;30].")
+        else:
+            raise NotImplementedError
+
+
 def create_user(user_data: NewUser) -> User | None:
     session = next(sessions)
 
@@ -46,9 +60,7 @@ def handle_registration() -> str | Response:
     except models.PasswordsUnmatch:
         return "Пароли не совпадают"
     except ValidationError as e:
-        what_happened = e.errors()[0]["loc"][0]
-        if what_happened == "email":
-            return "Некорректная почта"
+        return what_happened(e)
 
     new_user = create_user(model)
     if not new_user:
@@ -68,8 +80,8 @@ def handle_login() -> str | Response:
             email=form.get("email"),
             password=form.get("password")
         )
-    except ValidationError:
-        raise NotImplementedError
+    except ValidationError as e:
+        return what_happened(e)
 
     user = session.query(User).filter(User.email == model.email).one_or_none()
     if not user:
@@ -91,8 +103,8 @@ def handle_edit_data():
             email=form.get("email"),
             password=form.get("password")
         )
-    except ValidationError:
-        raise NotImplementedError
+    except ValidationError as e:
+        return what_happened(e)
 
     if not current_user.check_password(model.password):
         return f"Неверный пароль"
@@ -114,8 +126,8 @@ def handle_change_password():
             new_password=form.get("new_password"),
             new_confirmation=form.get("new_confirmation")
         )
-    except ValidationError:
-        raise NotImplementedError
+    except ValidationError as e:
+        return what_happened(e)
     except PasswordsUnmatch:
         return "Пароли не совпадают"
 
@@ -134,8 +146,8 @@ def handle_remove_account():
     form = request.form
     try:
         model = models.OnlyPassword(password=form.get("password"))
-    except ValidationError:
-        raise NotImplementedError
+    except ValidationError as e:
+        return what_happened(e)
 
     if not current_user.check_password(model.password):
         return f"Неверный пароль"

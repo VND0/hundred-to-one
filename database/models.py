@@ -17,8 +17,8 @@ class User(Base, UserMixin):
     __tablename__ = "User"
 
     id: Mapped[str] = mapped_column(primary_key=True)
-    username: Mapped[str] = mapped_column(String(20), nullable=False)
-    email: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
+    username: Mapped[str] = mapped_column(String(30), nullable=False)
+    email: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
     hashed_pwd: Mapped[str] = mapped_column(String(255), nullable=False)
 
     questions: Mapped[list["Question"]] = relationship(back_populates="user", lazy="joined")
@@ -35,7 +35,7 @@ class Question(Base):
     __tablename__ = "Question"
 
     id: Mapped[str] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(unique=True)
+    name: Mapped[str] = mapped_column(String(250), unique=True)
     user_id: Mapped[str] = mapped_column(ForeignKey(User.id))
 
     user: Mapped["User"] = relationship(back_populates="questions")
@@ -46,7 +46,7 @@ class Answer(Base):
     __tablename__ = "Answer"
 
     id: Mapped[str] = mapped_column(primary_key=True)
-    value: Mapped[str]
+    value: Mapped[str] = mapped_column(String(50))
     question_id: Mapped[str] = mapped_column(ForeignKey(Question.id))
 
     question: Mapped["Question"] = relationship(back_populates="answers")

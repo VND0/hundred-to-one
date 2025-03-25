@@ -1,8 +1,7 @@
 from pydantic import BaseModel, Field, model_validator, EmailStr
 from typing_extensions import Self
 
-PASSWORD = Field(min_length=8, max_length=60,
-                 pattern=r"""^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]+$""")
+PASSWORD = Field(min_length=8, max_length=60, pattern=r"""^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]+$""")
 
 
 class PasswordsUnmatch(Exception):

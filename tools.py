@@ -5,9 +5,11 @@ from flask_login import login_user, current_user, logout_user
 from pydantic import ValidationError
 
 import models
-from database import database
-from database.models import User
 from models import PasswordsUnmatch, NewUser
+
+from database import database
+from database.db_models import User
+
 
 sessions = database.session_generator()
 
@@ -52,13 +54,13 @@ def handle_registration() -> str | Response:
     form = request.form
 
     try:
-        model = models.NewUser(
+        model = NewUser(
             nickname=form.get("nickname"),
             email=form.get("email"),
             password=form.get("password"),
             password_confirmation=form.get("password-confirmation"),
         )
-    except models.PasswordsUnmatch:
+    except PasswordsUnmatch:
         return "Пароли не совпадают"
     except ValidationError as e:
         return what_happened(e)

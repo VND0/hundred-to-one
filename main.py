@@ -3,16 +3,19 @@ from flask_login import LoginManager, logout_user, login_required, current_user
 
 import tools
 from database.database import create_db_and_tables, session_generator
-from database.models import User
+from database.db_models import User
 
 app = Flask(__name__)
-sessions = session_generator()
+
 app.config["SECRET_KEY"] = "1"
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.jinja_env.auto_reload = True
 
 login_manager = LoginManager(app)
 login_manager.init_app(app)
+login_manager.login_view = "auth"
+
+sessions = session_generator()
 
 
 @login_manager.user_loader

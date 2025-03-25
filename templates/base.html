@@ -8,7 +8,7 @@
     <title>{{ title }}</title>
 </head>
 <body class="min-h-screen bg-base-200">
-    <header class="flex items-center bg-base-300 h-20 shadow-md p-4">
+    <header class="flex bg-base-300 h-20 shadow-md px-4">
         <nav class="navbar max-w-7xl mx-auto">
             <div class="flex-1">
                 {% if current_user.is_authenticated %}
@@ -31,10 +31,9 @@
                 </label>
                 {% if current_user.is_authenticated %}
                     <div class="dropdown dropdown-end">
-                        <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
-                            <div class="w-10 rounded-full">
-                                <img alt="Me" src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"/>
-                            </div>
+                        <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar avatar-placeholder">
+                            <div class="w-10 rounded-full text-lg" id="avatarContainer"
+                                 data-nickname="{{ current_user.nickname }}"></div>
                         </div>
                         <ul tabindex="0" class="menu menu-md dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
                             <li><a href="/settings">Настройки: {{ current_user.nickname }}</a></li>
@@ -46,6 +45,7 @@
         </nav>
     </header>
     {% block content %}{% endblock %}
+    <script src="{{ url_for('static', filename='scripts/avatar.js') }}"></script>
     <script src="{{ url_for('static', filename='scripts/themes.js') }}"></script>
 </body>
 </html>

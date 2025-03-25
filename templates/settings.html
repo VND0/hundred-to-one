@@ -1,116 +1,107 @@
 {% extends 'base.html' %}
-{#TODO: переместить скрытые инпуты в конец формы#}
+{# TODO: переместить скрытые инпуты в конец формы #}
 {% block content %}
-    <main class="flex items-center min-h-[calc(100vh-5rem)]">
-        <div class="tabs tabs-lift max-w-lg mx-auto -mt-20 shadow-lg">
-            <!-- Изменение данных -->
-            <input type="radio" name="my_tabs_2" class="tab [--tab-bg:var(--color-base-300)] text-base"
-                   aria-label="Изменение данных"
-                    {{ "checked" if action_type == "edit_data" }} />
+<main class="flex items-center min-h-[calc(100vh-5rem)]">
+    <div class="tabs tabs-lift max-w-lg mx-auto -mt-20 shadow-lg">
+        <!-- Изменение данных -->
+        <input type="radio" name="my_tabs_2" class="tab [--tab-bg:var(--color-base-300)] text-base"
+               aria-label="Изменение данных" {{ "checked" if action_type == "edit_data" }} />
 
-            <form class="tab-content bg-base-300 border-base-300 p-8" id="editForm" method="post">
-                <h1 class="text-2xl font-bold mb-8">Изменить данные</h1>
+        <form class="tab-content bg-base-300 border-base-300 p-8" method="post">
+            <h1 class="text-2xl font-bold mb-8">Изменить данные</h1>
 
-                <input class="hidden" name="action-type" value="edit_data"/>
+            <input class="hidden" name="action-type" value="edit_data" />
 
-                <label class="floating-label block w-full mb-6">
-                    <span>Никнейм</span>
-                    <input type="text" placeholder="Никнейм" minlength="6" maxlength="30"
-                           class="input w-full rounded-xl text-base" name="nickname"
-                           value="{{ current_user.nickname }}"/>
-                </label>
+            <label class="floating-label block w-full mb-6">
+                <span>Никнейм</span>
+                <input type="text" placeholder="Никнейм" minlength="6" maxlength="30"
+                       class="input w-full rounded-xl text-base" name="nickname"
+                       value="{{ current_user.nickname }}" />
+            </label>
 
-                <label class="floating-label block w-full mb-6">
-                    <span>Почта</span>
-                    <input type="email" placeholder="Почта" minlength="5" maxlength="100"
-                           class="input w-full rounded-xl text-base" name="email"
-                           value="{{ current_user.email }}"/>
-                </label>
+            <label class="floating-label block w-full mb-6">
+                <span>Почта</span>
+                <input type="email" placeholder="Почта" minlength="5" maxlength="100"
+                       class="input w-full rounded-xl text-base" name="email"
+                       value="{{ current_user.email }}" />
+            </label>
 
-                <label class="floating-label block w-full mb-6">
-                    <span>Пароль</span>
-                    <input type="password" placeholder="Введите пароль" class="input w-full rounded-xl text-base"
-                           minlength="8"
-                           maxlength="60" name="password" required/>
-                </label>
+            <label class="floating-label block w-full mb-6">
+                <span>Пароль</span>
+                <input type="password" placeholder="Введите пароль" class="input w-full rounded-xl text-base"
+                       minlength="8" maxlength="60" name="password" required />
+            </label>
 
-                {% if error and action_type == "edit_data" %}
-                    <div role="alert" class="alert alert-error alert-soft mb-6">
-                        <span>{{ error }}</span>
-                    </div>
-                {% endif %}
+            {% if error and action_type == "edit_data" %}
+                <div role="alert" class="alert alert-error alert-soft mb-6">
+                    <span>{{ error }}</span>
+                </div>
+            {% endif %}
 
-                <button class="btn btn-primary block w-full rounded-xl text-base" type="submit">Подтвердить
-                </button>
-            </form>
+            <button class="btn btn-primary block w-full rounded-xl text-base" type="submit">Подтвердить</button>
+        </form>
 
-            <!-- Изменение пароля -->
-            <input type="radio" name="my_tabs_2" class="tab [--tab-bg:var(--color-base-300)] text-base"
-                   aria-label="Смена пароля"
-                    {{ "checked" if action_type == "new_password" }} />
+        <!-- Изменение пароля -->
+        <input type="radio" name="my_tabs_2" class="tab [--tab-bg:var(--color-base-300)] text-base"
+               aria-label="Смена пароля" {{ "checked" if action_type == "new_password" }} />
 
-            <form class="tab-content bg-base-300 border-base-300 p-8" id="newPasswordForm" method="post">
-                <h1 class="text-2xl font-bold mb-8">Сменить пароль</h1>
+        <form class="tab-content bg-base-300 border-base-300 p-8" method="post">
+            <h1 class="text-2xl font-bold mb-8">Сменить пароль</h1>
 
-                <input class="hidden" name="action-type" value="new_password"/>
+            <input class="hidden" name="action-type" value="new_password" />
 
 
-                <label class="floating-label block w-full mb-6">
-                    <span>Старый пароль</span>
-                    <input type="password" placeholder="Старый пароль" class="input w-full rounded-xl text-base"
-                           minlength="8"
-                           maxlength="60" name="old_password" required/>
-                </label>
+            <label class="floating-label block w-full mb-6">
+                <span>Старый пароль</span>
+                <input type="password" placeholder="Старый пароль" class="input w-full rounded-xl text-base"
+                       minlength="8" maxlength="60" name="old_password" required />
+            </label>
 
-                <label class="floating-label block w-full mb-6">
-                    <span>Новый пароль</span>
-                    <input type="password" placeholder="Новый пароль" class="input w-full rounded-xl text-base"
-                           minlength="8"
-                           maxlength="60" name="new_password" required/>
-                </label>
+            <label class="floating-label block w-full mb-6">
+                <span>Новый пароль</span>
+                <input type="password" placeholder="Новый пароль" class="input w-full rounded-xl text-base"
+                       minlength="8" maxlength="60" name="new_password" required />
+            </label>
 
-                <label class="floating-label block w-full mb-6">
-                    <span>Подтверждение</span>
-                    <input type="password" placeholder="Введите еще раз" class="input w-full rounded-xl text-base"
-                           minlength="8"
-                           maxlength="60" name="new_confirmation" required/>
-                </label>
+            <label class="floating-label block w-full mb-6">
+                <span>Подтверждение</span>
+                <input type="password" placeholder="Введите еще раз" class="input w-full rounded-xl text-base"
+                       minlength="8" maxlength="60" name="new_confirmation" required />
+            </label>
 
-                {% if error and action_type == "new_password" %}
-                    <div role="alert" class="alert alert-error alert-soft mb-6">
-                        <span>{{ error }}</span>
-                    </div>
-                {% endif %}
+            {% if error and action_type == "new_password" %}
+                <div role="alert" class="alert alert-error alert-soft mb-6">
+                    <span>{{ error }}</span>
+                </div>
+            {% endif %}
 
-                <button class="btn btn-primary block w-full rounded-xl text-base" type="submit">Подтвердить
-                </button>
-            </form>
+            <button class="btn btn-primary block w-full rounded-xl text-base" type="submit">Подтвердить</button>
+        </form>
 
 
-            <!-- Удаление аккаунта -->
-            <input type="radio" name="my_tabs_2" class="tab [--tab-bg:var(--color-base-300)] text-base"
-                   aria-label="Удаление аккаунта"
-                    {{ "checked" if action_type == "remove" }} />
+        <!-- Удаление аккаунта -->
+        <input type="radio" name="my_tabs_2" class="tab [--tab-bg:var(--color-base-300)] text-base"
+               aria-label="Удаление аккаунта" {{ "checked" if action_type == "remove" }} />
 
-            <form class="tab-content bg-base-300 border-base-300 p-8" id="removeForm" method="post">
-                <h1 class="text-2xl font-bold mb-6">Удалить аккаунт</h1>
+        <form class="tab-content bg-base-300 border-base-300 p-8" id="removeForm" method="post">
+            <h1 class="text-2xl font-bold mb-6">Удалить аккаунт</h1>
 
-                <input class="hidden" name="action-type" value="remove"/>
+            <input class="hidden" name="action-type" value="remove" />
 
-                <label class="floating-label block w-full mb-6">
-                    <span>Пароль</span>
-                    <input type="password" placeholder="Пароль" minlength="8" maxlength="60"
-                           class="input w-full rounded-xl text-base" name="password" required/>
-                </label>
+            <label class="floating-label block w-full mb-6">
+                <span>Пароль</span>
+                <input type="password" placeholder="Пароль" minlength="8" maxlength="60"
+                       class="input w-full rounded-xl text-base" name="password" required />
+            </label>
 
-                {% if error and action_type == "remove" %}
-                    <div role="alert" class="alert alert-error alert-soft mb-6">
-                        <span>{{ error }}</span>
-                    </div>
-                {% endif %}
+            {% if error and action_type == "remove" %}
+                <div role="alert" class="alert alert-error alert-soft mb-6">
+                    <span>{{ error }}</span>
+                </div>
+            {% endif %}
 
-                <button class="btn btn-primary block w-full rounded-xl text-error" type="submit">Удалить</button>
-            </form>
-        </div>
-    </main>
+            <button class="btn btn-error block w-full rounded-xl text-base text-white" type="submit">Удалить</button>
+        </form>
+    </div>
+</main>
 {% endblock %}

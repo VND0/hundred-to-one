@@ -24,6 +24,7 @@ def what_happened(e: ValidationError) -> str:
             errors.append("Разрешенная длина никнейма - [6;30].")
         else:
             raise NotImplementedError
+    return " ".join(errors)
 
 
 def create_user(user_data: NewUser) -> User | None:

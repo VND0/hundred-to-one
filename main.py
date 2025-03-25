@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect, abort, Response
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from pydantic import ValidationError
 
+import models
 from database.cruds.user_crud import get_user_by_id, get_user_by_email, create_user
 from database.database import create_db_and_tables
 
@@ -29,17 +31,23 @@ def index():
 def handle_registration() -> str | Response:
     form = request.form
 
-    nickname = form.get("nickname")
-    email = form.get("email")
-    password = form.get("password")
-    confirmation = form.get("password-confirmation")
-
-    if password != confirmation:
+    try:
+        form_data = models.NewUser(
+            nickname=form.get("nickname"),
+            email=form.get("email"),
+            password=form.get("password"),
+            password_confirmation=form.get("password-confirmation"),
+        )
+    except models.PasswordsUnmatch:
         return "Пароли не совпадают"
+    except ValidationError as e:
+        what_happened = e.errors()[0]["loc"][0]
+        if what_happened == "email":
+            return "Некорректная почта"
 
-    new_user = create_user(nickname, email, password)
+    new_user = create_user(form_data.nickname, form_data.email, form_data.password)
     if not new_user:
-        return f"Пользователь с почтой {email} уже существует"
+        return f"Пользователь с почтой {form_data.email} уже существует"
 
     login_user(new_user)
 
@@ -49,13 +57,18 @@ def handle_registration() -> str | Response:
 def handle_login() -> str | Response:
     form = request.form
 
-    email = form.get("email")
-    password = form.get("password")
+    try:
+        model = models.User(
+            email=form.get("email"),
+            password=form.get("password")
+        )
+    except ValidationError:
+        pass
 
-    user = get_user_by_email(email)
+    user = get_user_by_email(model.email)
     if not user:
-        return f"Пользователя с почтой {email} не существует"
-    if not user.check_password(password):
+        return f"Пользователя с почтой {model.email} не существует"
+    if not user.check_password(model.password):
         return f"Неверный пароль"
 
     login_user(user)
@@ -97,13 +110,13 @@ def logout():
 @app.get("/profile")
 @login_required
 def user_profile():
-    return render_template("profile.html", title=f"Профиль {current_user.username}")
+    return render_template("profile.html", title=f"Профиль {current_user.nickname}")
 
 
 @app.get("/settings")
 @login_required
 def user_settings():
-    return render_template("settings.html", title=f"Настройки {current_user.username}")
+    return render_template("settings.html", title=f"Настройки {current_user.nickname}")
 
 
 if __name__ == '__main__':

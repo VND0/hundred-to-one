@@ -16,7 +16,7 @@ def get_user_by_email(email: str) -> User | None:
     return session.query(User).filter(User.email == email).one_or_none()
 
 
-def create_user(username: str, email: str, password: str) -> User | None:
+def create_user(nickname: str, email: str, password: str) -> User | None:
     session = next(sessions)
 
     existing_user = get_user_by_email(email)
@@ -25,7 +25,7 @@ def create_user(username: str, email: str, password: str) -> User | None:
 
     new_user = User(
         id=str(uuid.uuid4()),
-        username=username,
+        nickname=nickname,
         email=email
     )
     new_user.set_password(password)
@@ -45,7 +45,7 @@ def update_user(email: str, pwd: str, new_name: str = None, new_email: str = Non
         return None
 
     if new_name:
-        user.username = new_name
+        user.nickname = new_name
     if new_email:
         user.email = new_email
     if new_pwd:

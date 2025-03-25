@@ -2,11 +2,11 @@ from flask import Flask, render_template, request, redirect, abort, Response
 from flask_login import LoginManager, logout_user, login_required, current_user
 
 import tools
-from database.cruds.user_crud import get_user_by_id
-from database.database import create_db_and_tables
+from database.database import create_db_and_tables, session_generator
+from database.models import User
 
 app = Flask(__name__)
-
+sessions = session_generator()
 app.config["SECRET_KEY"] = "1"
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.jinja_env.auto_reload = True
@@ -17,7 +17,8 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
-    return get_user_by_id(user_id)
+    session = next(sessions)
+    return session.query(User).filter(User.id == user_id).one_or_none()
 
 
 @app.get("/")
@@ -80,7 +81,6 @@ def user_settings():
         elif action == "remove":
             load_tab = "remove"
             form_response = tools.handle_remove_account()
-            logout_user()
         else:
             abort(400, "Unknown action")
 

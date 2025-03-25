@@ -1,17 +1,43 @@
+import uuid
+
 from flask import request, Response, redirect
-from flask_login import login_user, current_user
+from flask_login import login_user, current_user, logout_user
 from pydantic import ValidationError
 
 import models
-from database.cruds.user_crud import get_user_by_email, create_user, update_user, update_password, delete_user
-from models import PasswordsUnmatch
+from database import database
+from database.models import User
+from models import PasswordsUnmatch, NewUser
+
+sessions = database.session_generator()
+
+
+def create_user(user_data: NewUser) -> User | None:
+    session = next(sessions)
+
+    existing_user = session.query(User).filter(User.email == user_data.email).one_or_none()
+    if existing_user:
+        return None
+
+    new_user = User(
+        id=str(uuid.uuid4()),
+        nickname=user_data.nickname,
+        email=user_data.email
+    )
+    new_user.set_password(user_data.password)
+
+    session.add(new_user)
+    session.commit()
+    session.refresh(new_user)
+
+    return new_user
 
 
 def handle_registration() -> str | Response:
     form = request.form
 
     try:
-        form_data = models.NewUser(
+        model = models.NewUser(
             nickname=form.get("nickname"),
             email=form.get("email"),
             password=form.get("password"),
@@ -24,9 +50,9 @@ def handle_registration() -> str | Response:
         if what_happened == "email":
             return "Некорректная почта"
 
-    new_user = create_user(form_data.nickname, form_data.email, form_data.password)
+    new_user = create_user(model)
     if not new_user:
-        return f"Пользователь с почтой {form_data.email} уже существует"
+        return f"Пользователь с почтой {model.email} уже существует"
 
     login_user(new_user)
 
@@ -35,6 +61,7 @@ def handle_registration() -> str | Response:
 
 def handle_login() -> str | Response:
     form = request.form
+    session = next(sessions)
 
     try:
         model = models.User(
@@ -44,7 +71,7 @@ def handle_login() -> str | Response:
     except ValidationError:
         raise NotImplementedError
 
-    user = get_user_by_email(model.email)
+    user = session.query(User).filter(User.email == model.email).one_or_none()
     if not user:
         return f"Пользователя с почтой {model.email} не существует"
     if not user.check_password(model.password):
@@ -56,6 +83,7 @@ def handle_login() -> str | Response:
 
 
 def handle_edit_data():
+    session = next(sessions)
     form = request.form
     try:
         model = models.EditUser(
@@ -69,11 +97,16 @@ def handle_edit_data():
     if not current_user.check_password(model.password):
         return f"Неверный пароль"
 
-    update_user(model)
+    user = session.query(User).filter(User.id == current_user.id).one()
+    user.email = str(model.email)
+    user.nickname = model.nickname
+
+    session.commit()
     return redirect("/settings")
 
 
 def handle_change_password():
+    session = next(sessions)
     form = request.form
     try:
         model = models.ChangingPassword(
@@ -89,21 +122,26 @@ def handle_change_password():
     if not current_user.check_password(model.old_password):
         return f"Неверный пароль"
 
-    update_password(model)
+    user = session.query(User).filter(User.id == current_user.id).one()
+    user.set_password(model.new_password)
+    session.commit()
+
     return redirect("/settings")
 
 
 def handle_remove_account():
+    session = next(sessions)
     form = request.form
     try:
-        model = models.OnlyPassword(
-            password=form.get("password")
-        )
+        model = models.OnlyPassword(password=form.get("password"))
     except ValidationError:
         raise NotImplementedError
 
     if not current_user.check_password(model.password):
         return f"Неверный пароль"
 
-    delete_user()
+    user = session.query(User).filter(User.id == current_user.id).one()
+    session.delete(user)
+    session.commit()
+    logout_user()
     return redirect("/")

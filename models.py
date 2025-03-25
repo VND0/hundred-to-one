@@ -1,7 +1,8 @@
-from typing import Optional
-
 from pydantic import BaseModel, Field, model_validator, EmailStr
 from typing_extensions import Self
+
+PASSWORD = Field(min_length=8, max_length=60,
+                 pattern=r"""^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]+$""")
 
 
 class PasswordsUnmatch(Exception):
@@ -10,37 +11,40 @@ class PasswordsUnmatch(Exception):
 
 class User(BaseModel):
     email: EmailStr = Field(min_length=5, max_length=100)
-    password: str = Field(min_length=8, max_length=60,
-                          pattern=r"""^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]+$""")
+    password: str = PASSWORD
 
 
 class NewUser(User):
     nickname: str = Field(min_length=6, max_length=30)
-    password_confirmation: str = Field(min_length=8, max_length=60,
-                                       pattern=r"""^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]+$""")
+    password_confirmation: str = PASSWORD
 
     @model_validator(mode="after")
     def validate_match(self) -> Self:
         if self.password != self.password_confirmation:
-            raise ValueError("Passwords don't match")
+            raise PasswordsUnmatch
         return self
 
 
 class EditUser(BaseModel):
-    nickname: Optional[str] = Field(default=None, min_length=6, max_length=30)
-    email: Optional[EmailStr] = Field(default=None, min_length=5, max_length=100)
-    password: Optional[str] = Field(default=None, min_length=8, max_length=60,
-                                    pattern=r"""^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]+$""")
-    password_confirmation: Optional[str] = Field(default=None, min_length=8, max_length=60,
-                                                 pattern=r"""^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]+$""")
+    nickname: str = Field(min_length=6, max_length=30)
+    email: EmailStr = Field(min_length=5, max_length=100)
+    password: str = PASSWORD
+
+
+class ChangingPassword(BaseModel):
+    old_password: str = PASSWORD
+    new_password: str = PASSWORD
+    new_confirmation: str = PASSWORD
 
     @model_validator(mode="after")
     def validate_match(self) -> Self:
-        if self.password is None and self.password_confirmation is None:
-            return self
-        if self.password != self.password_confirmation:
+        if self.new_password != self.new_confirmation:
             raise PasswordsUnmatch
         return self
+
+
+class OnlyPassword(BaseModel):
+    password: str = PASSWORD
 
 
 class Question(BaseModel):

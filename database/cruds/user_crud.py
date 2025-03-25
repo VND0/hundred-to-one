@@ -1,5 +1,8 @@
 import uuid
 
+from flask_login import current_user
+
+from models import EditUser, ChangingPassword
 from ..database import session_generator
 from ..models import User
 
@@ -37,31 +40,31 @@ def create_user(nickname: str, email: str, password: str) -> User | None:
     return new_user
 
 
-def update_user(email: str, pwd: str, new_name: str = None, new_email: str = None, new_pwd: str = None) -> User | None:
+def update_user(user_upd: EditUser) -> None:
     session = next(sessions)
 
-    user = get_user_by_email(email)
-    if not (user and user.check_password(pwd)):
-        return None
+    # user = get_user_by_id(current_user.id)
+    user = session.query(User).filter(User.id == current_user.id).one()
+    user.email = str(user_upd.email)
+    user.nickname = user_upd.nickname
 
-    if new_name:
-        user.nickname = new_name
-    if new_email:
-        user.email = new_email
-    if new_pwd:
-        user.set_password(new_pwd)
     session.commit()
 
-    return user
 
-
-def delete_user(email: str, pwd: str) -> bool:
+def update_password(new_password: ChangingPassword) -> None:
     session = next(sessions)
 
-    user = get_user_by_email(email)
-    if not (user and user.check_password(pwd)):
-        return False
+    # user = get_user_by_id(current_user.id)
+    user = session.query(User).filter(User.id == current_user.id).one()
+    user.set_password(new_password.new_password)
 
+    session.commit()
+
+
+def delete_user() -> None:
+    session = next(sessions)
+
+    # user = get_user_by_id(current_user.id)
+    user = session.query(User).filter(User.id == current_user.id).one()
     session.delete(user)
     session.commit()
-    return True

@@ -18,7 +18,7 @@ login_manager.init_app(app)
 login_manager.login_view = "auth"
 
 api = Api(app)
-api.add_resource(QuestionResource, "/api/questions/<str:question_id>")
+api.add_resource(QuestionResource, "/api/questions/<question_id>")
 api.add_resource(QuestionListResource, "/api/questions")
 
 sessions = session_generator()

@@ -100,6 +100,12 @@ def user_settings():
                                action_type=load_tab, error=form_response)
 
 
+@app.route("/questions")
+@login_required
+def questions_page():
+    return render_template("questions.html", title="Мои вопросы")
+
+
 if __name__ == '__main__':
     create_db_and_tables()
     app.run(host="0.0.0.0", port=8080, use_reloader=True)

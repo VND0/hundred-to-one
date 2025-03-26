@@ -50,5 +50,9 @@ class Question(BaseModel):
     name: str = Field(min_length=4, max_length=250)
 
 
+class NewQuestion(Question):
+    user_id: str = Field(alias="userId")
+
+
 class Answer(BaseModel):
     value: str = Field(min_length=2, max_length=100)

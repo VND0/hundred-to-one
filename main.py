@@ -1,10 +1,11 @@
 from flask import Flask, render_template, request, redirect, abort, Response
 from flask_login import LoginManager, logout_user, login_required, current_user
+from flask_restful import Api
 
 import tools
-
 from database.database import create_db_and_tables, session_generator
 from database.db_models import User
+from questions_resource import QuestionResource, QuestionListResource
 
 app = Flask(__name__)
 
@@ -15,6 +16,10 @@ app.jinja_env.auto_reload = True
 login_manager = LoginManager(app)
 login_manager.init_app(app)
 login_manager.login_view = "auth"
+
+api = Api(app)
+api.add_resource(QuestionResource, "/api/questions/<str:question_id>")
+api.add_resource(QuestionListResource, "/api/questions")
 
 sessions = session_generator()
 

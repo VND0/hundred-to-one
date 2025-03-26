@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, abort, Response
 from flask_login import LoginManager, logout_user, login_required, current_user
 
 import tools
+
 from database.database import create_db_and_tables, session_generator
 from database.db_models import User
 
@@ -59,7 +60,7 @@ def auth():
 @login_required
 def logout():
     logout_user()
-    return redirect("/auth")
+    return redirect("/")
 
 
 @app.get("/profile")

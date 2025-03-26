@@ -5,10 +5,10 @@
     <div class="tabs tabs-lift max-w-lg mx-auto -mt-20 shadow-lg">
         <!-- Изменение данных -->
         <input type="radio" name="my_tabs_2" class="tab [--tab-bg:var(--color-base-300)] text-base"
-               aria-label="Изменение данных" {{ "checked" if action_type == "edit_data" }} />
+               aria-label="Изменение профиля" {{ "checked" if action_type == "edit_data" }} />
 
         <form class="tab-content bg-base-300 border-base-300 p-8" method="post">
-            <h1 class="text-2xl font-bold mb-8">Изменить данные</h1>
+            <h1 class="text-2xl font-bold mb-8">Изменение профиля</h1>
 
             <input class="hidden" name="action-type" value="edit_data" />
 
@@ -46,7 +46,7 @@
                aria-label="Смена пароля" {{ "checked" if action_type == "new_password" }} />
 
         <form class="tab-content bg-base-300 border-base-300 p-8" method="post">
-            <h1 class="text-2xl font-bold mb-8">Сменить пароль</h1>
+            <h1 class="text-2xl font-bold mb-8">Смена пароля</h1>
 
             <input class="hidden" name="action-type" value="new_password" />
 
@@ -65,7 +65,7 @@
 
             <label class="floating-label block w-full mb-6">
                 <span>Подтверждение</span>
-                <input type="password" placeholder="Введите еще раз" class="input w-full rounded-xl text-base"
+                <input type="password" placeholder="Подтвердите новый пароль" class="input w-full rounded-xl text-base"
                        minlength="8" maxlength="60" name="new_confirmation" required />
             </label>
 
@@ -84,7 +84,7 @@
                aria-label="Удаление аккаунта" {{ "checked" if action_type == "remove" }} />
 
         <form class="tab-content bg-base-300 border-base-300 p-8" id="removeForm" method="post">
-            <h1 class="text-2xl font-bold mb-6">Удалить аккаунт</h1>
+            <h1 class="text-2xl font-bold mb-6">Удаление аккаунта</h1>
 
             <input class="hidden" name="action-type" value="remove" />
 

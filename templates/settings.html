@@ -10,8 +10,6 @@
         <form class="tab-content bg-base-300 border-base-300 p-8" method="post">
             <h1 class="text-2xl font-bold mb-8">Изменение профиля</h1>
 
-            <input class="hidden" name="action-type" value="edit_data" />
-
             <label class="floating-label block w-full mb-6">
                 <span>Никнейм</span>
                 <input type="text" placeholder="Никнейм" minlength="6" maxlength="30"
@@ -39,6 +37,7 @@
             {% endif %}
 
             <button class="btn btn-primary block w-full rounded-xl text-base" type="submit">Подтвердить</button>
+            <input class="hidden" name="action-type" value="edit_data" />
         </form>
 
         <!-- Изменение пароля -->
@@ -47,9 +46,6 @@
 
         <form class="tab-content bg-base-300 border-base-300 p-8" method="post">
             <h1 class="text-2xl font-bold mb-8">Смена пароля</h1>
-
-            <input class="hidden" name="action-type" value="new_password" />
-
 
             <label class="floating-label block w-full mb-6">
                 <span>Старый пароль</span>
@@ -76,6 +72,7 @@
             {% endif %}
 
             <button class="btn btn-primary block w-full rounded-xl text-base" type="submit">Подтвердить</button>
+            <input class="hidden" name="action-type" value="new_password" />
         </form>
 
 
@@ -85,8 +82,6 @@
 
         <form class="tab-content bg-base-300 border-base-300 p-8" id="removeForm" method="post">
             <h1 class="text-2xl font-bold mb-6">Удаление аккаунта</h1>
-
-            <input class="hidden" name="action-type" value="remove" />
 
             <label class="floating-label block w-full mb-6">
                 <span>Пароль</span>
@@ -101,6 +96,7 @@
             {% endif %}
 
             <button class="btn btn-error block w-full rounded-xl text-base text-white" type="submit">Удалить</button>
+            <input class="hidden" name="action-type" value="remove" />
         </form>
     </div>
 </main>

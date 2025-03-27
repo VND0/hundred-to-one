@@ -11,7 +11,6 @@
         <form class="tab-content bg-base-300 border-base-300 p-8" id="regForm" method="post">
             <h1 class="text-2xl font-bold mb-8">Добро пожаловать!</h1>
 
-            <input class="hidden" name="action-type" value="registration" />
 
             <label class="floating-label block w-full mb-6">
                 <span>Никнейм</span>
@@ -44,6 +43,8 @@
             {% endif %}
 
             <button class="btn btn-primary block w-full rounded-xl text-base" type="submit">Зарегистрироваться</button>
+            <input class="hidden" name="action-type" value="registration" />
+
         </form>
 
         <!-- Авторизация -->
@@ -52,8 +53,6 @@
 
         <form class="tab-content bg-base-300 border-base-300 p-8" id="loginForm" method="post">
             <h1 class="text-2xl font-bold mb-6">С возвращением!</h1>
-
-            <input class="hidden" name="action-type" value="login" />
 
             <label class="floating-label block w-full mb-6">
                 <span>Почта</span>
@@ -74,6 +73,7 @@
             {% endif %}
 
             <button class="btn btn-primary block w-full rounded-xl text-base" type="submit">Войти в аккаунт</button>
+            <input class="hidden" name="action-type" value="login" />
         </form>
     </div>
 </main>

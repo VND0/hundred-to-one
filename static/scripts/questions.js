@@ -18,24 +18,45 @@ function formError(text) {
     setTimeout(() => elem.remove(), 3000)
 }
 
+async function handleApiError(response) {
+    if (!response.ok) {
+        if (response.status === 409) {
+            formError("Вопросы должны быть уникальны")
+        } else if (response.status === 404) {
+            formError("Объект не найден")
+        } else {
+            const body = await response.json()
+            formError(body.message)
+        }
+    }
+}
 
 async function addQuestionRequest(value) {
     const body = {
         question: value,
         userId
     }
-    const response = await fetch("/api/questions", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body)
-    })
+    let response;
+    try {
+        response = await fetch("/api/questions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body)
+        })
+    } catch (error) {
+        formError("Проблемы с Интернетом")
+        return false
+    }
+
+    await handleApiError(response)
     return response.ok
 }
 
 async function deleteQuestionRequest(questionId) {
     const response = await fetch(`/api/questions/${questionId}`, {method: "DELETE"})
+    await handleApiError(response)
     return response.ok
 }
 
@@ -49,6 +70,8 @@ async function changeQuestionRequest(questionId, newValue) {
             question: newValue
         })
     })
+
+    await handleApiError(response)
     return response.ok
 }
 

@@ -30,7 +30,7 @@ class QuestionResource(Resource):
             model = models.Question.model_validate(request.get_json())
         except ValidationError as e:
             error = what_happened(e)
-            return jsonify(400, {"error": error})
+            abort(400, message={"error": error})
 
         question.name = model.question
         session.commit()
@@ -57,7 +57,7 @@ class QuestionListResource(Resource):
             model = models.NewQuestion.model_validate(request.get_json())
         except ValidationError as e:
             error = what_happened(e)
-            return jsonify(400, {"error": error})
+            abort(400, message={"error": error})
 
         question = Question(
             id=str(uuid.uuid4()),

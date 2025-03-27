@@ -17,9 +17,9 @@ class User(Base, UserMixin):
     __tablename__ = "users"
 
     id: Mapped[str] = mapped_column(primary_key=True)
-    nickname: Mapped[str] = mapped_column(String(30))
-    email: Mapped[str] = mapped_column(String(100), unique=True)
-    hashed_pwd: Mapped[str] = mapped_column(String(255))
+    nickname: Mapped[str] = mapped_column(String(30), nullable=False)
+    email: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
+    hashed_pwd: Mapped[str] = mapped_column(String(255), nullable=False)
 
     questions: Mapped[list["Question"]] = relationship(back_populates="user")
     polls: Mapped[list["Poll"]] = relationship(back_populates="user")
@@ -35,8 +35,8 @@ class Question(Base):
     __tablename__ = "questions"
 
     id: Mapped[str] = mapped_column(primary_key=True)
-    question: Mapped[str] = mapped_column(String(250), unique=True)
-    user_id: Mapped[str] = mapped_column(ForeignKey(User.id))
+    question: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
+    user_id: Mapped[str] = mapped_column(ForeignKey(User.id), nullable=False)
 
     user: Mapped["User"] = relationship(back_populates="questions")
     answers: Mapped[list["Answer"]] = relationship(back_populates="question")
@@ -46,8 +46,8 @@ class Answer(Base):
     __tablename__ = "answers"
 
     id: Mapped[str] = mapped_column(primary_key=True)
-    answer: Mapped[str] = mapped_column(String(50))
-    question_id: Mapped[str] = mapped_column(ForeignKey(Question.id))
+    answer: Mapped[str] = mapped_column(String(50), nullable=False)
+    question_id: Mapped[str] = mapped_column(ForeignKey(Question.id), unique=True, nullable=False)
 
     question: Mapped["Question"] = relationship(back_populates="answers")
 
@@ -56,8 +56,8 @@ class Poll(Base):
     __tablename__ = "polls"
 
     id: Mapped[str] = mapped_column(primary_key=True)
-    poll: Mapped[str] = mapped_column(String(100), unique=True)
-    user_id: Mapped[str] = mapped_column(ForeignKey(User.id))
+    poll: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
+    user_id: Mapped[str] = mapped_column(ForeignKey(User.id), nullable=False)
 
     user: Mapped["User"] = relationship(back_populates="polls")
     questions: Mapped[list["Question"]] = relationship(secondary=association_table)

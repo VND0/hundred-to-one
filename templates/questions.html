@@ -11,7 +11,7 @@
                                id="addInput"/>
                     </label>
                 </div>
-                <button class="btn btn-soft btn-primary join-item">Добавить</button>
+                <button class="btn btn-soft btn-accent join-item">Добавить</button>
             </div>
         </form>
         <div id="questionsList" class="space-y-3">
@@ -41,17 +41,17 @@
         </div>
     </div>
     <dialog class="modal">
-        <div class="modal-box">
+        <div class="modal-box bg-base-300">
             <h3 class="font-bold text-lg">Изменить вопрос</h3>
             <input type="text" class="input input-bordered w-full mt-4" id="editInput"/>
             <div class="modal-action">
                 <form method="dialog">
-                    <button class="btn btn-primary" id="saveEdit">Сохранить</button>
+                    <button class="btn btn-info" id="saveEdit">Сохранить</button>
                     <button class="btn ml-2">Отменить</button>
                 </form>
             </div>
         </div>
     </dialog>
 
-    <script src="{{ url_for("static", filename="scripts/questions.js") }}"></script>
+    <script src="{{ url_for('static', filename='scripts/questions.js') }}"></script>
 {% endblock %}

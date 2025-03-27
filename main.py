@@ -4,7 +4,7 @@ from flask_restful import Api
 
 import tools
 from database.database import create_db_and_tables, session_generator
-from database.db_models import User
+from database.db_models import User, Question
 from questions_resource import QuestionResource, QuestionListResource
 
 app = Flask(__name__)
@@ -103,7 +103,9 @@ def user_settings():
 @app.route("/questions")
 @login_required
 def questions_page():
-    return render_template("questions.html", title="Мои вопросы")
+    session = next(sessions)
+    questions = session.query(Question).filter(Question.user_id == current_user.id).all()
+    return render_template("questions.html", title="Мои вопросы", questions=questions)
 
 
 if __name__ == '__main__':

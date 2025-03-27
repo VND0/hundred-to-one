@@ -1,11 +1,12 @@
+import uuid
+
 from flask import jsonify
-from flask_restful import Resource, abort, reqparse
+from flask_restful import Resource, abort, reqparse, request
 from pydantic import ValidationError
 
+import models
 from database.database import session_generator
 from database.db_models import Question
-
-import models
 from tools import what_happened
 
 sessions = session_generator()
@@ -43,7 +44,6 @@ class QuestionResource(Resource):
 
         return jsonify(201, {"question_id": question.id})
 
-
     def delete(self, question_id: str):
         abort_if_question_not_found(question_id)
 
@@ -58,20 +58,18 @@ class QuestionResource(Resource):
 
 class QuestionListResource(Resource):
     def post(self):
-        args = parser.parse_args()
         session = next(sessions)
 
         try:
-            model = models.Question(
-                name=args["name"]
-            )
+            model = models.NewQuestion.model_validate(request.get_json())
         except ValidationError as e:
             error = what_happened(e)
             return jsonify(400, {"error": error})
 
         question = Question(
+            id=str(uuid.uuid4()),
             name=model.name,
-            user_id=args["user_id"]
+            user_id=model.user_id
         )
         session.add(question)
         session.commit()

@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="max-w-xl mx-auto px-3 mt-5">
+    <div class="max-w-3xl mx-auto px-3 mt-5">
         <h3 class="text-center font-bold text-2xl">Вопросы</h3>
-        <form id="addForm" class="my-10">
+        <form id="addForm" class="my-8 px-2">
             <div class="join w-full gap-1">
                 <div class="flex-1">
                     <label class="input join-item w-full">
@@ -14,12 +14,10 @@
                 <button class="btn btn-soft btn-primary join-item">Добавить</button>
             </div>
         </form>
-        <div id="questionsList" class="px-2 space-y-3">
+        <div id="questionsList" class="space-y-3">
             {% for question in questions %}
                 <div class="w-full flex gap-1 bg-base-300 rounded-sm p-2 items-center" data-id="{{ question.id }}">
-                    {#            <div class="w-full flex gap-1 bg-base-300 rounded-sm p-2 items-center" data-id="question.id">#}
                     <span class="flex-1">{{ question.name }}</span>
-                    {#                <span class="flex-1">question.name</span>#}
                     <button class="btn btn-sm btn-ghost edit-btn">
                         <svg
                                 xmlns="http://www.w3.org/2000/svg"

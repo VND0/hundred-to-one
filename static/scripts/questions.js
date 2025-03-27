@@ -6,20 +6,22 @@ const editInput = document.querySelector("#editInput")
 const saveEdit = document.querySelector("#saveEdit")
 const dialog = document.querySelector("dialog")
 
-const host = window.location.host
 const userId = document.querySelector("body").dataset.userId
 
 async function addQuestionRequest(value) {
-    const response = await fetch(host + "/api/questions", {
+    const body = {
+        name: value,
+        userId
+    }
+    console.log(body)
+    const response = await fetch("/api/questions", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: {
-            name: value,
-            userId
-        }
+        body: JSON.stringify(body)
     })
+    console.log(response.url)
     return await response.json()
 }
 

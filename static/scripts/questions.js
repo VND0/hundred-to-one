@@ -10,7 +10,7 @@ const userId = document.querySelector("body").dataset.userId
 
 async function addQuestionRequest(value) {
     const body = {
-        name: value,
+        question: value,
         userId
     }
     const response = await fetch("/api/questions", {
@@ -35,7 +35,7 @@ async function changeQuestionRequest(questionId, newValue) {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            name: newValue
+            question: newValue
         })
     })
     return response.ok

@@ -47,7 +47,7 @@ class OnlyPassword(BaseModel):
 
 
 class Question(BaseModel):
-    name: str = Field(min_length=4, max_length=250)
+    question: str = Field(min_length=4, max_length=250)
 
 
 class NewQuestion(Question):

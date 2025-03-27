@@ -24,7 +24,7 @@ def what_happened(e: ValidationError) -> str:
             errors.append("Некорректный пароль. Разрешены цифры, латиница и специальные символы, длина - [8;60].")
         elif "nickname" in loc:
             errors.append("Разрешенная длина никнейма - [6;30].")
-        elif "title" in loc:
+        elif "question" in loc:
             errors.append("Разрешенная длина вопроса - [4; 250]")
         else:
             raise NotImplementedError

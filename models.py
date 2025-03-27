@@ -55,4 +55,4 @@ class NewQuestion(Question):
 
 
 class Answer(BaseModel):
-    value: str = Field(min_length=2, max_length=100)
+    answer: str = Field(min_length=2, max_length=100)

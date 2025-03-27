@@ -32,7 +32,7 @@ class QuestionResource(Resource):
             error = what_happened(e)
             abort(400, message={"error": error})
 
-        question.name = model.question
+        question.question = model.question
         session.commit()
 
         return jsonify(201, {"question_id": question.id})
@@ -61,7 +61,7 @@ class QuestionListResource(Resource):
 
         question = Question(
             id=str(uuid.uuid4()),
-            name=model.question,
+            question=model.question,
             user_id=model.user_id
         )
         session.add(question)

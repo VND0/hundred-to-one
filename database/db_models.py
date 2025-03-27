@@ -8,13 +8,13 @@ from .database import Base
 association_table = Table(
     "PQ_connection",
     Base.metadata,
-    Column("poll_id", ForeignKey("Poll.id")),
-    Column("question_id", ForeignKey("Question.id"))
+    Column("poll_id", ForeignKey("polls.id")),
+    Column("question_id", ForeignKey("questions.id"))
 )
 
 
 class User(Base, UserMixin):
-    __tablename__ = "User"
+    __tablename__ = "users"
 
     id: Mapped[str] = mapped_column(primary_key=True)
     nickname: Mapped[str] = mapped_column(String(30), nullable=False)
@@ -32,10 +32,10 @@ class User(Base, UserMixin):
 
 
 class Question(Base):
-    __tablename__ = "Question"
+    __tablename__ = "questions"
 
     id: Mapped[str] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(250), unique=True)
+    question: Mapped[str] = mapped_column(String(250), unique=True)
     user_id: Mapped[str] = mapped_column(ForeignKey(User.id))
 
     user: Mapped["User"] = relationship(back_populates="questions")
@@ -43,21 +43,20 @@ class Question(Base):
 
 
 class Answer(Base):
-    __tablename__ = "Answer"
+    __tablename__ = "answers"
 
     id: Mapped[str] = mapped_column(primary_key=True)
-    value: Mapped[str] = mapped_column(String(50))
+    answer: Mapped[str] = mapped_column(String(50))
     question_id: Mapped[str] = mapped_column(ForeignKey(Question.id))
 
     question: Mapped["Question"] = relationship(back_populates="answers")
 
 
 class Poll(Base):
-    __tablename__ = "Poll"
+    __tablename__ = "polls"
 
     id: Mapped[str] = mapped_column(primary_key=True)
-    name: Mapped[str]
-    url: Mapped[str]
+    poll: Mapped[str]
     user_id: Mapped[str] = mapped_column(ForeignKey(User.id))
 
     user: Mapped["User"] = relationship(back_populates="polls")

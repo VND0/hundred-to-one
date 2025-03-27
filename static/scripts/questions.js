@@ -1,6 +1,6 @@
 const form = document.querySelector("#addForm")
 const qInput = document.querySelector("#addInput")
-const questionsList = document.querySelectorAll("#questionsList>div")
+const questionsList = document.querySelectorAll("#questionsList>li")
 
 const editInput = document.querySelector("#editInput")
 const saveEdit = document.querySelector("#saveEdit")

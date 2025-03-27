@@ -17,12 +17,12 @@ class User(Base, UserMixin):
     __tablename__ = "users"
 
     id: Mapped[str] = mapped_column(primary_key=True)
-    nickname: Mapped[str] = mapped_column(String(30), nullable=False)
-    email: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
-    hashed_pwd: Mapped[str] = mapped_column(String(255), nullable=False)
+    nickname: Mapped[str] = mapped_column(String(30))
+    email: Mapped[str] = mapped_column(String(100), unique=True)
+    hashed_pwd: Mapped[str] = mapped_column(String(255))
 
-    questions: Mapped[list["Question"]] = relationship(back_populates="user", lazy="joined")
-    polls: Mapped[list["Poll"]] = relationship(back_populates="user", lazy="joined")
+    questions: Mapped[list["Question"]] = relationship(back_populates="user")
+    polls: Mapped[list["Poll"]] = relationship(back_populates="user")
 
     def set_password(self, password):
         self.hashed_pwd = generate_password_hash(password)
@@ -56,7 +56,7 @@ class Poll(Base):
     __tablename__ = "polls"
 
     id: Mapped[str] = mapped_column(primary_key=True)
-    poll: Mapped[str]
+    poll: Mapped[str] = mapped_column(String(100), unique=True)
     user_id: Mapped[str] = mapped_column(ForeignKey(User.id))
 
     user: Mapped["User"] = relationship(back_populates="polls")

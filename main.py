@@ -4,7 +4,7 @@ from flask_restful import Api
 
 import tools
 from database.database import create_db_and_tables, session_generator
-from database.db_models import User, Question
+from database.db_models import User, Question, Poll
 from questions_resource import QuestionResource, QuestionListResource
 
 app = Flask(__name__)
@@ -102,10 +102,29 @@ def user_settings():
 
 @app.route("/questions")
 @login_required
-def questions_page():
+def questions_list():
     session = next(sessions)
     questions = session.query(Question).filter(Question.user_id == current_user.id).all()
     return render_template("questions.html", title="Мои вопросы", questions=questions)
+
+
+@app.route("/polls")
+@login_required
+def polls_list():
+    session = next(sessions)
+    polls = session.query(Poll).filter(Poll.user_id == current_user.id).all()
+    return render_template("polls.html", title="Мои опросы", polls=polls)
+
+
+@app.route("/poll-questions/<poll_id>")
+def poll_questions(poll_id: str):
+    session = next(sessions)
+    # Добавил, чтобы была заготовка на будущее
+    # poll = session.query(Poll).filter(Poll.id == poll_id and Poll.user_id == current_user.id).one_or_none()
+    # if not poll:
+    #     redirect("/polls")
+    questions = session.query(Question).filter(Question.user_id == current_user.id).all()
+    return render_template("poll_questions.html", title="Вопросы для опроса", questions=questions)
 
 
 if __name__ == '__main__':

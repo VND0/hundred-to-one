@@ -6,7 +6,18 @@ const editInput = document.querySelector("#editInput")
 const saveEdit = document.querySelector("#saveEdit")
 const dialog = document.querySelector("dialog")
 
+const toastTemplate = document.querySelector("#toastTemplate")
+const toastsContainer = document.querySelector("#toastsContainer")
+
 const userId = document.querySelector("body").dataset.userId
+
+function formError(text) {
+    const elem = toastTemplate.content.firstElementChild.cloneNode(true)
+    elem.querySelector("span").innerText = text
+    toastsContainer.append(elem)
+    setTimeout(() => elem.remove(), 3000)
+}
+
 
 async function addQuestionRequest(value) {
     const body = {

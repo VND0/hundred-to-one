@@ -1,7 +1,7 @@
 import uuid
 
 from flask import jsonify
-from flask_restful import Resource, abort, reqparse, request
+from flask_restful import Resource, abort, request
 from pydantic import ValidationError
 
 import models
@@ -10,10 +10,6 @@ from database.db_models import Question
 from tools import what_happened
 
 sessions = session_generator()
-
-parser = reqparse.RequestParser()
-parser.add_argument("name", required=True)
-parser.add_argument("user_id", required=True)
 
 
 def abort_if_question_not_found(question_id: str) -> None:
@@ -27,14 +23,11 @@ class QuestionResource(Resource):
     def put(self, question_id: str):
         abort_if_question_not_found(question_id)
 
-        args = parser.parse_args()
         session = next(sessions)
         question = session.query(Question).filter(Question.id == question_id).one()
 
         try:
-            model = models.Question(
-                name=args["name"]
-            )
+            model = models.Question.model_validate(request.get_json())
         except ValidationError as e:
             error = what_happened(e)
             return jsonify(400, {"error": error})

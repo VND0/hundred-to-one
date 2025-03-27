@@ -13,7 +13,6 @@ async function addQuestionRequest(value) {
         name: value,
         userId
     }
-    console.log(body)
     const response = await fetch("/api/questions", {
         method: "POST",
         headers: {
@@ -21,14 +20,25 @@ async function addQuestionRequest(value) {
         },
         body: JSON.stringify(body)
     })
-    console.log(response.url)
-    return await response.json()
+    return response.ok
 }
 
 async function deleteQuestionRequest(questionId) {
+    const response = await fetch(`/api/questions/${questionId}`, {method: "DELETE"})
+    return response.ok
 }
 
 async function changeQuestionRequest(questionId, newValue) {
+    const response = await fetch(`/api/questions/${questionId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            name: newValue
+        })
+    })
+    return response.ok
 }
 
 

@@ -17,7 +17,7 @@
         <div id="questionsList" class="space-y-3">
             {% for question in questions %}
                 <div class="w-full flex gap-1 bg-base-300 rounded-sm p-2 items-center" data-id="{{ question.id }}">
-                    <span class="flex-1">{{ question.name }}</span>
+                    <span class="flex-1">{{ question.question }}</span>
                     <button class="btn btn-sm btn-ghost edit-btn">
                         <svg
                                 xmlns="http://www.w3.org/2000/svg"

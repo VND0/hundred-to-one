@@ -53,8 +53,8 @@ class QuestionResource(Resource):
         try:
             session.delete(question)
             session.commit()
-        except IntegrityError:
-            abort(409, message=InterruptedError.__name__)
+        except IntegrityError as e:
+            abort(409, message=type(e).__name__)
 
         # Removing empty polls
         polls = session.query(Poll).all()

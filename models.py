@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field, model_validator, EmailStr
 from typing_extensions import Self
 
 PASSWORD = Field(min_length=8, max_length=60, pattern=r"""^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]+$""")
+USER_ID = Field(alias="userId")
 
 
 class PasswordsUnmatch(Exception):
@@ -51,7 +52,15 @@ class Question(BaseModel):
 
 
 class NewQuestion(Question):
-    user_id: str = Field(alias="userId")
+    user_id: str = USER_ID
+
+
+class Poll(BaseModel):
+    poll: str = Field(min_length=2, max_length=100)
+
+
+class NewPoll(Poll):
+    user_id: str = USER_ID
 
 
 class Answer(BaseModel):

@@ -5,6 +5,7 @@ from flask_restful import Api
 import tools
 from database.database import create_db_and_tables, session_generator
 from database.db_models import User, Question, Poll
+from polls_resource import PollResource, PollsListResource
 from questions_resource import QuestionResource, QuestionListResource
 
 app = Flask(__name__)
@@ -18,8 +19,12 @@ login_manager.init_app(app)
 login_manager.login_view = "auth"
 
 api = Api(app)
+
 api.add_resource(QuestionResource, "/api/questions/<question_id>")
 api.add_resource(QuestionListResource, "/api/questions")
+
+api.add_resource(PollResource, "/api/polls")
+api.add_resource(PollsListResource, "/api/polls/<poll_id>")
 
 sessions = session_generator()
 

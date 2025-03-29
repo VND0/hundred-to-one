@@ -3,17 +3,17 @@ from sqlalchemy import ForeignKey, Table, Column, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from .database import Base
+from .database import db
 
 association_table = Table(
     "PQ_connection",
-    Base.metadata,
+    db.Model.metadata,
     Column("poll_id", ForeignKey("polls.id")),
     Column("question_id", ForeignKey("questions.id"))
 )
 
 
-class User(Base, UserMixin):
+class User(db.Model, UserMixin):
     __tablename__ = "users"
 
     id: Mapped[str] = mapped_column(primary_key=True)
@@ -31,7 +31,7 @@ class User(Base, UserMixin):
         return check_password_hash(self.hashed_pwd, password)
 
 
-class Question(Base):
+class Question(db.Model):
     __tablename__ = "questions"
 
     id: Mapped[str] = mapped_column(primary_key=True)
@@ -42,7 +42,7 @@ class Question(Base):
     answers: Mapped[list["Answer"]] = relationship(back_populates="question")
 
 
-class Answer(Base):
+class Answer(db.Model):
     __tablename__ = "answers"
 
     id: Mapped[str] = mapped_column(primary_key=True)
@@ -52,7 +52,7 @@ class Answer(Base):
     question: Mapped["Question"] = relationship(back_populates="answers")
 
 
-class Poll(Base):
+class Poll(db.Model):
     __tablename__ = "polls"
 
     id: Mapped[str] = mapped_column(primary_key=True)

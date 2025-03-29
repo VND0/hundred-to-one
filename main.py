@@ -1,9 +1,11 @@
+import os
+
 from flask import Flask, render_template, request, redirect, abort, Response
 from flask_login import LoginManager, logout_user, login_required, current_user
 from flask_restful import Api
 
 import tools
-from database.database import create_db_and_tables, session_generator
+from database.database import db
 from database.db_models import User, Question, Poll
 from polls_resource import PollResource, PollsListResource
 from questions_resource import QuestionResource, QuestionListResource
@@ -12,7 +14,10 @@ app = Flask(__name__)
 
 app.config["SECRET_KEY"] = "1"
 app.config['TEMPLATES_AUTO_RELOAD'] = True
+app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.getcwd()}/database/database.db"
+
 app.jinja_env.auto_reload = True
+db.init_app(app)
 
 login_manager = LoginManager(app)
 login_manager.init_app(app)
@@ -26,13 +31,10 @@ api.add_resource(QuestionListResource, "/api/questions")
 api.add_resource(PollsListResource, "/api/polls")
 api.add_resource(PollResource, "/api/polls/<poll_id>")
 
-sessions = session_generator()
-
 
 @login_manager.user_loader
 def load_user(user_id):
-    session = next(sessions)
-    return session.query(User).filter(User.id == user_id).one_or_none()
+    return db.session.query(User).filter(User.id == user_id).one_or_none()
 
 
 @app.get("/")
@@ -108,30 +110,28 @@ def user_settings():
 @app.route("/questions")
 @login_required
 def questions_list():
-    session = next(sessions)
-    questions = session.query(Question).filter(Question.user_id == current_user.id).all()
+    questions = db.session.query(Question).filter(Question.user_id == current_user.id).all()
     return render_template("questions.html", title="Мои вопросы", questions=questions)
 
 
 @app.route("/polls")
 @login_required
 def polls_list():
-    session = next(sessions)
-    polls = session.query(Poll).filter(Poll.user_id == current_user.id).all()
+    polls = db.session.query(Poll).filter(Poll.user_id == current_user.id).all()
     return render_template("polls.html", title="Мои опросы", polls=polls, len=len)
 
 
 @app.route("/poll-questions/<poll_id>")
 def poll_questions(poll_id: str):
-    session = next(sessions)
     # Добавил, чтобы была заготовка на будущее
-    # poll = session.query(Poll).filter(Poll.id == poll_id and Poll.user_id == current_user.id).one_or_none()
+    # poll = db.session.query(Poll).filter(Poll.id == poll_id and Poll.user_id == current_user.id).one_or_none()
     # if not poll:
     #     redirect("/polls")
-    questions = session.query(Question).filter(Question.user_id == current_user.id).all()
+    questions = db.session.query(Question).filter(Question.user_id == current_user.id).all()
     return render_template("poll_questions.html", title="Вопросы для опроса", questions=questions)
 
 
 if __name__ == '__main__':
-    create_db_and_tables()
+    with app.app_context():
+        db.create_all()
     app.run(host="0.0.0.0", port=8080, use_reloader=True)

@@ -7,6 +7,7 @@ from flask_restful import Api
 import tools
 from database.database import db
 from database.db_models import User, Question, Poll
+from poll_questions_resource import PollQuestionResource
 from polls_resource import PollResource, PollsListResource
 from questions_resource import QuestionResource, QuestionListResource
 
@@ -30,6 +31,8 @@ api.add_resource(QuestionListResource, "/api/questions")
 
 api.add_resource(PollsListResource, "/api/polls")
 api.add_resource(PollResource, "/api/polls/<poll_id>")
+
+api.add_resource(PollQuestionResource, "/api/poll-questions/<poll_id>")
 
 
 @login_manager.user_loader
@@ -122,13 +125,17 @@ def polls_list():
 
 
 @app.route("/poll-questions/<poll_id>")
+@login_required
 def poll_questions(poll_id: str):
-    # Добавил, чтобы была заготовка на будущее
-    # poll = db.session.query(Poll).filter(Poll.id == poll_id and Poll.user_id == current_user.id).one_or_none()
-    # if not poll:
-    #     redirect("/polls")
-    questions = db.session.query(Question).filter(Question.user_id == current_user.id).all()
-    return render_template("poll_questions.html", title="Вопросы для опроса", questions=questions)
+    poll = db.session.query(Poll).filter(Poll.id == poll_id and Poll.user_id == current_user.id).one_or_none()
+    if not poll:
+        redirect("/polls")
+    all_questions = db.session.query(Question).filter(Question.user_id == current_user.id).all()
+    poll = db.session.query(Poll).filter(Poll.id == poll_id).one()
+    other_questions = [q for q in all_questions if q not in poll.questions]
+
+    return render_template("poll_questions.html", title="Вопросы для опроса", other_questions=other_questions,
+                           poll=poll)
 
 
 if __name__ == '__main__':

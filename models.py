@@ -65,3 +65,8 @@ class NewPoll(Poll):
 
 class Answer(BaseModel):
     answer: str = Field(min_length=2, max_length=100)
+
+
+class AttachDetachQuestions(BaseModel):
+    to_added: list[str] = Field(alias="toAdded")
+    to_other: list[str] = Field(alias="toOther")

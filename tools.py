@@ -5,11 +5,9 @@ from flask_login import login_user, current_user, logout_user
 from pydantic import ValidationError
 
 import models
-from models import PasswordsUnmatch, NewUser
-
 from database import database
 from database.db_models import User
-
+from models import PasswordsUnmatch, NewUser
 
 sessions = database.session_generator()
 
@@ -26,6 +24,8 @@ def what_happened(e: ValidationError) -> str:
             errors.append("Разрешенная длина никнейма - [6;30].")
         elif "question" in loc:
             errors.append("Разрешенная длина вопроса - [4; 250]")
+        elif "poll" in loc:
+            errors.append("Разрешенная длина опроса - [2;100]")
         else:
             raise NotImplementedError
     return " ".join(errors)

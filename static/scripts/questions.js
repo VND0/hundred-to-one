@@ -96,10 +96,6 @@ questionsList.forEach((elem) => {
         saveEdit.addEventListener("click", async function (evt) {
             evt.preventDefault()
             const value = editInput.value
-            if (value.length < 4 || value.length > 250) {
-
-            }
-
             const success = await changeQuestionRequest(id, value)
             if (success) {
                 questionValue.innerText = value

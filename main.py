@@ -23,8 +23,8 @@ api = Api(app)
 api.add_resource(QuestionResource, "/api/questions/<question_id>")
 api.add_resource(QuestionListResource, "/api/questions")
 
-api.add_resource(PollResource, "/api/polls")
-api.add_resource(PollsListResource, "/api/polls/<poll_id>")
+api.add_resource(PollsListResource, "/api/polls")
+api.add_resource(PollResource, "/api/polls/<poll_id>")
 
 sessions = session_generator()
 
@@ -118,7 +118,7 @@ def questions_list():
 def polls_list():
     session = next(sessions)
     polls = session.query(Poll).filter(Poll.user_id == current_user.id).all()
-    return render_template("polls.html", title="Мои опросы", polls=polls)
+    return render_template("polls.html", title="Мои опросы", polls=polls, len=len)
 
 
 @app.route("/poll-questions/<poll_id>")

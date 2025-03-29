@@ -11,23 +11,22 @@ const toastsContainer = document.querySelector("#toastsContainer")
 
 const userId = document.querySelector("body").dataset.userId
 
-
-function formError(text) {
+function formToast(text) {
     const elem = toastTemplate.content.firstElementChild.cloneNode(true)
     elem.querySelector("span").innerText = text
     toastsContainer.append(elem)
     setTimeout(() => elem.remove(), 3000)
+    return elem
 }
 
-function formMessageToast(text) {
-    // TODO: убрать костыль с классами в обоих функциях
-    const elem = toastTemplate.content.firstElementChild.cloneNode(true)
-    const classList = elem.classList
-    classList.remove("alert-error")
-    classList.add("alert-success")
-    elem.querySelector("span").innerText = text
-    toastsContainer.append(elem)
-    setTimeout(() => elem.remove(), 3000)
+function formError(text) {
+    const elem = formToast(text)
+    elem.classList.add("alert-error")
+}
+
+function formMessage(text) {
+    const elem = formToast(text)
+    elem.classList.add("alert-success")
 }
 
 async function handleApiError(response) {
@@ -76,9 +75,7 @@ async function editPollRequest(pollId, newName) {
     let response;
     try {
         response = await fetch(`/api/polls/${pollId}`, {
-            method: "PUT",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({poll: newName})
+            method: "PUT", headers: {"Content-Type": "application/json"}, body: JSON.stringify({poll: newName})
         })
     } catch (error) {
         formError("Проблемы с Интернетом")
@@ -109,7 +106,7 @@ pollsList.forEach((elem) => {
     publicLinkA.setAttribute("href", publicLink)
     toClipboardBtn.addEventListener("click", () => {
         navigator.clipboard.writeText(publicLink)
-        formMessageToast("Скопировано в буфер обмена")
+        formMessage("Скопировано в буфер обмена")
     })
 
     deleteBtn.addEventListener("click", async () => {
@@ -122,13 +119,13 @@ pollsList.forEach((elem) => {
     editBtn.addEventListener("click", () => {
         dialog.showModal()
         editInput.value = pollValue.innerText
-        saveEdit.addEventListener("click", async (evt) => {
+        saveEdit.onclick = async (evt) => {
             evt.preventDefault()
             const success = await editPollRequest(id, editInput.value)
             if (success) {
                 dialog.close()
                 pollValue.innerText = editInput.value
             }
-        })
+        }
     })
 })

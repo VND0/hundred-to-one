@@ -13,6 +13,7 @@ const userId = document.querySelector("body").dataset.userId
 
 function formError(text) {
     const elem = toastTemplate.content.firstElementChild.cloneNode(true)
+    elem.classList.add("alert-error")
     elem.querySelector("span").innerText = text
     toastsContainer.append(elem)
     setTimeout(() => elem.remove(), 3000)
@@ -93,7 +94,7 @@ questionsList.forEach((elem) => {
     editBtn.addEventListener("click", () => {
         dialog.showModal()
         editInput.value = questionValue.innerText
-        saveEdit.addEventListener("click", async function (evt) {
+        saveEdit.onclick = async function (evt) {
             evt.preventDefault()
             const value = editInput.value
             const success = await changeQuestionRequest(id, value)
@@ -101,7 +102,7 @@ questionsList.forEach((elem) => {
                 questionValue.innerText = value
                 dialog.close()
             }
-        })
+        }
     })
 
     deleteBtn.addEventListener("click", async function () {

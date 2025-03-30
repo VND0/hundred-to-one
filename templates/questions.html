@@ -14,16 +14,16 @@
                 <button class="btn btn-accent join-item">Добавить</button>
             </div>
         </form>
-        <ul id="questionsList" class="space-y-5">
+        <ul id="questionsList" class="space-y-4">
             {% for question in questions %}
                 <li class="flex items-center gap-2 w-full bg-base-300 rounded-lg px-4 py-2" data-id="{{ question.id }}">
-                    <span class="flex-1 text-lg font-semibold">{{ question.question }}</span>
+                    <span class="flex-1 font-semibold">{{ question.question }}</span>
                     <a href="/answers/{{ question.id }}"
-                       class="btn btn-outline {{ 'btn-info' if len(question.answers) < 100 else 'btn-success' }} btn-sm">
+                       class="btn btn-outline {{ 'btn-info' if len(question.answers) < 100 else 'btn-success' }} btn-xs">
                         Ответов: {{ len(question.answers) }}
                     </a>
-                    <button class="btn btn-sm btn-ghost edit-btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" stroke-width="2"
+                    <button class="btn btn-xs btn-ghost edit-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" stroke-width="2"
                              stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                             <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"/>
@@ -31,7 +31,7 @@
                             <path d="M16 5l3 3"/>
                         </svg>
                     </button>
-                    <button class="btn btn-sm btn-error delete-btn">✕</button>
+                    <button class="btn btn-xs btn-error delete-btn">✕</button>
                 </li>
             {% endfor %}
         </ul>

@@ -6,16 +6,16 @@
 
         <div class="mb-8">
             <div class="divider divider-start text-xl font-semibold">Добавленные</div>
-            <ul id="pollQuestions" class="px-4 space-y-5">
+            <ul id="pollQuestions" class="px-4 space-y-4">
                 {% for question in poll.questions %}
                     <li class="flex items-center gap-2 w-full bg-base-300 rounded-lg px-4 py-2"
                         data-question-id="{{ question.id }}">
-                        <span class="flex-1 text-lg font-semibold">{{ question.question }}</span>
+                        <span class="flex-1 font-semibold">{{ question.question }}</span>
                         <a href="/answers/{{ question.id }}"
                            class="btn btn-outline {{ 'btn-info' if len(question.answers) < 100 else 'btn-success' }} btn-xs">
                             Ответов: {{ len(question.answers) }}
                         </a>
-                        <input type="checkbox" class="checkbox border-2 border-accent" checked/>
+                        <input type="checkbox" class="checkbox border-2 border-accent checkbox-sm" checked/>
                     </li>
                 {% endfor %}
             </ul>
@@ -23,15 +23,15 @@
 
         <div class="mb-8">
             <div class="divider divider-start text-xl font-semibold">Доступные</div>
-            <ul id="noPollQuestions" class="px-4 space-y-5">
+            <ul id="noPollQuestions" class="px-4 space-y-4">
                 {% for question in other_questions %}
                     <li class="flex items-center gap-2 w-full bg-base-300 rounded-lg px-4 py-2"
                         data-question-id="{{ question.id }}">
-                        <span class="flex-1 text-lg font-semibold">{{ question.question }}</span>
+                        <span class="flex-1 font-semibold">{{ question.question }}</span>
                         <a href="/answers/{{ question.id }}"
                            class="btn btn-outline {{ 'btn-info' if len(question.answers) < 100 else 'btn-success' }} btn-xs">
                             Ответов: {{ len(question.answers) }}</a>
-                        <input type="checkbox" class="checkbox border-2 border-accent"/>
+                        <input type="checkbox" class="checkbox border-2 border-accent checkbox-sm"/>
                     </li>
                 {% endfor %}
             </ul>

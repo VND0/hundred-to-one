@@ -114,7 +114,7 @@ def user_settings():
 @login_required
 def questions_list():
     questions = db.session.query(Question).filter(Question.user_id == current_user.id).all()
-    return render_template("questions.html", title="Мои вопросы", questions=questions)
+    return render_template("questions.html", title="Мои вопросы", questions=questions, len=len)
 
 
 @app.route("/polls")
@@ -135,7 +135,7 @@ def poll_questions(poll_id: str):
     other_questions = [q for q in all_questions if q not in poll.questions]
 
     return render_template("poll_questions.html", title="Вопросы для опроса", other_questions=other_questions,
-                           poll=poll)
+                           poll=poll, len=len)
 
 
 if __name__ == '__main__':

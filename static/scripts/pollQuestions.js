@@ -20,13 +20,13 @@ function formError(text) {
 
 function highlightCheckedCheckbox(input) {
     const classList = input.classList
-    const borderInfo = "border-info"
+    const borderSecondary = "border-secondary"
     const borderAccent = "border-accent"
     if (classList.contains(borderAccent)) {
         classList.remove(borderAccent)
-        classList.add(borderInfo)
+        classList.add(borderSecondary)
     } else {
-        classList.remove(borderInfo)
+        classList.remove(borderSecondary)
         classList.add(borderAccent)
     }
 }

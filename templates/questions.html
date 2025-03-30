@@ -1,49 +1,54 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="max-w-3xl mx-auto px-4 mt-5">
-    <h1 class="text-center font-bold text-3xl">Вопросы</h1>
-    <form id="addForm" class="my-8">
-        <div class="join w-full gap-2">
-            <div class="flex-1">
-                <label class="input join-item w-full">
-                    <input type="text" placeholder="Текст вопроса" minlength="4" maxlength="250" required
-                           class="text-base" id="addInput" />
-                </label>
+    <div class="max-w-3xl mx-auto px-4 mt-5">
+        <h1 class="text-center font-bold text-3xl">Вопросы</h1>
+        <form id="addForm" class="my-8">
+            <div class="join w-full gap-2">
+                <div class="flex-1">
+                    <label class="input join-item w-full">
+                        <input type="text" placeholder="Текст вопроса" minlength="4" maxlength="250" required
+                               class="text-base" id="addInput"/>
+                    </label>
+                </div>
+                <button class="btn btn-accent join-item">Добавить</button>
             </div>
-            <button class="btn btn-accent join-item">Добавить</button>
-        </div>
-    </form>
-    <ul id="questionsList" class="space-y-5">
-        {% for question in questions %}
-            <li class="flex items-center gap-2 w-full bg-base-300 rounded-lg px-4 py-2" data-id="{{ question.id }}">
-                <span class="flex-1 text-lg font-semibold">{{ question.question }}</span>
-                <button class="btn btn-sm btn-ghost edit-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-                        <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
-                        <path d="M16 5l3 3" />
-                    </svg>
-                </button>
-                <button class="btn btn-sm btn-error delete-btn">✕</button>
-            </li>
-        {% endfor %}
-    </ul>
-</div>
-
-<dialog class="modal">
-    <div class="modal-box bg-base-300">
-        <h3 class="font-bold text-lg">Изменение вопроса</h3>
-        <input type="text" class="input input-bordered w-full mt-4 text-base" id="editInput"/>
-        <div class="modal-action">
-            <form method="dialog">
-                <button class="btn btn-info" id="saveEdit">Сохранить</button>
-                <button class="btn ml-2">Отменить</button>
-            </form>
-        </div>
+        </form>
+        <ul id="questionsList" class="space-y-5">
+            {% for question in questions %}
+                <li class="flex items-center gap-2 w-full bg-base-300 rounded-lg px-4 py-2" data-id="{{ question.id }}">
+                    <span class="flex-1 text-lg font-semibold">{{ question.question }}</span>
+                    <a href="/answers/{{ question.id }}"
+                       class="btn btn-outline {{ 'btn-info' if len(question.answers) < 100 else 'btn-success' }} btn-sm">
+                        Ответов: {{ len(question.answers) }}
+                    </a>
+                    <button class="btn btn-sm btn-ghost edit-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" stroke-width="2"
+                             stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"/>
+                            <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"/>
+                            <path d="M16 5l3 3"/>
+                        </svg>
+                    </button>
+                    <button class="btn btn-sm btn-error delete-btn">✕</button>
+                </li>
+            {% endfor %}
+        </ul>
     </div>
-</dialog>
 
-<script src="{{ url_for('static', filename='scripts/questions.js') }}"></script>
+    <dialog class="modal">
+        <div class="modal-box bg-base-300">
+            <h3 class="font-bold text-lg">Изменение вопроса</h3>
+            <input type="text" class="input input-bordered w-full mt-4 text-base" id="editInput"/>
+            <div class="modal-action">
+                <form method="dialog">
+                    <button class="btn btn-info" id="saveEdit">Сохранить</button>
+                    <button class="btn ml-2">Отменить</button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+
+    <script src="{{ url_for('static', filename='scripts/questions.js') }}"></script>
 {% endblock %}

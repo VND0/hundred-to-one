@@ -18,7 +18,7 @@
 
         <div id="pollsList" class="space-y-3">
             {% for poll in polls %}
-                <div class="flex flex-col gap-2 w-full bg-base-300 rounded-sm p-4" data-id="{{ poll.id }}">
+                <div class="flex flex-col gap-1 w-full bg-base-300 rounded-sm px-4 py-3" data-id="{{ poll.id }}">
                     <div class="flex gap-2 items-center">
                         <h2 class="flex-1 text-xl font-bold truncate poll-name">{{ poll.poll }}</h2>
                         <button class="btn btn-sm btn-ghost edit-btn">
@@ -33,27 +33,25 @@
                         <button class="btn btn-sm btn-error delete-btn">✕</button>
                     </div>
 
-                    <div class="divider horizontal-divider text-xl font-semibold">Информация об опросе</div>
+                    <div class="divider horizontal-divider text-lg font-semibold">Информация об опросе</div>
 
                     <div class="flex justify-around">
                         <div class="flex flex-1 flex-col items-center gap-2">
-                            <span class="flex-1 text-lg font-semibold">Вопросы ({{ len(poll.questions) }}):</span>
+                            <span class="flex-1 font-semibold">Вопросы ({{ len(poll.questions) }})</span>
                             <a class="block w-1/2" href="/poll-questions/{{ poll.id }}">
-                                <button class="btn btn-md btn-soft btn-info w-full">Изменить</button>
+                                <button class="btn btn-sm btn-soft btn-info w-full">Изменить</button>
                             </a>
                         </div>
 
                         <div class="flex flex-1 flex-col items-center gap-2">
-                            <a class="flex-1 text-lg font-semibold public-link" href="#">Ссылка на опрос</a>
+                            <a class="flex-1 font-semibold public-link" href="#">Ссылка на опрос</a>
                             <a class="block w-1/2">
-                                <button class="btn btn-md btn-soft btn-success w-full to-clipboard">Скопировать</button>
+                                <button class="btn btn-sm btn-soft btn-success w-full to-clipboard">Скопировать</button>
                             </a>
                         </div>
                     </div>
                 </div>
             {% endfor %}
-
-
         </div>
     </div>
 

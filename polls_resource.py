@@ -49,7 +49,7 @@ class PollResource(Resource):
             error = what_happened(e)
             abort(400, message=error)
 
-            poll = db.session.query(Poll).filter(Poll.id == poll_id).one()
+        poll = db.session.query(Poll).filter(Poll.id == poll_id).one()
         poll.poll = model.poll
         try:
             db.session.commit()

@@ -44,7 +44,8 @@
                         </div>
 
                         <div class="flex flex-1 flex-col items-center gap-2">
-                            <a class="flex-1 font-semibold public-link" href="#">Ссылка на опрос</a>
+                            <a class="flex-1 font-semibold public-link text-blue-900 italic" href="#">
+                                Ссылка на опрос</a>
                             <a class="block w-1/2">
                                 <button class="btn btn-sm btn-soft btn-success w-full to-clipboard">Скопировать</button>
                             </a>
@@ -68,5 +69,5 @@
         </div>
     </dialog>
 
-    <script src="{{ url_for("static", filename="scripts/polls.js") }}"></script>
+    <script src="{{ url_for('static', filename='scripts/polls.js') }}"></script>
 {% endblock %}

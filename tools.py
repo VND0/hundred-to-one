@@ -7,6 +7,7 @@ from pydantic import ValidationError
 import models
 from database.database import db
 from database.db_models import User
+from init_account import add_questions
 from models import PasswordsUnmatch, NewUser
 
 
@@ -68,6 +69,7 @@ def handle_registration() -> str | Response:
         return f"Пользователь с почтой {model.email} уже существует"
 
     login_user(new_user)
+    add_questions(new_user.id)
 
     return redirect("/profile")
 
@@ -149,7 +151,14 @@ def handle_remove_account():
         return f"Неверный пароль"
 
     user = db.session.query(User).filter(User.id == current_user.id).one()
+    for question in user.questions:
+        for answer in question.answers:
+            db.session.delete(answer)
+        db.session.delete(question)
+    for poll in user.polls:
+        db.session.delete(poll)
     db.session.delete(user)
+
     db.session.commit()
     logout_user()
     return redirect("/")

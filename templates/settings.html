@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <main class="flex items-center min-h-[calc(100vh-5rem)]">
-    <div class="tabs tabs-lift max-w-lg mx-auto -mt-20 shadow-lg">
+    <div class="tabs tabs-lift max-w-lg mx-auto -mt-20">
         <!-- Изменение данных -->
         <input type="radio" name="my_tabs_2" class="tab [--tab-bg:var(--color-base-300)] text-base"
                aria-label="Изменение профиля" {{ "checked" if action_type == "edit_data" }} />

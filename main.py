@@ -67,8 +67,7 @@ def auth():
 
     if type(form_response) is Response:
         return form_response
-    else:
-        return render_template("auth.html", title="Авторизация", error=form_response, action_type=action_type)
+    return render_template("auth.html", title="Авторизация", error=form_response, action_type=action_type)
 
 
 @app.route("/logout")
@@ -87,27 +86,27 @@ def user_profile():
 @app.route("/settings", methods=["POST", "GET"])
 @login_required
 def user_settings():
-    load_tab = "edit_data"
     form_response = None
+    action_type = "edit_data"
+
     if request.method == "POST":
         form = request.form
         action = form.get("action-type")
         if action == "edit_data":
             form_response = tools.handle_edit_data()
         elif action == "new_password":
-            load_tab = "new_password"
+            action_type = "new_password"
             form_response = tools.handle_change_password()
         elif action == "remove":
-            load_tab = "remove"
+            action_type = "remove"
             form_response = tools.handle_remove_account()
         else:
             abort(400, "Unknown action")
 
     if type(form_response) is Response:
         return form_response
-    else:
-        return render_template("settings.html", title=f"Настройки {current_user.nickname}",
-                               action_type=load_tab, error=form_response)
+    return render_template("settings.html", title=f"Настройки {current_user.nickname}",
+                           error=form_response, action_type=action_type)
 
 
 @app.route("/questions")
@@ -115,6 +114,16 @@ def user_settings():
 def questions_list():
     questions = db.session.query(Question).filter(Question.user_id == current_user.id).all()
     return render_template("questions.html", title="Мои вопросы", questions=questions, len=len)
+
+
+@app.route("/answers/<question_id>")
+@login_required
+def question_answers(question_id: str):
+    question = db.session.query(Question).filter(Question.id == question_id).one_or_none()
+    if not question:
+        redirect("/questions")
+
+    return render_template("question_answers.html", title="Ответы на вопрос", answers=question.answers)
 
 
 @app.route("/polls")
@@ -130,12 +139,25 @@ def poll_questions(poll_id: str):
     poll = db.session.query(Poll).filter(Poll.id == poll_id and Poll.user_id == current_user.id).one_or_none()
     if not poll:
         redirect("/polls")
+
     all_questions = db.session.query(Question).filter(Question.user_id == current_user.id).all()
-    poll = db.session.query(Poll).filter(Poll.id == poll_id).one()
-    other_questions = [q for q in all_questions if q not in poll.questions]
+    other_questions = [question for question in all_questions if question not in poll.questions]
 
     return render_template("poll_questions.html", title="Вопросы для опроса", other_questions=other_questions,
                            poll=poll, len=len)
+
+
+@app.route("/public/polls/<poll_id>", methods=["POST", "GET"])
+def poll_form(poll_id: str):
+    poll = db.session.query(Poll).filter(Poll.id == poll_id).one_or_none()
+    if request.method == "POST":
+        return redirect("/public/polls/done")
+    return render_template("poll_form.html", title="Прохождение опроса", poll=poll)
+
+
+@app.route("/public/polls/done")
+def poll_form_done():
+    return render_template("poll_form_done.html", title="Опрос пройден")
 
 
 if __name__ == '__main__':

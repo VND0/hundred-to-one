@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ru" data-theme="retro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>{{ title }}</title>
+</head>
+<body class="min-h-screen bg-base-200">
+    <div class="max-w-3xl mx-auto pt-12 px-4">
+        {% if not poll %}
+            <h1 class="text-center font-bold text-3xl">Ошибка: Такого опроса не существует</h1>
+        {% else %}
+            <form id="pollForm" class="bg-base-300 rounded-xl p-6" method="post">
+                <h1 class="text-center font-bold text-3xl">Опрос: {{ poll.poll }}</h1>
+
+                {% for question in poll.questions %}
+                    <fieldset class="fieldset mt-4">
+                        <legend class="fieldset-legend text-xl">{{ question.question }}</legend>
+                        <input type="text" placeholder="Ваш ответ" minlength="1" maxlength="50"
+                               class="input w-full rounded-xl text-base" required />
+                    </fieldset>
+                {% endfor %}
+
+                <button class="btn btn-info rounded-xl text-base mt-4" type="submit">Отправить ответы</button>
+            </form>
+        {% endif %}
+    </div>
+</body>

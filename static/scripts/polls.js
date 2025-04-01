@@ -11,6 +11,7 @@ const toastsContainer = document.querySelector("#toastsContainer")
 
 const userId = document.querySelector("body").dataset.userId
 
+
 function formToast(text) {
     const elem = toastTemplate.content.firstElementChild.cloneNode(true)
     elem.querySelector("span").innerText = text
@@ -19,10 +20,12 @@ function formToast(text) {
     return elem
 }
 
+
 function formError(text) {
     const elem = formToast(text)
     elem.classList.add("alert-error")
 }
+
 
 function formMessage(text) {
     const elem = formToast(text)
@@ -41,6 +44,7 @@ async function handleApiError(response) {
     }
 }
 
+
 async function addPollRequest(poll) {
     const body = {poll, userId}
     let response;
@@ -57,6 +61,7 @@ async function addPollRequest(poll) {
     return response.ok
 }
 
+
 async function delPollRequest(pollId) {
     let response;
     try {
@@ -70,6 +75,7 @@ async function delPollRequest(pollId) {
     return response.ok
 
 }
+
 
 async function editPollRequest(pollId, newName) {
     let response;
@@ -86,6 +92,7 @@ async function editPollRequest(pollId, newName) {
     return response.ok
 }
 
+
 addForm.addEventListener("submit", async function (evt) {
     evt.preventDefault()
     const success = await addPollRequest(pInput.value)
@@ -93,6 +100,7 @@ addForm.addEventListener("submit", async function (evt) {
         window.location.reload()
     }
 })
+
 
 pollsList.forEach((elem) => {
     const id = elem.dataset.id

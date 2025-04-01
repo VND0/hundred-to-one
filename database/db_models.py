@@ -35,11 +35,15 @@ class Question(db.Model):
     __tablename__ = "questions"
 
     id: Mapped[str] = mapped_column(primary_key=True)
-    question: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
+    question: Mapped[str] = mapped_column(String(250), nullable=False)
     user_id: Mapped[str] = mapped_column(ForeignKey(User.id), nullable=False)
 
     user: Mapped["User"] = relationship(back_populates="questions")
     answers: Mapped[list["Answer"]] = relationship(back_populates="question")
+
+    __table_args__ = (
+        db.UniqueConstraint("user_id", "question", name="uq_user_question"),
+    )
 
 
 class Answer(db.Model):
@@ -47,7 +51,7 @@ class Answer(db.Model):
 
     id: Mapped[str] = mapped_column(primary_key=True)
     answer: Mapped[str] = mapped_column(String(50), nullable=False)
-    question_id: Mapped[str] = mapped_column(ForeignKey(Question.id), unique=True, nullable=False)
+    question_id: Mapped[str] = mapped_column(ForeignKey(Question.id), nullable=False)
 
     question: Mapped["Question"] = relationship(back_populates="answers")
 
@@ -56,8 +60,12 @@ class Poll(db.Model):
     __tablename__ = "polls"
 
     id: Mapped[str] = mapped_column(primary_key=True)
-    poll: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
+    poll: Mapped[str] = mapped_column(String(100), nullable=False)
     user_id: Mapped[str] = mapped_column(ForeignKey(User.id), nullable=False)
 
     user: Mapped["User"] = relationship(back_populates="polls")
     questions: Mapped[list["Question"]] = relationship(secondary=association_table)
+
+    __table_args__ = (
+        db.UniqueConstraint("user_id", "poll", name="uq_user_poll"),
+    )

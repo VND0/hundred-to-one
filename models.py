@@ -14,7 +14,7 @@ class User(BaseModel):
     password: str = PASSWORD
 
 
-class NewUser(User):
+class UserCreate(User):
     nickname: str = Field(min_length=6, max_length=30)
     password_confirmation: str = PASSWORD
 
@@ -25,13 +25,13 @@ class NewUser(User):
         return self
 
 
-class EditUser(BaseModel):
+class UserUpdate(BaseModel):
     nickname: str = Field(min_length=6, max_length=30)
     email: EmailStr = Field(min_length=5, max_length=100)
     password: str = PASSWORD
 
 
-class ChangingPassword(BaseModel):
+class PasswordChange(BaseModel):
     old_password: str = PASSWORD
     new_password: str = PASSWORD
     new_confirmation: str = PASSWORD
@@ -51,7 +51,7 @@ class Question(BaseModel):
     question: str = Field(min_length=4, max_length=250)
 
 
-class NewQuestion(Question):
+class QuestionCreate(Question):
     user_id: str = USER_ID
 
 
@@ -59,14 +59,14 @@ class Poll(BaseModel):
     poll: str = Field(min_length=2, max_length=100)
 
 
-class NewPoll(Poll):
+class PollCreate(Poll):
     user_id: str = USER_ID
 
 
 class Answer(BaseModel):
-    answer: str = Field(min_length=2, max_length=100)
+    answer: str = Field(min_length=1, max_length=50)
 
 
-class AttachDetachQuestions(BaseModel):
+class PollQuestionsEdit(BaseModel):
     to_added: list[str] = Field(alias="toAdded")
     to_other: list[str] = Field(alias="toOther")

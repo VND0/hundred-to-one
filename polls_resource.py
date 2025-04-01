@@ -8,7 +8,7 @@ from sqlalchemy.exc import IntegrityError
 import models
 from database.database import db
 from database.db_models import Poll
-from tools import what_happened
+from tools import get_errors
 
 
 def abort_if_poll_not_found(poll_id: str) -> None:
@@ -20,9 +20,9 @@ def abort_if_poll_not_found(poll_id: str) -> None:
 class PollsListResource(Resource):
     def post(self):
         try:
-            model = models.NewPoll.model_validate(request.get_json())
+            model = models.PollCreate.model_validate(request.get_json())
         except ValidationError as e:
-            error = what_happened(e)
+            error = get_errors(e)
             abort(400, message=error)
 
         try:
@@ -46,7 +46,7 @@ class PollResource(Resource):
         try:
             model = models.Poll.model_validate(request.get_json())
         except ValidationError as e:
-            error = what_happened(e)
+            error = get_errors(e)
             abort(400, message=error)
 
         poll = db.session.query(Poll).filter(Poll.id == poll_id).one()

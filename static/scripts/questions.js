@@ -11,6 +11,7 @@ const toastsContainer = document.querySelector("#toastsContainer")
 
 const userId = document.querySelector("body").dataset.userId
 
+
 function formError(text) {
     const elem = toastTemplate.content.firstElementChild.cloneNode(true)
     elem.classList.add("alert-error")
@@ -18,6 +19,7 @@ function formError(text) {
     toastsContainer.append(elem)
     setTimeout(() => elem.remove(), 3000)
 }
+
 
 async function handleApiError(response) {
     if (!response.ok) {
@@ -31,6 +33,7 @@ async function handleApiError(response) {
         }
     }
 }
+
 
 async function addQuestionRequest(value) {
     const body = {
@@ -55,11 +58,13 @@ async function addQuestionRequest(value) {
     return response.ok
 }
 
+
 async function deleteQuestionRequest(questionId) {
     const response = await fetch(`/api/questions/${questionId}`, {method: "DELETE"})
     await handleApiError(response)
     return response.ok
 }
+
 
 async function changeQuestionRequest(questionId, newValue) {
     const response = await fetch(`/api/questions/${questionId}`, {

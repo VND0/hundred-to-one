@@ -8,29 +8,29 @@ import models
 from database.database import db
 from database.db_models import User
 from init_account import add_questions
-from models import PasswordsUnmatch, NewUser
+from models import PasswordsUnmatch, UserCreate
 
 
-def what_happened(e: ValidationError) -> str:
+def get_errors(e: ValidationError) -> str:
     errors = []
-    for err_obj in e.errors():
-        loc = err_obj["loc"][0]
+    for error_object in e.errors():
+        loc = error_object["loc"][0]
         if "email" in loc:
-            errors.append("Некорректный адрес почты. Разрешена длина [5;100].")
-        elif "passw" in loc:
-            errors.append("Некорректный пароль. Разрешены цифры, латиница и специальные символы, длина - [8;60].")
+            errors.append("Допустимая длина почты - от 5 до 100 символов.")
+        elif "password" in loc:
+            errors.append("В пароле разрешены цифры, латиница и специальные символы. Допустимая длина - от 8 до 60 символов.")
         elif "nickname" in loc:
-            errors.append("Разрешенная длина никнейма - [6;30].")
+            errors.append("Допустимая длина никнейма - от 6 до 30 символов.")
         elif "question" in loc:
-            errors.append("Разрешенная длина вопроса - [4; 250]")
+            errors.append("Допустимая длина вопроса - от 4 до 250 символов.")
         elif "poll" in loc:
-            errors.append("Разрешенная длина опроса - [2;100]")
+            errors.append("Допустимая длина названия опроса - от 2 до 100 символов.")
         else:
             raise NotImplementedError
     return " ".join(errors)
 
 
-def create_user(user_data: NewUser) -> User | None:
+def create_user(user_data: UserCreate) -> User | None:
     existing_user = db.session.query(User).filter(User.email == user_data.email).one_or_none()
     if existing_user:
         return None
@@ -53,7 +53,7 @@ def handle_registration() -> str | Response:
     form = request.form
 
     try:
-        model = NewUser(
+        model = UserCreate(
             nickname=form.get("nickname"),
             email=form.get("email"),
             password=form.get("password"),
@@ -62,7 +62,7 @@ def handle_registration() -> str | Response:
     except PasswordsUnmatch:
         return "Пароли не совпадают"
     except ValidationError as e:
-        return what_happened(e)
+        return get_errors(e)
 
     new_user = create_user(model)
     if not new_user:
@@ -82,7 +82,7 @@ def handle_login() -> str | Response:
             password=form.get("password")
         )
     except ValidationError as e:
-        return what_happened(e)
+        return get_errors(e)
 
     user = db.session.query(User).filter(User.email == model.email).one_or_none()
     if not user:
@@ -95,16 +95,16 @@ def handle_login() -> str | Response:
     return redirect("/profile")
 
 
-def handle_edit_data():
+def handle_edit_data() -> str |None:
     form = request.form
     try:
-        model = models.EditUser(
+        model = models.UserUpdate(
             nickname=form.get("nickname"),
             email=form.get("email"),
             password=form.get("password")
         )
     except ValidationError as e:
-        return what_happened(e)
+        return get_errors(e)
 
     if not current_user.check_password(model.password):
         return f"Неверный пароль"
@@ -117,21 +117,21 @@ def handle_edit_data():
     return redirect("/settings")
 
 
-def handle_change_password():
+def handle_change_password() -> str | None:
     form = request.form
     try:
-        model = models.ChangingPassword(
+        model = models.PasswordChange(
             old_password=form.get("old_password"),
             new_password=form.get("new_password"),
             new_confirmation=form.get("new_confirmation")
         )
     except ValidationError as e:
-        return what_happened(e)
+        return get_errors(e)
     except PasswordsUnmatch:
-        return "Пароли не совпадают"
+        return "Новый пароль и его подтверждение не совпадают"
 
     if not current_user.check_password(model.old_password):
-        return f"Неверный пароль"
+        return f"Неверный текущий пароль"
 
     user = db.session.query(User).filter(User.id == current_user.id).one()
     user.set_password(model.new_password)
@@ -140,25 +140,28 @@ def handle_change_password():
     return redirect("/settings")
 
 
-def handle_remove_account():
+def handle_remove_account() -> str | None:
     form = request.form
     try:
         model = models.OnlyPassword(password=form.get("password"))
     except ValidationError as e:
-        return what_happened(e)
+        return get_errors(e)
 
     if not current_user.check_password(model.password):
         return f"Неверный пароль"
 
     user = db.session.query(User).filter(User.id == current_user.id).one()
+
     for question in user.questions:
         for answer in question.answers:
             db.session.delete(answer)
         db.session.delete(question)
+
     for poll in user.polls:
         db.session.delete(poll)
-    db.session.delete(user)
 
+    db.session.delete(user)
     db.session.commit()
+
     logout_user()
     return redirect("/")

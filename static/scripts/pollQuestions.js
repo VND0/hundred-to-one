@@ -1,14 +1,17 @@
-const pollQuestions = document.querySelectorAll("#pollQuestions>li")
-const otherQuestions = document.querySelectorAll("#noPollQuestions>li")
-const saveButton = document.querySelector("#saveButton")
-const requestData = {
+let requestData = {
     toAdded: [], toOther: [],
 }
 let changesCounter = 0;
 
+const pollQuestions = document.querySelectorAll("#pollQuestions>li")
+const otherQuestions = document.querySelectorAll("#noPollQuestions>li")
+const saveButton = document.querySelector("#saveButton")
+
+
 function changesCounterUpdate() {
     saveButton.style.display = changesCounter === 0 ? "none" : "block"
 }
+
 
 function formError(text) {
     const elem = toastTemplate.content.firstElementChild.cloneNode(true)
@@ -18,20 +21,17 @@ function formError(text) {
     setTimeout(() => elem.remove(), 3000)
 }
 
+
 function highlightCheckedCheckbox(input) {
     const classList = input.classList
     const borderSecondary = "border-secondary"
     const borderAccent = "border-accent"
-    if (classList.contains(borderAccent)) {
-        classList.remove(borderAccent)
-        classList.add(borderSecondary)
-    } else {
-        classList.remove(borderSecondary)
-        classList.add(borderAccent)
-    }
+
+    classList.toggle(borderAccent)
+    classList.toggle(borderSecondary)
 }
 
-changesCounterUpdate()
+
 pollQuestions.forEach((elem) => {
     const id = elem.dataset.questionId
     const input = elem.querySelector("input")
@@ -65,7 +65,7 @@ otherQuestions.forEach((elem) => {
 })
 
 saveButton.addEventListener("click", async (evt) => {
-    if (changesCounter === 0) { // На всякий
+    if (changesCounter === 0) {
         changesCounterUpdate()
         return
     }
@@ -82,3 +82,6 @@ saveButton.addEventListener("click", async (evt) => {
         formError(`${response.status}: ${body.message}`)
     }
 })
+
+
+changesCounterUpdate()

@@ -8,7 +8,7 @@ from sqlalchemy.exc import IntegrityError
 import models
 from database.database import db
 from database.db_models import Question, Answer, Poll
-from tools import what_happened
+from tools import get_errors
 
 
 def abort_if_question_not_found(question_id: str) -> None:
@@ -25,7 +25,7 @@ class QuestionResource(Resource):
         try:
             model = models.Question.model_validate(request.get_json())
         except ValidationError as e:
-            error = what_happened(e)
+            error = get_errors(e)
             abort(400, message=error)
 
         try:
@@ -61,9 +61,9 @@ class QuestionResource(Resource):
 class QuestionListResource(Resource):
     def post(self):
         try:
-            model = models.NewQuestion.model_validate(request.get_json())
+            model = models.QuestionCreate.model_validate(request.get_json())
         except ValidationError as e:
-            error = what_happened(e)
+            error = get_errors(e)
             abort(400, message=error)
 
         try:

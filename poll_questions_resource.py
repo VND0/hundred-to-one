@@ -5,7 +5,7 @@ from pydantic import ValidationError
 import models
 from database.database import db
 from database.db_models import Poll, Question
-from tools import what_happened
+from tools import get_errors
 
 
 class PollQuestionResource(Resource):
@@ -15,9 +15,9 @@ class PollQuestionResource(Resource):
             abort(404, message=f"Poll {poll_id} not found")
 
         try:
-            model = models.AttachDetachQuestions.model_validate(request.get_json())
+            model = models.PollQuestionsEdit.model_validate(request.get_json())
         except ValidationError as e:
-            error = what_happened(e)
+            error = get_errors(e)
             abort(409, message=error)
 
         for question in poll.questions.copy():

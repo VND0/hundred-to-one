@@ -5,6 +5,7 @@ from flask_login import LoginManager, logout_user, login_required, current_user
 from flask_restful import Api
 
 import tools
+from answers_resource import AnswersListResource, AnswersResource
 from database.database import db
 from database.db_models import User, Question, Poll
 from poll_questions_resource import PollQuestionResource
@@ -33,6 +34,9 @@ api.add_resource(PollsListResource, "/api/polls")
 api.add_resource(PollResource, "/api/polls/<poll_id>")
 
 api.add_resource(PollQuestionResource, "/api/poll-questions/<poll_id>")
+
+api.add_resource(AnswersListResource, "/api/answers/<question_id>")
+api.add_resource(AnswersResource, "/api/answers/<answer_id>")
 
 
 @login_manager.user_loader

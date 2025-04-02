@@ -1,6 +1,7 @@
 from flask_login import UserMixin
 from sqlalchemy import ForeignKey, Table, Column, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy_serializer import SerializerMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from .database import db
@@ -13,7 +14,7 @@ poll_question = Table(
 )
 
 
-class User(db.Model, UserMixin):
+class User(db.Model, SerializerMixin, UserMixin):
     __tablename__ = "users"
 
     id: Mapped[str] = mapped_column(primary_key=True)
@@ -31,7 +32,7 @@ class User(db.Model, UserMixin):
         return check_password_hash(self.hashed_pwd, password)
 
 
-class Question(db.Model):
+class Question(db.Model, SerializerMixin):
     __tablename__ = "questions"
 
     id: Mapped[str] = mapped_column(primary_key=True)
@@ -46,17 +47,22 @@ class Question(db.Model):
     )
 
 
-class Answer(db.Model):
+class Answer(db.Model, SerializerMixin):
     __tablename__ = "answers"
 
     id: Mapped[str] = mapped_column(primary_key=True)
     answer: Mapped[str] = mapped_column(String(50), nullable=False)
     question_id: Mapped[str] = mapped_column(ForeignKey(Question.id), nullable=False)
+    quantity: Mapped[int] = mapped_column(nullable=False)
 
     question: Mapped["Question"] = relationship(back_populates="answers")
 
+    __table_args__ = (
+        db.UniqueConstraint("question_id", "answer", name="unique_answer_entity"),
+    )
 
-class Poll(db.Model):
+
+class Poll(db.Model, SerializerMixin):
     __tablename__ = "polls"
 
     id: Mapped[str] = mapped_column(primary_key=True)

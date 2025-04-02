@@ -6,25 +6,27 @@ from pydantic import ValidationError
 
 import models
 from database.database import db
-from database.db_models import User
+from database.db_models import User, Poll, Question, Answer
 from init_account import add_questions
-from models import PasswordsUnmatch, UserCreate
+from models import PasswordsUnmatch, UserCreate, AnswerCreate
 
 
 def get_errors(e: ValidationError) -> str:
     errors = []
     for error_object in e.errors():
         loc = error_object["loc"][0]
-        if "email" in loc:
+        if "nickname" in loc:
+            errors.append("Допустимая длина никнейма - от 6 до 30 символов.")
+        elif "email" in loc:
             errors.append("Допустимая длина почты - от 5 до 100 символов.")
         elif "password" in loc:
             errors.append("В пароле разрешены цифры, латиница и специальные символы. Допустимая длина - от 8 до 60 символов.")
-        elif "nickname" in loc:
-            errors.append("Допустимая длина никнейма - от 6 до 30 символов.")
-        elif "question" in loc:
-            errors.append("Допустимая длина вопроса - от 4 до 250 символов.")
         elif "poll" in loc:
             errors.append("Допустимая длина названия опроса - от 2 до 100 символов.")
+        elif "question" in loc:
+            errors.append("Допустимая длина вопроса - от 4 до 250 символов.")
+        elif "answer" in loc:
+            errors.append("Допустимая длина ответа - от 1 до 50 символов.")
         else:
             raise NotImplementedError
     return " ".join(errors)
@@ -95,7 +97,7 @@ def handle_login() -> str | Response:
     return redirect("/profile")
 
 
-def handle_edit_data() -> str |None:
+def handle_edit_data() -> str | Response:
     form = request.form
     try:
         model = models.UserUpdate(
@@ -117,7 +119,7 @@ def handle_edit_data() -> str |None:
     return redirect("/settings")
 
 
-def handle_change_password() -> str | None:
+def handle_change_password() -> str | Response:
     form = request.form
     try:
         model = models.PasswordChange(
@@ -140,7 +142,7 @@ def handle_change_password() -> str | None:
     return redirect("/settings")
 
 
-def handle_remove_account() -> str | None:
+def handle_remove_account() -> str | Response:
     form = request.form
     try:
         model = models.OnlyPassword(password=form.get("password"))
@@ -165,3 +167,34 @@ def handle_remove_account() -> str | None:
 
     logout_user()
     return redirect("/")
+
+
+def handle_poll_form(poll_id: str) -> str | Response:
+    form = request.form
+
+    poll = db.session.query(Poll).filter(Poll.id == poll_id).one()
+    for index, question in enumerate(poll.questions):
+        create_answer = True
+        try:
+            model = AnswerCreate(
+                answer=form.get(f"answer-{index + 1}")
+            )
+        except ValidationError as e:
+            return get_errors(e)
+
+        for answer in question.answers:
+            if answer.answer == model.answer:
+                answer.quantity += 1
+                create_answer = False
+
+        if create_answer:
+            new_answer = Answer(
+                id=str(uuid.uuid4()),
+                answer=model.answer,
+                question_id=question.id,
+                quantity=1
+            )
+            db.session.add(new_answer)
+    db.session.commit()
+
+    return redirect("/public/polls/done")

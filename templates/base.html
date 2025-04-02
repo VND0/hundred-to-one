@@ -12,13 +12,15 @@
     <header class="flex bg-base-300 h-20 shadow-md px-4">
         <nav class="navbar max-w-7xl mx-auto">
             <div class="flex-1">
-                {% if current_user.is_authenticated %}
+                {% if public %}
+                    <h1 class="text-2xl font-bold">Hundred To One</h1>
+                {% elif current_user.is_authenticated %}
                     <a class="text-2xl font-bold" href="/profile">Hundred To One</a>
                 {% else %}
                     <a class="text-2xl font-bold" href="/">Hundred To One</a>
                 {% endif %}
             </div>
-            {% if current_user.is_authenticated %}
+            {% if current_user.is_authenticated and not public %}
                 <div class="dropdown dropdown-end">
                     <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar avatar-placeholder">
                         <div class="w-10 rounded-full text-lg text-white" id="avatarContainer"

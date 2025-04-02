@@ -67,6 +67,10 @@ class Answer(BaseModel):
     answer: str = Field(min_length=1, max_length=50)
 
 
+class AnswerCreate(Answer):
+    pass
+
+
 class PollQuestionsEdit(BaseModel):
     to_added: list[str] = Field(alias="toAdded")
     to_other: list[str] = Field(alias="toOther")

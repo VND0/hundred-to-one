@@ -153,10 +153,16 @@ def poll_questions(poll_id: str):
 
 @app.route("/public/polls/<poll_id>", methods=["POST", "GET"])
 def poll_form(poll_id: str):
+    form_response = None
     poll = db.session.query(Poll).filter(Poll.id == poll_id).one_or_none()
+
     if request.method == "POST":
-        return redirect("/public/polls/done")
-    return render_template("poll_form.html", title="Прохождение опроса", poll=poll)
+        form_response = tools.handle_poll_form(poll_id)
+
+    if type(form_response) is Response:
+        return form_response
+    return render_template("poll_form.html", title="Прохождение опроса", poll=poll,
+                           error=form_response, public=True)
 
 
 @app.route("/public/polls/done")

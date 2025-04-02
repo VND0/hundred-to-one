@@ -35,7 +35,7 @@ api.add_resource(PollResource, "/api/polls/<poll_id>")
 
 api.add_resource(PollQuestionResource, "/api/poll-questions/<poll_id>")
 
-api.add_resource(AnswersListResource, "/api/answers/<question_id>")
+api.add_resource(AnswersListResource, "/api/answers")
 api.add_resource(AnswersResource, "/api/answers/<answer_id>")
 
 
@@ -127,7 +127,7 @@ def question_answers(question_id: str):
     if not question:
         redirect("/questions")
 
-    return render_template("question_answers.html", title="Ответы на вопрос", answers=question.answers)
+    return render_template("question_answers.html", title="Ответы на вопрос", question_id=question_id)
 
 
 @app.route("/polls")

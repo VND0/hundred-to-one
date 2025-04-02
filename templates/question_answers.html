@@ -3,39 +3,19 @@
 {% block content %}
     <div class="max-w-2xl mx-auto px-4">
         <h1 class="text-center font-bold text-3xl my-6">Ответы и статистика</h1>
-        <div class="tabs tabs-lift">
-            <input type="radio" name="my_tabs_3" class="tab [--tab-bg:var(--color-base-300)] text-base" aria-label="Ответы"
-                   checked />
-
-            <div class="tab-content bg-base-300 p-6">
-                <ul id="answersList" class="space-y-4">
-                    <li class="flex items-center w-full bg-base-100 rounded-xl px-4 py-2">
-                        <span class="flex-1 font-semibold text-base">1. Tft 1</span>
-                        <button class="btn btn-xs btn-error delete-btn">✕</button>
-                    </li>
-                    <li class="flex items-center w-full bg-base-100 rounded-xl px-4 py-2">
-                        <span class="flex-1 font-semibold text-base">2. Tft 2</span>
-                        <button class="btn btn-xs btn-error delete-btn">✕</button>
-                    </li>
-                </ul>
-            </div>
-
-            <input type="radio" name="my_tabs_3" class="tab [--tab-bg:var(--color-base-300)] text-base" aria-label="Сформировать статистику" />
-
-            <form id="statsForm" class="tab-content bg-base-300 p-6 space-y-2" method="post">
-                {% for i in range(6) %}
-                    <fieldset class="fieldset">
-                        <legend class="fieldset-legend text-xl">Топ-{{ i + 1 }} ответ по популярности</legend>
-                        <div class="flex gap-2">
-                            <input type="text" placeholder="Текст ответа" minlength="1" maxlength="50"
-                                   class="input flex-4 rounded-xl text-base" name="top-{{ i + 1 }}" required />
-                            <input type="number" placeholder="Очки" min="1" max="95"
-                               class="input flex-1 rounded-xl text-base" name="top-{{ i + 1 }}-amount" required />
-                        </div>
-                    </fieldset>
-                {% endfor %}
-                <button class="btn btn-info rounded-xl text-base" type="submit">Сформировать</button>
-            </form>
-        </div>
+        <ul id="answersList" class="space-y-4 bg-base-300 p-5 rounded-lg" data-question-id="{{ question_id }}">
+            {#            <li class="flex items-center w-full bg-base-100 rounded-xl px-4 py-1">#}
+            {#                <span class="flex-1 font-semibold text-base">2. Tft 2</span>#}
+            {#                <input class="input input-xs mx-2 w-[70px]" type="number" value="1" max="99" min="1"/>#}
+            {#                <button class="btn btn-xs btn-error delete-btn">✕</button>#}
+            {#            </li>#}
+        </ul>
     </div>
+    <template id="answerTemplate">
+        <li class="flex items-center w-full bg-base-100 rounded-xl px-4 py-1">
+            <span class="flex-1 font-semibold text-base answer-text"></span>
+            <button class="btn btn-xs btn-error delete-btn">✕</button>
+        </li>
+    </template>
+    <script src="{{ url_for('static', filename='scripts/answers.js') }}"></script>
 {% endblock %}

@@ -5,8 +5,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from .database import db
 
-association_table = Table(
-    "PQ_connection",
+poll_question = Table(
+    "poll-question",
     db.Model.metadata,
     Column("poll_id", ForeignKey("polls.id")),
     Column("question_id", ForeignKey("questions.id"))
@@ -64,7 +64,7 @@ class Poll(db.Model):
     user_id: Mapped[str] = mapped_column(ForeignKey(User.id), nullable=False)
 
     user: Mapped["User"] = relationship(back_populates="polls")
-    questions: Mapped[list["Question"]] = relationship(secondary=association_table)
+    questions: Mapped[list["Question"]] = relationship(secondary=poll_question)
 
     __table_args__ = (
         db.UniqueConstraint("user_id", "poll", name="uq_user_poll"),

@@ -7,7 +7,7 @@ from sqlalchemy.exc import IntegrityError
 
 import models
 from database.database import db
-from database.db_models import Question, Answer, Poll
+from database.db_models import Question, Answer
 from tools import get_errors
 
 
@@ -39,7 +39,7 @@ class QuestionResource(Resource):
     def delete(self, question_id: str):
         abort_if_question_not_found(question_id)
         question = db.session.query(Question).filter(Question.id == question_id).one()
-        # Removing answers
+
         db.session.query(Answer).filter(Answer.question_id == question_id).delete()
 
         try:
@@ -47,13 +47,6 @@ class QuestionResource(Resource):
             db.session.commit()
         except IntegrityError as e:
             abort(409, message=type(e).__name__)
-
-        # Removing empty polls
-        polls = db.session.query(Poll).all()
-        for poll in polls:
-            if not poll.questions:
-                db.session.delete(poll)
-        db.session.commit()
 
         return jsonify(204, {"success": "OK"})
 

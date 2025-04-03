@@ -17,7 +17,7 @@ class AnswersListResource(Resource):
 
         answers: list[Answer] = question.answers
         answers.sort(key=lambda a: a.quantity, reverse=True)
-        return jsonify(list(map(Answer.to_dict, answers)))
+        return jsonify(list(map(lambda a:a.to_dict(rules=('-question',)), answers)))
 
 
 class AnswersResource(Resource):

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="max-w-3xl mx-auto px-4">
+    <div class="max-w-3xl mx-auto px-4 pb-5">
         <h1 class="text-center font-bold text-3xl my-6">Вопросы опроса "{{ poll.poll }}"</h1>
 
         <div class="mb-8">
@@ -15,7 +15,7 @@
                            class="btn btn-outline {{ 'btn-info' if len(question.answers) < 100 else 'btn-success' }} btn-xs">
                             Ответов: {{ len(question.answers) }}
                         </a>
-                        <input type="checkbox" class="checkbox border-2 border-accent checkbox-sm" checked />
+                        <input type="checkbox" class="checkbox border-2 border-accent checkbox-sm" checked/>
                     </li>
                 {% endfor %}
             </ul>
@@ -31,16 +31,13 @@
                         <a href="/answers/{{ question.id }}"
                            class="btn btn-outline {{ 'btn-info' if len(question.answers) < 100 else 'btn-success' }} btn-xs">
                             Ответов: {{ len(question.answers) }}</a>
-                        <input type="checkbox" class="checkbox border-2 border-accent checkbox-sm" />
+                        <input type="checkbox" class="checkbox border-2 border-accent checkbox-sm"/>
                     </li>
                 {% endfor %}
             </ul>
         </div>
-
-        <a class="block w-full pb-4" href="/polls">
-            <button class="btn btn-accent block max-w-xs mx-auto">Вернуться к списку опросов</button>
-        </a>
-
+        <a href="/polls" class="btn btn-accent mx-auto block max-w-xs flex items-center justify-center">Вернуться к
+            списку опросов</a>
         <button class="btn btn-secondary fixed bottom-15 right-15" id="saveButton" data-poll-id="{{ poll.id }}">
             Сохранить
         </button>

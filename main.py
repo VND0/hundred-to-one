@@ -127,7 +127,7 @@ def question_answers(question_id: str):
     if not question:
         redirect("/questions")
 
-    return render_template("question_answers.html", title="Ответы на вопрос", question_id=question_id)
+    return render_template("answers.html", title="Ответы на вопрос", question_id=question_id)
 
 
 @app.route("/polls")

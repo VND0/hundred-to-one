@@ -1,4 +1,4 @@
-from flask import jsonify
+from flask import jsonify, make_response
 from flask_restful import Resource, abort, reqparse
 
 from database.database import db
@@ -17,7 +17,7 @@ class AnswersListResource(Resource):
 
         answers: list[Answer] = question.answers
         answers.sort(key=lambda a: a.quantity, reverse=True)
-        return jsonify(list(map(lambda a:a.to_dict(rules=('-question',)), answers)))
+        return jsonify(list(map(lambda a: a.to_dict(rules=('-question',)), answers)))
 
 
 class AnswersResource(Resource):
@@ -27,4 +27,4 @@ class AnswersResource(Resource):
             abort(404, message=f"Answer {answer_id} not found")
         db.session.delete(answer)
         db.session.commit()
-        return jsonify(204, message="OK")
+        return make_response("OK", 204)

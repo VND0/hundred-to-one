@@ -17,14 +17,29 @@ function loadAnswers(answersList) {
     answersList.forEach((answer, ind) => {
         const newElem = tmplt.content.cloneNode(true).childNodes[1]
         const points = Math.round(1.0 * answer.quantity / pointsSum * 100)
+        const pointsStats = newElem.querySelector(".points-stats")
+
         newElem.querySelector("span").innerHTML = `${answer.answer}`
-        newElem.querySelector(".points-stats").innerHTML = `ответов: ${answer.quantity}`
+        pointsStats.innerHTML = `ответов: ${answer.quantity}`
         answersListElem.appendChild(newElem)
 
         if (ind < 6) {
             newElem.classList.add("border-3")
             newElem.classList.add("border-success")
-            newElem.querySelector(".points-stats").innerText = `очков: ${points}, ` + newElem.querySelector(".points-stats").innerText
+            pointsStats.innerText = `очков: ${points}, ` + pointsStats.innerText
         }
+
+        newElem.querySelector("button").addEventListener("click", () => deleteAnswerRequest(answer.id, newElem))
     })
+}
+
+async function deleteAnswerRequest(answerId, toBeDeleted) {
+    const response = await fetch(`/api/answers/${answerId}`, {method: "DELETE"})
+    if (response.ok) {
+        toBeDeleted.remove()
+    } else {
+        const data = await response.json()
+        console.log(response.status)
+        console.log(data)
+    }
 }

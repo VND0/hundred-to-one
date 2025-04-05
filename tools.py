@@ -26,7 +26,7 @@ def get_errors(e: ValidationError) -> str:
         elif "question" in loc:
             errors.append("Допустимая длина вопроса - от 4 до 250 символов.")
         elif "answer" in loc:
-            errors.append("Допустимая длина ответа - от 1 до 50 символов.")
+            errors.append("Допустимая длина ответа - от 1 до 40 символов.")
         else:
             raise NotImplementedError
     return " ".join(errors)

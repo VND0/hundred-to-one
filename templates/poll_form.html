@@ -11,7 +11,7 @@
                 {% for question in poll.questions %}
                     <fieldset class="fieldset mt-2">
                         <legend class="fieldset-legend text-lg">{{ question.question }}</legend>
-                        <input type="text" placeholder="Ваш ответ" minlength="1" maxlength="50"
+                        <input type="text" placeholder="Ваш ответ" minlength="1" maxlength="40"
                                class="input w-full rounded-xl text-base" name="answer-{{ loop.index }}" required />
                     </fieldset>
                 {% endfor %}

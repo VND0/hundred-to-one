@@ -64,7 +64,7 @@ class PollCreate(Poll):
 
 
 class Answer(BaseModel):
-    answer: str = Field(min_length=1, max_length=50)
+    answer: str = Field(min_length=1, max_length=40)
 
 
 class AnswerCreate(Answer):

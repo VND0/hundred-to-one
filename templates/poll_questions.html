@@ -41,6 +41,6 @@
         <button class="btn btn-secondary fixed bottom-15 right-15" id="saveButton" data-poll-id="{{ poll.id }}">
             Сохранить
         </button>
-        <script src="{{ url_for('static', filename='scripts/pollQuestions.js') }}"></script>
+        <script src="{{ url_for('static', filename='scripts/pollQuestions.js') }}" type="module"></script>
     </div>
 {% endblock %}

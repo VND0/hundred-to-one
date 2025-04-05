@@ -1,3 +1,5 @@
+import {formError} from "./toasts.js";
+
 const form = document.querySelector("#addForm")
 const qInput = document.querySelector("#addInput")
 const questionsList = document.querySelectorAll("#questionsList>li")
@@ -6,20 +8,7 @@ const editInput = document.querySelector("#editInput")
 const saveEdit = document.querySelector("#saveEdit")
 const dialog = document.querySelector("dialog")
 
-const toastTemplate = document.querySelector("#toastTemplate")
-const toastsContainer = document.querySelector("#toastsContainer")
-
 const userId = document.querySelector("body").dataset.userId
-
-
-function formError(text) {
-    const elem = toastTemplate.content.firstElementChild.cloneNode(true)
-    elem.classList.add("alert-error")
-    elem.querySelector("span").innerText = text
-    toastsContainer.append(elem)
-    setTimeout(() => elem.remove(), 3000)
-}
-
 
 async function handleApiError(response) {
     if (!response.ok) {
@@ -34,20 +23,16 @@ async function handleApiError(response) {
     }
 }
 
-
 async function addQuestionRequest(value) {
     const body = {
-        question: value,
-        userId
+        question: value, userId
     }
     let response;
     try {
         response = await fetch("/api/questions", {
-            method: "POST",
-            headers: {
+            method: "POST", headers: {
                 "Content-Type": "application/json",
-            },
-            body: JSON.stringify(body)
+            }, body: JSON.stringify(body)
         })
     } catch (error) {
         formError("Проблемы с Интернетом")
@@ -58,21 +43,17 @@ async function addQuestionRequest(value) {
     return response.ok
 }
 
-
 async function deleteQuestionRequest(questionId) {
     const response = await fetch(`/api/questions/${questionId}`, {method: "DELETE"})
     await handleApiError(response)
     return response.ok
 }
 
-
 async function changeQuestionRequest(questionId, newValue) {
     const response = await fetch(`/api/questions/${questionId}`, {
-        method: "PUT",
-        headers: {
+        method: "PUT", headers: {
             "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+        }, body: JSON.stringify({
             question: newValue
         })
     })
@@ -80,7 +61,6 @@ async function changeQuestionRequest(questionId, newValue) {
     await handleApiError(response)
     return response.ok
 }
-
 
 form.addEventListener("submit", async function (evt) {
     evt.preventDefault()

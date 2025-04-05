@@ -1,3 +1,5 @@
+import {formError} from "./toasts.js";
+
 let requestData = {
     toAdded: [], toOther: [],
 }
@@ -12,16 +14,6 @@ function changesCounterUpdate() {
     saveButton.style.display = changesCounter === 0 ? "none" : "block"
 }
 
-
-function formError(text) {
-    const elem = toastTemplate.content.firstElementChild.cloneNode(true)
-    elem.classList.add("alert-error")
-    elem.querySelector("span").innerText = text
-    toastsContainer.append(elem)
-    setTimeout(() => elem.remove(), 3000)
-}
-
-
 function highlightCheckedCheckbox(input) {
     const classList = input.classList
     const borderSecondary = "border-secondary"
@@ -30,7 +22,6 @@ function highlightCheckedCheckbox(input) {
     classList.toggle(borderAccent)
     classList.toggle(borderSecondary)
 }
-
 
 pollQuestions.forEach((elem) => {
     const id = elem.dataset.questionId
@@ -82,6 +73,5 @@ saveButton.addEventListener("click", async (evt) => {
         formError(`${response.status}: ${body.message}`)
     }
 })
-
 
 changesCounterUpdate()

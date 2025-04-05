@@ -1,13 +1,18 @@
 {% extends 'base.html' %}
 {% block content %}
-    <main class="flex items-center min-h-[calc(100vh-5rem)]">
-        <div class="tabs tabs-lift max-w-lg mx-auto -mt-20">
+    <main class="flex flex-col justify-center space-y-4 max-w-lg min-h-[calc(100vh-5rem)] -mt-10 mx-auto">
+        <div class="flex justify-between items-center">
+            <h1 class="font-bold text-2xl">Настройки профиля</h1>
+            <a class="link link-info font-bold text-xl" href="/profile">Назад</a>
+        </div>
+
+        <div class="tabs tabs-lift">
             <!-- Изменение данных -->
             <input type="radio" name="my_tabs_2" class="tab [--tab-bg:var(--color-base-300)] text-base"
                    aria-label="Изменение профиля" {{ "checked" if action_type == "edit_data" }} />
 
-            <form class="tab-content bg-base-300 border-base-300 p-8" method="post">
-                <h1 class="text-2xl font-bold mb-8">Изменение профиля</h1>
+            <form class="tab-content bg-base-300 border-base-300 px-8 py-6" method="post">
+                <h1 class="text-xl font-bold mb-6">Изменение профиля</h1>
 
                 <label class="floating-label block w-full mb-6">
                     <span>Никнейм</span>
@@ -23,19 +28,19 @@
                            value="{{ current_user.email }}" />
                 </label>
 
-                <label class="floating-label block w-full mb-6">
+                <label class="floating-label block w-full mb-4">
                     <span>Пароль</span>
                     <input type="password" placeholder="Введите пароль" class="input w-full rounded-xl text-base"
                            minlength="8" maxlength="60" name="password" required />
                 </label>
 
                 {% if error and action_type == "edit_data" %}
-                    <div role="alert" class="alert alert-error alert-soft mb-6">
+                    <div role="alert" class="alert alert-error alert-soft mb-4">
                         <span>{{ error }}</span>
                     </div>
                 {% endif %}
 
-                <button class="btn btn-info block w-full rounded-xl text-base" type="submit">Подтвердить</button>
+                <button class="btn btn-info block w-full rounded-xl text-base" type="submit">Изменить данные</button>
                 <input class="hidden" name="action-type" value="edit_data" />
             </form>
 
@@ -43,8 +48,8 @@
             <input type="radio" name="my_tabs_2" class="tab [--tab-bg:var(--color-base-300)] text-base"
                    aria-label="Смена пароля" {{ "checked" if action_type == "new_password" }} />
 
-            <form class="tab-content bg-base-300 border-base-300 p-8" method="post">
-                <h1 class="text-2xl font-bold mb-8">Смена пароля</h1>
+            <form class="tab-content bg-base-300 border-base-300 px-8 py-6" method="post">
+                <h1 class="text-xl font-bold mb-6">Смена пароля</h1>
 
                 <label class="floating-label block w-full mb-6">
                     <span>Старый пароль</span>
@@ -58,19 +63,19 @@
                            minlength="8" maxlength="60" name="new_password" required />
                 </label>
 
-                <label class="floating-label block w-full mb-6">
+                <label class="floating-label block w-full mb-4">
                     <span>Подтверждение</span>
                     <input type="password" placeholder="Подтвердите новый пароль" class="input w-full rounded-xl text-base"
                            minlength="8" maxlength="60" name="new_confirmation" required />
                 </label>
 
                 {% if error and action_type == "new_password" %}
-                    <div role="alert" class="alert alert-error alert-soft mb-6">
+                    <div role="alert" class="alert alert-error alert-soft mb-4">
                         <span>{{ error }}</span>
                     </div>
                 {% endif %}
 
-                <button class="btn btn-info block w-full rounded-xl text-base" type="submit">Подтвердить</button>
+                <button class="btn btn-info block w-full rounded-xl text-base" type="submit">Сменить пароль</button>
                 <input class="hidden" name="action-type" value="new_password" />
             </form>
 
@@ -79,22 +84,22 @@
             <input type="radio" name="my_tabs_2" class="tab [--tab-bg:var(--color-base-300)] text-base"
                    aria-label="Удаление аккаунта" {{ "checked" if action_type == "remove" }} />
 
-            <form class="tab-content bg-base-300 border-base-300 p-8" id="removeForm" method="post">
-                <h1 class="text-2xl font-bold mb-6">Удаление аккаунта</h1>
+            <form class="tab-content bg-base-300 border-base-300 px-8 py-6" id="removeForm" method="post">
+                <h1 class="text-xl font-bold mb-6">Удаление аккаунта</h1>
 
-                <label class="floating-label block w-full mb-6">
+                <label class="floating-label block w-full mb-4">
                     <span>Пароль</span>
                     <input type="password" placeholder="Пароль" minlength="8" maxlength="60"
                            class="input w-full rounded-xl text-base" name="password" required />
                 </label>
 
                 {% if error and action_type == "remove" %}
-                    <div role="alert" class="alert alert-error alert-soft mb-6">
+                    <div role="alert" class="alert alert-error alert-soft mb-4">
                         <span>{{ error }}</span>
                     </div>
                 {% endif %}
 
-                <button class="btn btn-error block w-full rounded-xl text-base text-white" type="submit">Удалить</button>
+                <button class="btn btn-error block w-full rounded-xl text-base text-white" type="submit">Удалить аккаунт</button>
                 <input class="hidden" name="action-type" value="remove" />
             </form>
         </div>

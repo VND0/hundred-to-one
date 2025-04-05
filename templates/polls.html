@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="max-w-3xl mx-auto px-4 mt-5">
+    <div class="max-w-3xl mt-8 mx-auto px-4">
         <div class="flex justify-between items-center">
-            <h1 class="font-bold text-3xl">Опросы</h1>
+            <h1 class="font-bold text-2xl">Опросы</h1>
             <a class="link link-info font-bold text-xl" href="/profile">Назад</a>
         </div>
 
@@ -19,7 +19,7 @@
             </div>
         </form>
 
-        <div id="pollsList" class="space-y-3 pb-3">
+        <div id="pollsList" class="space-y-8 pb-8">
             {% for poll in polls %}
                 <div class="flex flex-col gap-1 w-full bg-base-300 rounded-xl p-4" data-id="{{ poll.id }}">
                     <div class="flex gap-2 items-center">
@@ -40,7 +40,7 @@
 
                     <div class="flex justify-around">
                         <div class="flex flex-1 flex-col items-center gap-2">
-                            <span class="flex-1 font-semibold">Вопросы ({{ len(poll.questions) }})</span>
+                            <span class="flex-1 font-semibold">Вопросы: {{ len(poll.questions) }}</span>
                             <a class="block w-1/2" href="/poll-questions/{{ poll.id }}">
                                 <button class="btn btn-sm btn-soft btn-info w-full">Изменить</button>
                             </a>

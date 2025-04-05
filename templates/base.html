@@ -13,21 +13,20 @@
         <nav class="navbar max-w-7xl mx-auto">
             <div class="flex-1">
                 {% if public %}
-                    <h1 class="text-2xl font-bold">Hundred To One</h1>
+                    <h1 class="text-3xl font-bold">Hundred To One</h1>
                 {% elif current_user.is_authenticated %}
-                    <a class="text-2xl font-bold" href="/profile">Hundred To One</a>
+                    <a class="text-3xl font-bold" href="/profile">Hundred To One</a>
                 {% else %}
-                    <a class="text-2xl font-bold" href="/">Hundred To One</a>
+                    <a class="text-3xl font-bold" href="/">Hundred To One</a>
                 {% endif %}
             </div>
             {% if current_user.is_authenticated and not public %}
                 <div class="dropdown dropdown-end">
-                    <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar avatar-placeholder">
+                    <div tabindex="0" role="button" class="btn btn-lg btn-ghost btn-circle avatar avatar-placeholder">
                         <div class="w-10 rounded-full text-lg text-white" id="avatarContainer"
                              data-nickname="{{ current_user.nickname }}"></div>
                     </div>
-                    <ul tabindex="0"
-                        class="menu menu-md dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+                    <ul tabindex="0" class="menu menu-md dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
                         <li class="max-w-full">
                             <a class="flex w-full" href="/profile">
                                 <svg class="w-5 fill-current flex-shrink-0" xmlns="http://www.w3.org/2000/svg"
@@ -37,27 +36,33 @@
                                 <span class="truncate">{{ current_user.nickname }}</span>
                             </a>
                         </li>
-                        <li><a href="/questions" class="flex w-full">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 class="w-5 fill-current flex-shrink-0">
-                                <path d="M11.29,15.29a1.58,1.58,0,0,0-.12.15.76.76,0,0,0-.09.18.64.64,0,0,0-.06.18,1.36,1.36,0,0,0,0,.2.84.84,0,0,0,.08.38.9.9,0,0,0,.54.54.94.94,0,0,0,.76,0,.9.9,0,0,0,.54-.54A1,1,0,0,0,13,16a1,1,0,0,0-.29-.71A1,1,0,0,0,11.29,15.29ZM12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm0,18a8,8,0,1,1,8-8A8,8,0,0,1,12,20ZM12,7A3,3,0,0,0,9.4,8.5a1,1,0,1,0,1.73,1A1,1,0,0,1,12,9a1,1,0,0,1,0,2,1,1,0,0,0-1,1v1a1,1,0,0,0,2,0v-.18A3,3,0,0,0,12,7Z"></path>
-                            </svg>
-                            <span>Вопросы</span>
-                        </a></li>
-                        <li><a href="/polls" class="flex w-full">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 class="w-5 fill-current flex-shrink-0">
-                                <path d="M21,12a1,1,0,0,0-1,1v6a1,1,0,0,1-1,1H5a1,1,0,0,1-1-1V5A1,1,0,0,1,5,4h6a1,1,0,0,0,0-2H5A3,3,0,0,0,2,5V19a3,3,0,0,0,3,3H19a3,3,0,0,0,3-3V13A1,1,0,0,0,21,12ZM6,12.76V17a1,1,0,0,0,1,1h4.24a1,1,0,0,0,.71-.29l6.92-6.93h0L21.71,8a1,1,0,0,0,0-1.42L17.47,2.29a1,1,0,0,0-1.42,0L13.23,5.12h0L6.29,12.05A1,1,0,0,0,6,12.76ZM16.76,4.41l2.83,2.83L18.17,8.66,15.34,5.83ZM8,13.17l5.93-5.93,2.83,2.83L10.83,16H8Z"></path>
-                            </svg>
-                            <span>Опросы</span>
-                        </a></li>
-                        <li><a href="/games" class="flex w-full">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 class="w-5 fill-current flex-shrink-0">
-                                <path d="M12.57,16.3a.64.64,0,0,0-.15-.13l-.17-.09L12.06,16a1,1,0,0,0-.9.28,1,1,0,0,0-.22.32,1,1,0,0,0-.07.39,1,1,0,0,0,.29.7,1,1,0,0,0,.32.22,1,1,0,0,0,.39.07,1,1,0,0,0,.38-.07,1,1,0,0,0,.32-.22,1,1,0,0,0,.3-.7,1,1,0,0,0-.08-.39A.87.87,0,0,0,12.57,16.3ZM11.87,9a3,3,0,0,0-2.6,1.5,1,1,0,1,0,1.73,1,1,1,0,0,1,1.87.5,1,1,0,0,1-1,1,1,1,0,1,0,0,2,3,3,0,0,0,0-6ZM19,5.5H12.72l-.32-1a3,3,0,0,0-2.84-2H5a3,3,0,0,0-3,3v13a3,3,0,0,0,3,3H19a3,3,0,0,0,3-3V8.5A3,3,0,0,0,19,5.5Zm1,13a1,1,0,0,1-1,1H5a1,1,0,0,1-1-1V5.5a1,1,0,0,1,1-1H9.56a1,1,0,0,1,.95.68l.54,1.64A1,1,0,0,0,12,7.5h7a1,1,0,0,1,1,1Z"></path>
-                            </svg>
-                            <span>Игры</span>
-                        </a></li>
+                        <li>
+                            <a href="/questions" class="flex w-full">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                     class="w-5 fill-current flex-shrink-0">
+                                    <path d="M11.29,15.29a1.58,1.58,0,0,0-.12.15.76.76,0,0,0-.09.18.64.64,0,0,0-.06.18,1.36,1.36,0,0,0,0,.2.84.84,0,0,0,.08.38.9.9,0,0,0,.54.54.94.94,0,0,0,.76,0,.9.9,0,0,0,.54-.54A1,1,0,0,0,13,16a1,1,0,0,0-.29-.71A1,1,0,0,0,11.29,15.29ZM12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm0,18a8,8,0,1,1,8-8A8,8,0,0,1,12,20ZM12,7A3,3,0,0,0,9.4,8.5a1,1,0,1,0,1.73,1A1,1,0,0,1,12,9a1,1,0,0,1,0,2,1,1,0,0,0-1,1v1a1,1,0,0,0,2,0v-.18A3,3,0,0,0,12,7Z"></path>
+                                </svg>
+                                <span>Вопросы</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/polls" class="flex w-full">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                     class="w-5 fill-current flex-shrink-0">
+                                    <path d="M21,12a1,1,0,0,0-1,1v6a1,1,0,0,1-1,1H5a1,1,0,0,1-1-1V5A1,1,0,0,1,5,4h6a1,1,0,0,0,0-2H5A3,3,0,0,0,2,5V19a3,3,0,0,0,3,3H19a3,3,0,0,0,3-3V13A1,1,0,0,0,21,12ZM6,12.76V17a1,1,0,0,0,1,1h4.24a1,1,0,0,0,.71-.29l6.92-6.93h0L21.71,8a1,1,0,0,0,0-1.42L17.47,2.29a1,1,0,0,0-1.42,0L13.23,5.12h0L6.29,12.05A1,1,0,0,0,6,12.76ZM16.76,4.41l2.83,2.83L18.17,8.66,15.34,5.83ZM8,13.17l5.93-5.93,2.83,2.83L10.83,16H8Z"></path>
+                                </svg>
+                                <span>Опросы</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/games" class="flex w-full">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                     class="w-5 fill-current flex-shrink-0">
+                                    <path d="M12.57,16.3a.64.64,0,0,0-.15-.13l-.17-.09L12.06,16a1,1,0,0,0-.9.28,1,1,0,0,0-.22.32,1,1,0,0,0-.07.39,1,1,0,0,0,.29.7,1,1,0,0,0,.32.22,1,1,0,0,0,.39.07,1,1,0,0,0,.38-.07,1,1,0,0,0,.32-.22,1,1,0,0,0,.3-.7,1,1,0,0,0-.08-.39A.87.87,0,0,0,12.57,16.3ZM11.87,9a3,3,0,0,0-2.6,1.5,1,1,0,1,0,1.73,1,1,1,0,0,1,1.87.5,1,1,0,0,1-1,1,1,1,0,1,0,0,2,3,3,0,0,0,0-6ZM19,5.5H12.72l-.32-1a3,3,0,0,0-2.84-2H5a3,3,0,0,0-3,3v13a3,3,0,0,0,3,3H19a3,3,0,0,0,3-3V8.5A3,3,0,0,0,19,5.5Zm1,13a1,1,0,0,1-1,1H5a1,1,0,0,1-1-1V5.5a1,1,0,0,1,1-1H9.56a1,1,0,0,1,.95.68l.54,1.64A1,1,0,0,0,12,7.5h7a1,1,0,0,1,1,1Z"></path>
+                                </svg>
+                                <span>Игры</span>
+                            </a>
+                        </li>
                         <li class="max-w-full">
                             <a class="flex w-full" href="/settings">
                                 <svg class="w-5 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">

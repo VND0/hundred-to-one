@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="max-w-3xl mx-auto px-4 mt-5">
+    <div class="max-w-3xl mt-8 mx-auto px-4">
         <div class="flex justify-between items-center">
-            <h1 class="font-bold text-3xl">Вопросы</h1>
+            <h1 class="font-bold text-2xl">Вопросы</h1>
             <a class="link link-info font-bold text-xl" href="/profile">Назад</a>
         </div>
 
@@ -12,20 +12,20 @@
                 <div class="flex-1">
                     <label class="input join-item w-full">
                         <input type="text" placeholder="Текст вопроса" minlength="4" maxlength="250" required
-                               class="text-base" id="addInput"/>
+                               class="text-base" id="addInput" />
                     </label>
                 </div>
                 <button class="btn btn-accent join-item">Добавить</button>
             </div>
         </form>
 
-        <ul id="questionsList" class="space-y-4 pb-4">
+        <ul id="questionsList" class="space-y-5 pb-4">
             {% for question in questions %}
                 <li class="flex items-center gap-2 w-full bg-base-300 rounded-lg px-4 py-2" data-id="{{ question.id }}">
                     <span class="flex-1 font-semibold">{{ question.question }}</span>
                     <a href="/answers/{{ question.id }}"
-                       class="btn btn-outline {{ 'btn-info' if len(question.answers) < 100 else 'btn-success' }} btn-xs">
-                        Ответов: {{ len(question.answers) }}
+                       class="btn btn-sm btn-soft {{ 'btn-info' if len(question.answers) < 100 else 'btn-success' }}">
+                        Ответы: {{ len(question.answers) }}
                     </a>
                     <button class="btn btn-xs btn-ghost edit-btn">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" stroke-width="2"

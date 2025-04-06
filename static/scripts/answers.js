@@ -5,6 +5,9 @@ const questionId = answersListElem.dataset.questionId
 const params = new URLSearchParams()
 params.append("question_id", questionId)
 fetch(`/api/answers?${params}`, {method: "GET"}).then((response) => response.json()).then((data) => {
+    if (data.length !== 0) {
+        answersListElem.innerHTML = ""
+    }
     loadAnswers(data)
 })
 

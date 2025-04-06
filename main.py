@@ -125,9 +125,9 @@ def questions_list():
 def question_answers(question_id: str):
     question = db.session.query(Question).filter(Question.id == question_id).one_or_none()
     if not question:
-        redirect("/questions")
+        return redirect("/questions")
 
-    return render_template("answers.html", title="Ответы на вопрос", question_id=question_id)
+    return render_template("answers.html", title="Ответы на вопрос", question=question)
 
 
 @app.route("/polls")
@@ -142,7 +142,7 @@ def polls_list():
 def poll_questions(poll_id: str):
     poll = db.session.query(Poll).filter(Poll.id == poll_id and Poll.user_id == current_user.id).one_or_none()
     if not poll:
-        redirect("/polls")
+        return redirect("/polls")
 
     all_questions = db.session.query(Question).filter(Question.user_id == current_user.id).all()
     other_questions = [question for question in all_questions if question not in poll.questions]

@@ -117,7 +117,7 @@ def user_settings():
 @login_required
 def questions_list():
     questions = db.session.query(Question).filter(Question.user_id == current_user.id).all()
-    return render_template("questions.html", title="Мои вопросы", questions=questions, len=len)
+    return render_template("questions.html", title="Мои вопросы", questions=questions)
 
 
 @app.route("/answers/<question_id>")
@@ -134,7 +134,7 @@ def question_answers(question_id: str):
 @login_required
 def polls_list():
     polls = db.session.query(Poll).filter(Poll.user_id == current_user.id).all()
-    return render_template("polls.html", title="Мои опросы", polls=polls, len=len)
+    return render_template("polls.html", title="Мои опросы", polls=polls)
 
 
 @app.route("/poll-questions/<poll_id>")
@@ -148,7 +148,7 @@ def poll_questions(poll_id: str):
     other_questions = [question for question in all_questions if question not in poll.questions]
 
     return render_template("poll_questions.html", title="Вопросы для опроса", other_questions=other_questions,
-                           poll=poll, len=len)
+                           poll=poll)
 
 
 @app.route("/public/polls/<poll_id>", methods=["POST", "GET"])
@@ -161,13 +161,14 @@ def poll_form(poll_id: str):
 
     if type(form_response) is Response:
         return form_response
+
     return render_template("poll_form.html", title="Прохождение опроса", poll=poll,
                            error=form_response, public=True)
 
 
 @app.route("/public/polls/done")
 def poll_form_done():
-    return render_template("poll_form_done.html", title="Опрос пройден")
+    return render_template("poll_form_done.html", title="Опрос пройден", public=True)
 
 
 if __name__ == '__main__':

@@ -6,7 +6,7 @@ from pydantic import ValidationError
 
 import models
 from database.database import db
-from database.db_models import User, Poll, Question, Answer
+from database.db_models import User, Poll, Answer
 from init_account import add_questions
 from models import PasswordsUnmatch, UserCreate, AnswerCreate
 
@@ -22,7 +22,7 @@ def get_errors(e: ValidationError) -> str:
         elif "password" in loc:
             errors.append("В пароле разрешены цифры, латиница и специальные символы. Допустимая длина - от 8 до 60 символов.")
         elif "poll" in loc:
-            errors.append("Допустимая длина названия опроса - от 2 до 100 символов.")
+            errors.append("Допустимая длина названия опроса - от 2 до 70 символов.")
         elif "question" in loc:
             errors.append("Допустимая длина вопроса - от 4 до 250 символов.")
         elif "answer" in loc:

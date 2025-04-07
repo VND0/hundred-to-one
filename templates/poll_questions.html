@@ -1,46 +1,68 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="max-w-3xl mx-auto px-4 pb-5">
-        <h1 class="text-center font-bold text-3xl my-6">Вопросы опроса "{{ poll.poll }}"</h1>
+    <div class="max-w-3xl mt-8 mx-auto px-4 pb-8">
+        <div class="flex justify-between items-center">
+            <h1 class="font-bold text-2xl">Вопросы опроса</h1>
+            <a class="link link-info font-bold text-xl" href="/polls">Назад</a>
+        </div>
 
-        <div class="mb-8">
-            <div class="divider divider-start text-xl font-semibold">Добавленные</div>
+        <span class="font-semibold opacity-50 italic">{{ poll.poll }}</span>
+
+        <div class="my-6">
+            <div class="divider divider-start text-xl font-semibold">Добавленные ({{ poll.questions | length }})</div>
             <ul id="pollQuestions" class="px-4 space-y-4">
                 {% for question in poll.questions %}
-                    <li class="flex items-center gap-2 w-full bg-base-300 rounded-lg px-4 py-2"
-                        data-question-id="{{ question.id }}">
-                        <span class="flex-1 font-semibold">{{ question.question }}</span>
-                        <a href="/answers/{{ question.id }}"
-                           class="btn btn-outline {{ 'btn-info' if len(question.answers) < 100 else 'btn-success' }} btn-xs">
-                            Ответов: {{ len(question.answers) }}
-                        </a>
-                        <input type="checkbox" class="checkbox border-2 border-accent checkbox-sm" checked/>
+                    {% set word_amount = question.question.strip().split() | length %}
+                    <li class="flex items-center gap-2 w-full bg-base-300 rounded-lg px-4 py-2" data-question-id="{{ question.id }}">
+                        <span class="flex-1 font-semibold {{ 'break-words' if word_amount > 1 else 'break-all' }}">
+                            {{ question.question }}
+                        </span>
+
+                        <div class="flex self-start items-center gap-2">
+                            <a href="/answers/{{ question.id }}"
+                               class="btn btn-xs btn-soft {{ 'btn-info' if question.answers | length < 100 else 'btn-success' }}">
+                                Ответы: {{ question.answers | length }}
+                            </a>
+
+                            <input type="checkbox" class="checkbox checkbox-sm checkbox-accent border-2" checked />
+                        </div>
                     </li>
                 {% endfor %}
             </ul>
         </div>
 
-        <div class="mb-8">
-            <div class="divider divider-start text-xl font-semibold">Доступные</div>
+        <div class="mb-6">
+            <div class="divider divider-start text-xl font-semibold">Доступные ({{ other_questions | length }})</div>
             <ul id="noPollQuestions" class="px-4 space-y-4">
                 {% for question in other_questions %}
-                    <li class="flex items-center gap-2 w-full bg-base-300 rounded-lg px-4 py-2"
-                        data-question-id="{{ question.id }}">
-                        <span class="flex-1 font-semibold">{{ question.question }}</span>
-                        <a href="/answers/{{ question.id }}"
-                           class="btn btn-outline {{ 'btn-info' if len(question.answers) < 100 else 'btn-success' }} btn-xs">
-                            Ответов: {{ len(question.answers) }}</a>
-                        <input type="checkbox" class="checkbox border-2 border-accent checkbox-sm"/>
+                    {% set word_amount = question.question.strip().split() | length %}
+                    <li class="flex items-center gap-4 w-full bg-base-300 rounded-lg px-4 py-2" data-question-id="{{ question.id }}">
+                        <span class="flex-1 font-semibold {{ 'break-words' if word_amount > 1 else 'break-all' }}">
+                            {{ question.question }}
+                        </span>
+
+                        <div class="flex self-start items-center gap-2">
+                            <a href="/answers/{{ question.id }}"
+                               class="btn btn-xs btn-soft {{ 'btn-info' if question.answers | length < 100 else 'btn-success' }}">
+                                Ответы: {{ question.answers | length }}
+                            </a>
+
+                            <input type="checkbox" class="checkbox checkbox-sm checkbox-accent border-2" />
+                        </div>
                     </li>
                 {% endfor %}
             </ul>
         </div>
-        <a href="/polls" class="btn btn-accent mx-auto block max-w-xs flex items-center justify-center">Вернуться к
-            списку опросов</a>
+
+        <a href="/polls" class="flex justify-center items-center btn btn-accent block max-w-1/2 mx-auto">
+            Вернуться к списку опросов
+        </a>
+
         <button class="btn btn-secondary fixed bottom-15 right-15" id="saveButton" data-poll-id="{{ poll.id }}">
             Сохранить
         </button>
+
         <script src="{{ url_for('static', filename='scripts/pollQuestions.js') }}" type="module"></script>
     </div>
 {% endblock %}

@@ -14,13 +14,20 @@ function changesCounterUpdate() {
     saveButton.style.display = changesCounter === 0 ? "none" : "block"
 }
 
-function highlightCheckedCheckbox(input) {
+function highlightCheckedCheckbox(input, type) {
     const classList = input.classList
-    const borderSecondary = "border-secondary"
-    const borderAccent = "border-accent"
 
-    classList.toggle(borderAccent)
-    classList.toggle(borderSecondary)
+    const checkboxPrimary = "checkbox-error"
+    const checkboxSecondary = "checkbox-secondary"
+    const checkboxAccent = "checkbox-accent"
+
+    if (type === "other") {
+        classList.toggle(checkboxSecondary)
+    } else {
+        classList.toggle(checkboxPrimary)
+    }
+
+    classList.toggle(checkboxAccent)
 }
 
 pollQuestions.forEach((elem) => {
@@ -35,7 +42,7 @@ pollQuestions.forEach((elem) => {
             changesCounter++
         }
         changesCounterUpdate()
-        highlightCheckedCheckbox(input)
+        highlightCheckedCheckbox(input, "poll")
     })
 })
 
@@ -51,7 +58,7 @@ otherQuestions.forEach((elem) => {
             changesCounter--
         }
         changesCounterUpdate()
-        highlightCheckedCheckbox(input)
+        highlightCheckedCheckbox(input, "other")
     })
 })
 

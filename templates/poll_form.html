@@ -1,29 +1,41 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="max-w-2xl mx-auto pt-12 px-4">
-        {% if not poll %}
-            <h1 class="text-center font-bold text-2xl">Ошибка: Такого опроса не существует</h1>
-        {% else %}
-            <form id="pollForm" class="bg-base-300 rounded-xl p-6" method="post">
-                <h1 class="text-center font-bold text-2xl">Опрос: {{ poll.poll }}</h1>
+    <main class="flex items-center min-h-[calc(100vh-5rem)]">
+        <div class="max-w-2xl mx-auto px-4 py-12">
+            {% if not poll %}
+                <h1 class="text-2xl font-bold text-center">Ошибка: Такого опроса не существует</h1>
+            {% else %}
+                <form id="pollForm" class="bg-base-300 rounded-xl p-6" method="post">
+                    {% set p_word_amount = poll.poll.strip().split() | length %}
 
-                {% for question in poll.questions %}
-                    <fieldset class="fieldset mt-2">
-                        <legend class="fieldset-legend text-lg">{{ question.question }}</legend>
-                        <input type="text" placeholder="Ваш ответ" minlength="1" maxlength="40"
-                               class="input w-full rounded-xl text-base" name="answer-{{ loop.index }}" required />
-                    </fieldset>
-                {% endfor %}
+                    <h1 class="text-2xl font-bold">Прохождение опроса</h1>
 
-                {% if error %}
-                    <div role="alert" class="alert alert-error alert-soft mb-6">
-                        <span>{{ error }}</span>
-                    </div>
-                {% endif %}
+                    <span class="font-semibold opacity-50 italic {{ 'break-words' if p_word_amount > 1 else 'break-all' }}">
+                        {{ poll.poll }}
+                    </span>
 
-                <button class="btn btn-base btn-info rounded-xl text-base mt-4" type="submit">Отправить</button>
-            </form>
-        {% endif %}
-    </div>
+                    {% for question in poll.questions %}
+                        {% set q_word_amount = poll.poll.strip().split() | length %}
+                        <fieldset class="fieldset mb-2">
+                            <legend class="fieldset-legend text-lg {{ 'break-words' if p_word_amount > 1 else 'break-all' }}">
+                                {{ loop.index }}. {{ question.question }}
+                            </legend>
+
+                            <input type="text" placeholder="Ваш ответ" minlength="1" maxlength="40"
+                                   class="input w-full rounded-xl text-base" name="answer-{{ loop.index }}" required />
+                        </fieldset>
+                    {% endfor %}
+
+                    {% if error %}
+                        <div role="alert" class="alert alert-error alert-soft mb-6">
+                            <span>{{ error }}</span>
+                        </div>
+                    {% endif %}
+
+                    <button class="btn btn-base btn-info rounded-xl text-base" type="submit">Отправить</button>
+                </form>
+            {% endif %}
+        </div>
+    </main>
 {% endblock %}

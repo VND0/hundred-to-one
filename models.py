@@ -56,7 +56,7 @@ class QuestionCreate(Question):
 
 
 class Poll(BaseModel):
-    poll: str = Field(min_length=2, max_length=100)
+    poll: str = Field(min_length=2, max_length=70)
 
 
 class PollCreate(Poll):

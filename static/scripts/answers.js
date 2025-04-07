@@ -1,4 +1,5 @@
 const tmplt = document.querySelector("#answerTemplate")
+const backLink = document.querySelector("#backLink")
 const answersListElem = document.querySelector("#answersList")
 const questionId = answersListElem.dataset.questionId
 
@@ -46,3 +47,8 @@ async function deleteAnswerRequest(answerId, toBeDeleted) {
         console.log(data)
     }
 }
+
+backLink.addEventListener("click", () => {
+    document.location.href = document.referrer
+})
+

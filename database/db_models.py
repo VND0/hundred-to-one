@@ -51,7 +51,7 @@ class Answer(db.Model, SerializerMixin):
     __tablename__ = "answers"
 
     id: Mapped[str] = mapped_column(primary_key=True)
-    answer: Mapped[str] = mapped_column(String(50), nullable=False)
+    answer: Mapped[str] = mapped_column(String(40), nullable=False)
     question_id: Mapped[str] = mapped_column(ForeignKey(Question.id), nullable=False)
     quantity: Mapped[int] = mapped_column(nullable=False)
 
@@ -66,7 +66,7 @@ class Poll(db.Model, SerializerMixin):
     __tablename__ = "polls"
 
     id: Mapped[str] = mapped_column(primary_key=True)
-    poll: Mapped[str] = mapped_column(String(100), nullable=False)
+    poll: Mapped[str] = mapped_column(String(70), nullable=False)
     user_id: Mapped[str] = mapped_column(ForeignKey(User.id), nullable=False)
 
     user: Mapped["User"] = relationship(back_populates="polls")

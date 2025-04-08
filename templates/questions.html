@@ -30,8 +30,7 @@
                     </span>
 
                     <div class="flex self-start items-center gap-2">
-                        <a href="/answers/{{ question.id }}"
-                           class="btn btn-xs btn-soft {{ 'btn-info' if question.answers | length < 100 else 'btn-success' }}">
+                        <a href="/answers/{{ question.id }}" class="btn btn-xs btn-soft btn-info">
                             Ответы: {{ question.answers | length }}
                         </a>
 
@@ -65,6 +64,8 @@
             </div>
         </div>
     </dialog>
+{% endblock %}
 
+{% block scripts %}
     <script src="{{ url_for('static', filename='scripts/questions.js') }}" type="module"></script>
 {% endblock %}

@@ -33,6 +33,7 @@ function highlightCheckedCheckbox(input, type) {
 pollQuestions.forEach((elem) => {
     const id = elem.dataset.questionId
     const input = elem.querySelector("input")
+
     input.addEventListener("change", () => {
         if (input.checked) {
             requestData.toOther.splice(requestData.toOther.indexOf(id))
@@ -49,6 +50,7 @@ pollQuestions.forEach((elem) => {
 otherQuestions.forEach((elem) => {
     const id = elem.dataset.questionId
     const input = elem.querySelector("input")
+
     input.addEventListener("change", () => {
         if (input.checked) {
             requestData.toAdded.push(id)

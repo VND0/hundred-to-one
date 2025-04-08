@@ -2,7 +2,7 @@
 
 {% block content %}
     <main class="flex items-center min-h-[calc(100vh-5rem)]">
-        <div class="max-w-2xl mx-auto px-4 py-12">
+        <div class="max-w-2xl w-full mx-auto px-4 py-12">
             {% if not poll %}
                 <h1 class="text-2xl font-bold text-center">Ошибка: Такого опроса не существует</h1>
             {% else %}
@@ -15,17 +15,21 @@
                         {{ poll.poll }}
                     </span>
 
-                    {% for question in poll.questions %}
-                        {% set q_word_amount = poll.poll.strip().split() | length %}
-                        <fieldset class="fieldset mb-2">
-                            <legend class="fieldset-legend text-lg {{ 'break-words' if p_word_amount > 1 else 'break-all' }}">
-                                {{ loop.index }}. {{ question.question }}
-                            </legend>
+                    <ul class="my-4 space-y-2">
+                        {% for question in poll.questions %}
+                            {% set q_word_amount = poll.poll.strip().split() | length %}
+                            <li>
+                                <fieldset class="fieldset">
+                                    <legend class="fieldset-legend text-lg {{ 'break-words' if p_word_amount > 1 else 'break-all' }}">
+                                        {{ loop.index }}. {{ question.question }}
+                                    </legend>
 
-                            <input type="text" placeholder="Ваш ответ" minlength="1" maxlength="40"
-                                   class="input w-full rounded-xl text-base" name="answer-{{ loop.index }}" required />
-                        </fieldset>
-                    {% endfor %}
+                                    <input type="text" placeholder="Ваш ответ" minlength="1" maxlength="40"
+                                           class="input w-full rounded-xl text-base" name="answer-{{ loop.index }}" required />
+                                </fieldset>
+                            </li>
+                        {% endfor %}
+                    </ul>
 
                     {% if error %}
                         <div role="alert" class="alert alert-error alert-soft mb-6">

@@ -93,6 +93,8 @@
 
     {% block content %}{% endblock %}
 
-<script src="{{ url_for('static', filename='scripts/avatar.js') }}" type="module"></script>
+    <script src="{{ url_for('static', filename='scripts/avatar.js') }}" type="module"></script>
+
+    {% block scripts %} {% endblock %}
 </body>
 </html>

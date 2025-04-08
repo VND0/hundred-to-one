@@ -7,7 +7,7 @@ from flask_restful import Api
 import tools
 from answers_resource import AnswersListResource, AnswersResource
 from database.database import db
-from database.db_models import User, Question, Poll
+from database.db_models import User, Question, Poll, Game
 from poll_questions_resource import PollQuestionResource
 from polls_resource import PollResource, PollsListResource
 from questions_resource import QuestionResource, QuestionListResource
@@ -169,6 +169,24 @@ def poll_form(poll_id: str):
 @app.route("/public/polls/done")
 def poll_form_done():
     return render_template("poll_form_done.html", title="Опрос пройден", public=True)
+
+
+@app.route("/games")
+@login_required
+def games_list():
+    game_questions = db.session.query(Question).filter(Question.user_id == current_user.id).all()
+    games = db.session.query(Game).filter(Game.user_id == current_user.id).all()
+    return render_template("games.html", title="Мои игры", games=games, questions=game_questions)
+
+
+@app.route("/game-info/<game_id>")
+@login_required
+def game_info(game_id: str):
+    game = db.session.query(Game).filter(Game.id == game_id).one_or_none()
+    if not game:
+        return redirect("/games")
+
+    render_template("game_info.html", title="Отчет по игре", game=game)
 
 
 if __name__ == '__main__':

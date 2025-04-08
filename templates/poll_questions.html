@@ -20,8 +20,7 @@
                         </span>
 
                         <div class="flex self-start items-center gap-2">
-                            <a href="/answers/{{ question.id }}"
-                               class="btn btn-xs btn-soft {{ 'btn-info' if question.answers | length < 100 else 'btn-success' }}">
+                            <a href="/answers/{{ question.id }}" class="btn btn-xs btn-soft btn-info">
                                 Ответы: {{ question.answers | length }}
                             </a>
 
@@ -62,7 +61,9 @@
         <button class="btn btn-secondary fixed bottom-15 right-15" id="saveButton" data-poll-id="{{ poll.id }}">
             Сохранить
         </button>
-
-        <script src="{{ url_for('static', filename='scripts/pollQuestions.js') }}" type="module"></script>
     </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='scripts/pollQuestions.js') }}" type="module"></script>
 {% endblock %}

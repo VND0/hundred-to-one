@@ -14,6 +14,14 @@ poll_question = Table(
 )
 
 
+game_question = Table(
+    "game-question",
+    db.Model.metadata,
+    Column("game_id", ForeignKey("games.id")),
+    Column("question_id", ForeignKey("questions.id"))
+)
+
+
 class User(db.Model, SerializerMixin, UserMixin):
     __tablename__ = "users"
 
@@ -22,8 +30,20 @@ class User(db.Model, SerializerMixin, UserMixin):
     email: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
     hashed_pwd: Mapped[str] = mapped_column(String(255), nullable=False)
 
-    questions: Mapped[list["Question"]] = relationship(back_populates="user")
-    polls: Mapped[list["Poll"]] = relationship(back_populates="user")
+    questions: Mapped[list["Question"]] = relationship(
+        argument="Question",
+        back_populates="user"
+    )
+
+    polls: Mapped[list["Poll"]] = relationship(
+        argument="Poll",
+        back_populates="user"
+    )
+
+    games: Mapped[list["Game"]] = relationship(
+        argument="Game",
+        back_populates="user"
+    )
 
     def set_password(self, password):
         self.hashed_pwd = generate_password_hash(password)
@@ -39,8 +59,15 @@ class Question(db.Model, SerializerMixin):
     question: Mapped[str] = mapped_column(String(250), nullable=False)
     user_id: Mapped[str] = mapped_column(ForeignKey(User.id), nullable=False)
 
-    user: Mapped["User"] = relationship(back_populates="questions")
-    answers: Mapped[list["Answer"]] = relationship(back_populates="question")
+    user: Mapped["User"] = relationship(
+        argument="User",
+        back_populates="questions"
+    )
+
+    answers: Mapped[list["Answer"]] = relationship(
+        argument="Answer",
+        back_populates="question"
+    )
 
     __table_args__ = (
         db.UniqueConstraint("user_id", "question", name="uq_user_question"),
@@ -55,10 +82,13 @@ class Answer(db.Model, SerializerMixin):
     question_id: Mapped[str] = mapped_column(ForeignKey(Question.id), nullable=False)
     quantity: Mapped[int] = mapped_column(nullable=False)
 
-    question: Mapped["Question"] = relationship(back_populates="answers")
+    question: Mapped["Question"] = relationship(
+        argument="Question",
+        back_populates="answers"
+    )
 
     __table_args__ = (
-        db.UniqueConstraint("question_id", "answer", name="unique_answer_entity"),
+        db.UniqueConstraint("question_id", "answer", name="uq_question_answer"),
     )
 
 
@@ -69,9 +99,32 @@ class Poll(db.Model, SerializerMixin):
     poll: Mapped[str] = mapped_column(String(70), nullable=False)
     user_id: Mapped[str] = mapped_column(ForeignKey(User.id), nullable=False)
 
-    user: Mapped["User"] = relationship(back_populates="polls")
-    questions: Mapped[list["Question"]] = relationship(secondary=poll_question)
+    user: Mapped["User"] = relationship(
+        argument="User",
+        back_populates="polls"
+    )
+
+    questions: Mapped[list["Question"]] = relationship(
+        secondary=poll_question
+    )
 
     __table_args__ = (
         db.UniqueConstraint("user_id", "poll", name="uq_user_poll"),
+    )
+
+
+class Game(db.Model, SerializerMixin):
+    __tablename__ = "games"
+
+    id: Mapped[str] = mapped_column(primary_key=True)
+    game: Mapped[str] = mapped_column(String(50), nullable=False)
+    user_id: Mapped[str] = mapped_column(ForeignKey(User.id), nullable=False)
+
+    user: Mapped["User"] = relationship(
+        argument="User",
+        back_populates="games"
+    )
+
+    questions: Mapped[list["Question"]] = relationship(
+        secondary=game_question
     )

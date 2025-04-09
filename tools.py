@@ -6,9 +6,9 @@ from pydantic import ValidationError
 
 import models
 from database.database import db
-from database.db_models import User, Poll, Answer
+from database.db_models import User, Poll, Answer, Game
 from init_account import add_questions
-from models import PasswordsUnmatch, UserCreate, AnswerCreate
+from models import PasswordsUnmatch, UserCreate, AnswerCreate, GameCreate
 
 
 def get_errors(e: ValidationError) -> str:
@@ -27,6 +27,8 @@ def get_errors(e: ValidationError) -> str:
             errors.append("Допустимая длина вопроса - от 4 до 250 символов.")
         elif "answer" in loc:
             errors.append("Допустимая длина ответа - от 1 до 40 символов.")
+        elif "game" in loc:
+            errors.append("Допустимая длина названия игры - от 5 до 50 символов. У игры может быть только 7 вопросов.")
         else:
             raise NotImplementedError
     return " ".join(errors)
@@ -198,3 +200,22 @@ def handle_poll_form(poll_id: str) -> str | Response:
     db.session.commit()
 
     return redirect("/public/polls/done")
+
+
+def handle_game_form() -> str | Response:
+    form = request.form
+
+    try:
+        model = GameCreate(
+            game=form.get("game"),
+            game_questions=form.getlist("question")
+        )
+    except ValidationError as e:
+        return get_errors(e)
+
+    new_game = Game(
+        game=model.game,
+        user_id=current_user.id
+    )
+
+    return redirect("/games")

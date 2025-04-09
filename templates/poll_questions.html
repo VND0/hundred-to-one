@@ -9,7 +9,7 @@
 
         <span class="font-semibold opacity-50 italic">{{ poll.poll }}</span>
 
-        <div class="my-6">
+        <div class="mt-6">
             <div class="divider divider-start text-xl font-semibold">Добавленные ({{ poll.questions | length }})</div>
             <ul id="pollQuestions" class="px-4 space-y-4">
                 {% for question in poll.questions %}
@@ -31,7 +31,7 @@
             </ul>
         </div>
 
-        <div class="mb-6">
+        <div class="my-8">
             <div class="divider divider-start text-xl font-semibold">Доступные ({{ other_questions | length }})</div>
             <ul id="noPollQuestions" class="px-4 space-y-4">
                 {% for question in other_questions %}

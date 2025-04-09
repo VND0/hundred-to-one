@@ -26,7 +26,7 @@ QUESTIONS = [
 def add_questions(user_id: str) -> None:
     user = db.session.query(User).filter(User.id == user_id).one()
     shuffle(QUESTIONS)
-    for q in QUESTIONS[:5]:
+    for q in QUESTIONS[:7]:
         question = Question(id=str(uuid.uuid4()), question=q, user_id=user_id)
         db.session.add(question)
         user.questions.append(question)

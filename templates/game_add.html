@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="max-w-3xl mx-auto px-4">
+        <div class="flex justify-between items-center my-8">
+            <h1 class="font-bold text-2xl">Создание игры</h1>
+            <a class="link link-info font-bold text-xl" href="/games">Назад</a>
+        </div>
+
+        <form id="addForm" class="bg-base-300 rounded-lg mt-4 p-6">
+            <h1 class="text-2xl font-bold text-center mb-4">Новая игра</h1>
+
+            <label class="floating-label block w-full mb-6">
+                <span>Название игры</span>
+                <input type="text" placeholder="Название игры" minlength="5" maxlength="50"
+                       class="input w-full rounded-xl text-base" id="addInput" name="game" required />
+            </label>
+
+            <div class="divider divider-error text-lg font-semibold" id="listTitle">Вопросы для игры (0 / 7)</div>
+
+            <ul id="questionsList" class="space-y-4 mb-4">
+                {% for question in questions %}
+                    {% if question.answers | length >= 6 %}
+                        {% set word_amount = question.question.strip().split() | length %}
+                        <li class="flex items-center gap-2 w-full bg-base-200 rounded-lg px-4 py-2" data-question-id="{{ question.id }}">
+                            <span class="flex-1 font-semibold {{ 'break-words' if word_amount > 1 else 'break-all' }}">
+                                {{ question.question }}
+                            </span>
+
+                            <div class="flex self-start items-center gap-2">
+                                <a href="/answers/{{ question.id }}" class="btn btn-xs btn-soft btn-info">
+                                    Ответы: {{ question.answers | length }}
+                                </a>
+
+                                <input type="checkbox" class="checkbox checkbox-sm checkbox-accent border-2" />
+                            </div>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+
+            <button class="btn btn-disabled btn-info rounded-xl" id="addButton" type="submit">Добавить игру</button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='scripts/games.js') }}" type="module"></script>
+{% endblock %}

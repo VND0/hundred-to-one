@@ -21,11 +21,12 @@
 
         <div class="divider text-xl font-semibold mb-6">Список опросов</div>
 
-        <div id="pollsList" class="space-y-8 pb-8">
+        <ul id="pollsList" class="space-y-8 pb-8">
             {% for poll in polls %}
-                <div class="flex flex-col gap-1 w-full bg-base-300 rounded-xl p-4" data-id="{{ poll.id }}">
+                <li class="flex flex-col gap-1 w-full bg-base-300 rounded-xl p-4" data-id="{{ poll.id }}">
                     <div class="flex gap-2 items-center">
                         <h2 class="flex-1 text-xl font-bold truncate poll-name">{{ poll.poll }}</h2>
+
                         <button class="btn btn-xs btn-ghost btn-square edit-btn">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" stroke-width="2"
                                  stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -35,6 +36,7 @@
                                 <path d="M16 5l3 3"></path>
                             </svg>
                         </button>
+
                         <button class="btn btn-xs btn-square btn-error delete-btn">✕</button>
                     </div>
 
@@ -57,9 +59,9 @@
                             </a>
                         </div>
                     </div>
-                </div>
+                </li>
             {% endfor %}
-        </div>
+        </ul>
     </div>
 
     <dialog class="modal">

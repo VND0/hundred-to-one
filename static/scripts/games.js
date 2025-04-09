@@ -4,7 +4,12 @@ let questionsCounter = 0;
 
 const listTitle = document.querySelector("#listTitle")
 const questionsList = document.querySelectorAll("#questionsList>li")
+
+const addForm = document.querySelector("#addForm")
+const gInput = document.querySelector("#addInput")
 const addButton = document.querySelector("#addButton")
+
+const userId = document.querySelector("body").dataset.userId
 
 function changesCounterUpdate() {
     listTitle.innerText = `Вопросы для игры (${questionsCounter} / 7)`

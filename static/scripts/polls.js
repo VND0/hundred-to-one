@@ -2,7 +2,7 @@ import {formError, formMessage} from "./toasts.js";
 
 const addForm = document.querySelector("#addForm")
 const pInput = document.querySelector("#addInput")
-const pollsList = document.querySelectorAll("#pollsList>div")
+const pollsList = document.querySelectorAll("#pollsList>li")
 
 const editInput = document.querySelector("#editInput")
 const saveEdit = document.querySelector("#saveEdit")

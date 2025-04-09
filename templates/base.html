@@ -84,6 +84,9 @@
             {% endif %}
         </nav>
     </header>
+
+    {% block content %}{% endblock %}
+
     <div class="toast" id="toastsContainer"></div>
     <template id="toastTemplate">
         <div class="alert alert-soft">
@@ -91,10 +94,8 @@
         </div>
     </template>
 
-    {% block content %}{% endblock %}
-
     <script src="{{ url_for('static', filename='scripts/avatar.js') }}" type="module"></script>
 
-    {% block scripts %} {% endblock %}
+    {% block scripts %}{% endblock %}
 </body>
 </html>

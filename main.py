@@ -174,9 +174,9 @@ def poll_form_done():
 @app.route("/games")
 @login_required
 def games_list():
-    game_questions = db.session.query(Question).filter(Question.user_id == current_user.id).all()
+    questions = db.session.query(Question).filter(Question.user_id == current_user.id).all()
     games = db.session.query(Game).filter(Game.user_id == current_user.id).all()
-    return render_template("games.html", title="Мои игры", games=games, questions=game_questions)
+    return render_template("games.html", title="Мои игры", games=games, questions=questions, gq=questions[:7])
 
 
 @app.route("/game-info/<game_id>")

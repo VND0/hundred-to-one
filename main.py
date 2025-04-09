@@ -5,12 +5,14 @@ from flask_login import LoginManager, logout_user, login_required, current_user
 from flask_restful import Api
 
 import tools
-from answers_resource import AnswersListResource, AnswersResource
+
 from database.database import db
 from database.db_models import User, Question, Poll, Game
+
 from poll_questions_resource import PollQuestionResource
 from polls_resource import PollResource, PollsListResource
 from questions_resource import QuestionResource, QuestionListResource
+from answers_resource import AnswersListResource, AnswersResource
 
 app = Flask(__name__)
 
@@ -179,11 +181,20 @@ def games_list():
     return render_template("games.html", title="Мои игры", games=games, gq=questions[:7])
 
 
-@app.route("/games/game-add")
+@app.route("/games/game-add", methods=["POST", "GET"])
 @login_required
 def game_add():
+    form_response = None
     questions = db.session.query(Question).filter(Question.user_id == current_user.id).all()
-    return render_template("game_add.html", title="Создание игры", questions=questions)
+
+    if request.method == "POST":
+        pass
+
+    if type(form_response) is Response:
+        return form_response
+
+    return render_template("game_add.html", title="Создание игры", error=form_response,
+                           questions=questions)
 
 
 @app.route("/game-info/<game_id>")

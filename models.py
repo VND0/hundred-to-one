@@ -63,6 +63,11 @@ class PollCreate(Poll):
     user_id: str = USER_ID
 
 
+class PollQuestionsEdit(BaseModel):
+    to_added: list[str] = Field(alias="toAdded")
+    to_other: list[str] = Field(alias="toOther")
+
+
 class Answer(BaseModel):
     answer: str = Field(min_length=1, max_length=40)
 
@@ -71,6 +76,9 @@ class AnswerCreate(Answer):
     pass
 
 
-class PollQuestionsEdit(BaseModel):
-    to_added: list[str] = Field(alias="toAdded")
-    to_other: list[str] = Field(alias="toOther")
+class Game(BaseModel):
+    game: str = Field(min_length=5, max_length=50)
+
+
+class GameCreate(Game):
+    game_questions: list[str] = Field(min_length=7, max_length=7)

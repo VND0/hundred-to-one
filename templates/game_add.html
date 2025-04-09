@@ -39,6 +39,12 @@
                 {% endfor %}
             </ul>
 
+            {% if error %}
+                <div role="alert" class="alert alert-error alert-soft mb-6">
+                    <span>{{ error }}</span>
+                </div>
+            {% endif %}
+
             <button class="btn btn-disabled btn-info rounded-xl" id="addButton" type="submit">Добавить игру</button>
         </form>
     </div>

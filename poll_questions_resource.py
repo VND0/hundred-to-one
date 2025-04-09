@@ -1,6 +1,7 @@
 from flask import jsonify
 from flask_restful import Resource, request, abort
 from pydantic import ValidationError
+from sqlalchemy.exc import IntegrityError
 
 import models
 from database.database import db
@@ -31,7 +32,7 @@ class PollQuestionResource(Resource):
 
         try:
             db.session.commit()
-        except Exception as e:
+        except IntegrityError as e:
             abort(400, message=type(e).__name__)
 
         return jsonify(message="OK")

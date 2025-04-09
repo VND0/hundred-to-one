@@ -176,9 +176,8 @@ def poll_form_done():
 @app.route("/games")
 @login_required
 def games_list():
-    questions = db.session.query(Question).filter(Question.user_id == current_user.id).all()
     games = db.session.query(Game).filter(Game.user_id == current_user.id).all()
-    return render_template("games.html", title="Мои игры", games=games, gq=questions[:7])
+    return render_template("games.html", title="Мои игры", games=games)
 
 
 @app.route("/games/game-add", methods=["POST", "GET"])
@@ -188,7 +187,7 @@ def game_add():
     questions = db.session.query(Question).filter(Question.user_id == current_user.id).all()
 
     if request.method == "POST":
-        pass
+        form_response = tools.handle_game_form()
 
     if type(form_response) is Response:
         return form_response

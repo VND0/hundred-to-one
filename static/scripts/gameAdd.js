@@ -1,15 +1,9 @@
-let requestData = []
-
 let questionsCounter = 0;
 
 const listTitle = document.querySelector("#listTitle")
 const questionsList = document.querySelectorAll("#questionsList>li")
-
-const addForm = document.querySelector("#addForm")
-const gInput = document.querySelector("#addInput")
 const addButton = document.querySelector("#addButton")
 
-const userId = document.querySelector("body").dataset.userId
 
 function changesCounterUpdate() {
     listTitle.innerText = `Вопросы для игры (${questionsCounter} / 7)`
@@ -28,15 +22,12 @@ function changesCounterUpdate() {
 }
 
 questionsList.forEach((elem) => {
-    const id = elem.dataset.questionId
     const input = elem.querySelector("input")
 
     input.addEventListener("change", () => {
         if (input.checked) {
-            requestData.push(id)
             questionsCounter++
         } else {
-            requestData.splice(requestData.indexOf(id))
             questionsCounter--
         }
 

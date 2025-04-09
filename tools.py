@@ -3,10 +3,11 @@ import uuid
 from flask import request, Response, redirect
 from flask_login import login_user, current_user, logout_user
 from pydantic import ValidationError
+from sqlalchemy.exc import IntegrityError
 
 import models
 from database.database import db
-from database.db_models import User, Poll, Answer, Game
+from database.db_models import User, Question, Poll, Answer, Game
 from init_account import add_questions
 from models import PasswordsUnmatch, UserCreate, AnswerCreate, GameCreate
 
@@ -16,19 +17,21 @@ def get_errors(e: ValidationError) -> str:
     for error_object in e.errors():
         loc = error_object["loc"][0]
         if "nickname" in loc:
-            errors.append("Допустимая длина никнейма - от 6 до 30 символов.")
+            errors.append("Допустимая длина никнейма - от 6 до 30 символов")
         elif "email" in loc:
-            errors.append("Допустимая длина почты - от 5 до 100 символов.")
+            errors.append("Допустимая длина почты - от 5 до 100 символов")
         elif "password" in loc:
-            errors.append("В пароле разрешены цифры, латиница и специальные символы. Допустимая длина - от 8 до 60 символов.")
+            errors.append("В пароле разрешены цифры, латиница и специальные символы. Допустимая длина - от 8 до 60 символов")
         elif "poll" in loc:
-            errors.append("Допустимая длина названия опроса - от 2 до 70 символов.")
+            errors.append("Допустимая длина названия опроса - от 2 до 70 символов")
+        elif "game_question" in loc:
+            errors.append("У игры может быть только 7 вопросов")
         elif "question" in loc:
-            errors.append("Допустимая длина вопроса - от 4 до 250 символов.")
+            errors.append("Допустимая длина вопроса - от 4 до 250 символов")
         elif "answer" in loc:
-            errors.append("Допустимая длина ответа - от 1 до 40 символов.")
+            errors.append("Допустимая длина ответа - от 1 до 40 символов")
         elif "game" in loc:
-            errors.append("Допустимая длина названия игры - от 5 до 50 символов. У игры может быть только 7 вопросов.")
+            errors.append("Допустимая длина названия игры - от 5 до 50 символов")
         else:
             raise NotImplementedError
     return " ".join(errors)
@@ -214,8 +217,19 @@ def handle_game_form() -> str | Response:
         return get_errors(e)
 
     new_game = Game(
+        id=str(uuid.uuid4()),
         game=model.game,
         user_id=current_user.id
     )
+
+    for question_id in model.game_questions:
+        question = db.session.query(Question).filter(Question.id == question_id and current_user.id == question.user_id).one()
+        new_game.questions.append(question)
+
+    try:
+        db.session.add(new_game)
+        db.session.commit()
+    except IntegrityError as e:
+        return type(e).__name__
 
     return redirect("/games")

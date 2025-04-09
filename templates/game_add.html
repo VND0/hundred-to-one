@@ -7,7 +7,7 @@
             <a class="link link-info font-bold text-xl" href="/games">Назад</a>
         </div>
 
-        <form id="addForm" class="bg-base-300 rounded-lg mt-4 p-6">
+        <form id="addForm" class="bg-base-300 rounded-lg mt-4 p-6" method="post">
             <h1 class="text-2xl font-bold text-center mb-4">Новая игра</h1>
 
             <label class="floating-label block w-full mb-6">
@@ -22,7 +22,7 @@
                 {% for question in questions %}
                     {% if question.answers | length >= 6 %}
                         {% set word_amount = question.question.strip().split() | length %}
-                        <li class="flex items-center gap-2 w-full bg-base-200 rounded-lg px-4 py-2" data-question-id="{{ question.id }}">
+                        <li class="flex items-center gap-2 w-full bg-base-200 rounded-lg px-4 py-2">
                             <span class="flex-1 font-semibold {{ 'break-words' if word_amount > 1 else 'break-all' }}">
                                 {{ question.question }}
                             </span>
@@ -32,7 +32,8 @@
                                     Ответы: {{ question.answers | length }}
                                 </a>
 
-                                <input type="checkbox" class="checkbox checkbox-sm checkbox-accent border-2" name="question" />
+                                <input type="checkbox" class="checkbox checkbox-sm checkbox-accent border-2"
+                                       name="question" value="{{ question.id }}" />
                             </div>
                         </li>
                     {% endif %}
@@ -40,7 +41,7 @@
             </ul>
 
             {% if error %}
-                <div role="alert" class="alert alert-error alert-soft mb-6">
+                <div role="alert" class="alert alert-error alert-soft mb-4">
                     <span>{{ error }}</span>
                 </div>
             {% endif %}

@@ -81,4 +81,4 @@ class Game(BaseModel):
 
 
 class GameCreate(Game):
-    game_questions: list[str] = Field(min_length=7, max_length=7)
+    questions_identifiers: list[str] = Field(min_length=7, max_length=7)

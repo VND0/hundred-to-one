@@ -21,7 +21,7 @@ def get_errors(e: ValidationError) -> str:
         elif "email" in loc:
             errors.append("Допустимая длина почты - от 5 до 100 символов")
         elif "password" in loc:
-            errors.append("В пароле разрешены цифры, латиница и специальные символы. Допустимая длина - от 8 до 60 символов")
+            errors.append("В пароле разрешены цифры, латиница и специальные символы. Длина - от 8 до 60 символов")
         elif "poll" in loc:
             errors.append("Допустимая длина названия опроса - от 2 до 70 символов")
         elif "game_question" in loc:
@@ -211,7 +211,7 @@ def handle_game_form() -> str | Response:
     try:
         model = GameCreate(
             game=form.get("game"),
-            game_questions=form.getlist("question")
+            questions_identifiers=form.getlist("question")
         )
     except ValidationError as e:
         return get_errors(e)
@@ -222,12 +222,39 @@ def handle_game_form() -> str | Response:
         user_id=current_user.id
     )
 
-    for question_id in model.game_questions:
-        question = db.session.query(Question).filter(Question.id == question_id and current_user.id == question.user_id).one()
+    for question_id in model.questions_identifiers:
+        question = db.session.query(Question).filter(
+            Question.id == question_id and current_user.id == question.user_id).one()
         new_game.questions.append(question)
 
     try:
         db.session.add(new_game)
+        db.session.commit()
+    except IntegrityError as e:
+        return type(e).__name__
+
+    return redirect("/games")
+
+
+def handle_game_edit(game_id: str):
+    form = request.form
+    try:
+        model = GameCreate(
+            game=form.get("game"),
+            questions_identifiers=form.getlist("question")
+        )
+    except ValidationError as e:
+        return get_errors(e)
+
+    game = db.session.query(Game).filter(Game.id == game_id).one()
+    game.game = model.game
+    game.questions.clear()
+    for question_id in model.questions_identifiers:
+        question = db.session.query(Question).filter(Question.id == question_id and
+                                                     Question.user_id == current_user.id).one()
+        game.questions.append(question)
+
+    try:
         db.session.commit()
     except IntegrityError as e:
         return type(e).__name__

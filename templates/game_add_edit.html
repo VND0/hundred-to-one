@@ -3,17 +3,17 @@
 {% block content %}
     <div class="max-w-3xl space-y-6 mx-auto py-8 px-4">
         <div class="flex justify-between items-center">
-            <h1 class="font-bold text-2xl">Создание игры</h1>
+            <h1 class="font-bold text-2xl">{{ title }}</h1>
             <a class="link link-info font-bold text-xl" href="/games">Назад</a>
         </div>
 
         <form id="addForm" class="bg-base-300 rounded-lg mt-4 p-6" method="post">
-            <h1 class="text-2xl font-bold text-center mb-4">Новая игра</h1>
+            <h1 class="text-2xl font-bold text-center mb-4">{{ game.game or 'Новая игра' }}</h1>
 
             <label class="floating-label block w-full mb-6">
                 <span>Название игры</span>
-                <input type="text" placeholder="Название игры" minlength="5" maxlength="50"
-                       class="input w-full rounded-xl text-base" id="addInput" name="game" required />
+                <input type="text" placeholder="Название игры" minlength="5" maxlength="50" id="addInput" name="game"
+                       value="{{ game.game or '' }}" class="input w-full rounded-xl text-base" required/>
             </label>
 
             <div class="divider divider-error text-lg font-semibold" id="listTitle">Вопросы для игры (0 / 7)</div>
@@ -33,7 +33,8 @@
                                 </a>
 
                                 <input type="checkbox" class="checkbox checkbox-sm checkbox-accent border-2"
-                                       name="question" value="{{ question.id }}" />
+                                       name="question" value="{{ question.id }}"
+                                        {{ 'checked' if question in game.questions }}/>
                             </div>
                         </li>
                     {% endif %}
@@ -46,7 +47,9 @@
                 </div>
             {% endif %}
 
-            <button class="btn btn-disabled btn-info rounded-xl" id="addButton" type="submit">Добавить игру</button>
+            <button class="btn btn-disabled btn-info rounded-xl" id="addButton" type="submit">
+                {{ 'Добавить' if not game.game else 'Изменить' }} игру
+            </button>
         </form>
     </div>
 {% endblock %}

@@ -4,7 +4,6 @@ const listTitle = document.querySelector("#listTitle")
 const questionsList = document.querySelectorAll("#questionsList>li")
 const addButton = document.querySelector("#addButton")
 
-
 function changesCounterUpdate() {
     listTitle.innerText = `Вопросы для игры (${questionsCounter} / 7)`
 
@@ -21,16 +20,20 @@ function changesCounterUpdate() {
     }
 }
 
+function countCheckbox(input, doDecrement = true) {
+    if (input.checked) {
+        questionsCounter++
+    } else if (doDecrement) {
+        questionsCounter--
+    }
+}
+
 questionsList.forEach((elem) => {
     const input = elem.querySelector("input")
+    countCheckbox(input, false)
 
     input.addEventListener("change", () => {
-        if (input.checked) {
-            questionsCounter++
-        } else {
-            questionsCounter--
-        }
-
+        countCheckbox(input)
         changesCounterUpdate()
     })
 })

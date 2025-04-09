@@ -17,7 +17,7 @@
                     <div class="flex gap-2 items-center">
                         <h2 class="flex-1 text-xl font-bold truncate game-name">{{ game.game }}</h2>
 
-                        <button class="btn btn-xs btn-ghost btn-square edit-btn">
+                        <a class="btn btn-xs btn-ghost btn-square edit-btn" href="/games/game-edit/{{ game.id }}">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" stroke-width="2"
                                  stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -25,7 +25,7 @@
                                 <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
                                 <path d="M16 5l3 3"></path>
                             </svg>
-                        </button>
+                        </a>
 
                         <button class="btn btn-xs btn-square btn-error delete-btn">✕</button>
                     </div>

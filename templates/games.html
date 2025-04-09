@@ -18,25 +18,26 @@
                         <h2 class="flex-1 text-xl font-bold truncate game-name">{{ game.game }}</h2>
 
                         <button class="btn btn-xs btn-ghost btn-square edit-btn">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" stroke-width="2"
-                                         stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                        <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
-                                        <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
-                                        <path d="M16 5l3 3"></path>
-                                    </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" stroke-width="2"
+                                 stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
+                                <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
+                                <path d="M16 5l3 3"></path>
+                            </svg>
                         </button>
 
                         <button class="btn btn-xs btn-square btn-error delete-btn">✕</button>
                     </div>
 
                     <div class="collapse collapse-arrow bg-base-100 border border-base-300">
-                        <input type="checkbox" name="game-questions" />
+                        <input type="checkbox" name="game-questions"/>
                         <div class="collapse-title bg-base-200 font-semibold">Вопросы для игры</div>
                         <ul class="collapse-content bg-base-200 space-y-4">
                             {% for question in game.questions %}
                                 {% set word_amount = question.question.strip().split() | length %}
-                                <li class="flex items-center gap-2 w-full bg-base-100 rounded-lg px-4 py-2" data-question-id="{{ question.id }}">
+                                <li class="flex items-center gap-2 w-full bg-base-100 rounded-lg px-4 py-2"
+                                    data-question-id="{{ question.id }}">
                                     <span class="flex-1 font-semibold {{ 'break-words' if word_amount > 1 else 'break-all' }}">
                                         {{ question.question }}
                                     </span>
@@ -62,4 +63,5 @@
             {% endfor %}
         </ul>
     </div>
+    <script src="{{ url_for('static', filename='scripts/games.js') }}" type="module"></script>
 {% endblock %}

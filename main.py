@@ -13,6 +13,7 @@ from poll_questions_resource import PollQuestionResource
 from polls_resource import PollResource, PollsListResource
 from questions_resource import QuestionResource, QuestionListResource
 from answers_resource import AnswersListResource, AnswersResource
+from games_resource import GamesResource
 
 app = Flask(__name__)
 
@@ -39,6 +40,8 @@ api.add_resource(PollQuestionResource, "/api/poll-questions/<poll_id>")
 
 api.add_resource(AnswersListResource, "/api/answers")
 api.add_resource(AnswersResource, "/api/answers/<answer_id>")
+
+api.add_resource(GamesResource, "/api/games/<game_id>")
 
 
 @login_manager.user_loader

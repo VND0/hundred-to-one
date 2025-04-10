@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask, render_template, request, redirect, abort, Response
+from flask_jwt_extended import JWTManager
 from flask_login import LoginManager, logout_user, login_required, current_user
 from flask_restful import Api
 
@@ -15,7 +16,7 @@ from questions_resource import QuestionResource, QuestionListResource
 
 app = Flask(__name__)
 
-app.config["SECRET_KEY"] = "1"
+app.config["SECRET_KEY"] = app.config["JWT_SECRET_KEY"] = "1"
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.getcwd()}/database/database.db"
 
@@ -25,6 +26,8 @@ db.init_app(app)
 login_manager = LoginManager(app)
 login_manager.init_app(app)
 login_manager.login_view = "auth"
+
+jwt = JWTManager(app)
 
 api = Api(app)
 
@@ -81,7 +84,9 @@ def auth():
 @login_required
 def logout():
     logout_user()
-    return redirect("/")
+    response = redirect("/")
+    response.set_cookie("jwtToken", expires=0)
+    return response
 
 
 @app.get("/profile")

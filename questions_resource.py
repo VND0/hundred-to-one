@@ -1,6 +1,7 @@
 import uuid
 
 from flask import jsonify
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_restful import Resource, abort, request
 from pydantic import ValidationError
 from sqlalchemy.exc import IntegrityError
@@ -18,9 +19,13 @@ def abort_if_question_not_found(question_id: str) -> None:
 
 
 class QuestionResource(Resource):
+    @jwt_required()
     def put(self, question_id: str):
+        jwt_user_id = get_jwt_identity()
+
         abort_if_question_not_found(question_id)
-        question = db.session.query(Question).filter(Question.id == question_id).one()
+        question = db.session.query(Question).filter(Question.id == question_id and
+                                                     Question.user_id == jwt_user_id).one()
 
         try:
             model = models.Question.model_validate(request.get_json())
@@ -36,9 +41,13 @@ class QuestionResource(Resource):
 
         return jsonify(201, {"question_id": question.id})
 
+    @jwt_required()
     def delete(self, question_id: str):
+        jwt_user_id = get_jwt_identity()
+
         abort_if_question_not_found(question_id)
-        question = db.session.query(Question).filter(Question.id == question_id).one()
+        question = db.session.query(Question).filter(Question.id == question_id and
+                                                     Question.user_id == jwt_user_id).one()
 
         db.session.query(Answer).filter(Answer.question_id == question_id).delete()
 
@@ -52,12 +61,17 @@ class QuestionResource(Resource):
 
 
 class QuestionListResource(Resource):
+    @jwt_required()
     def post(self):
         try:
             model = models.QuestionCreate.model_validate(request.get_json())
         except ValidationError as e:
             error = get_errors(e)
             abort(400, message=error)
+
+        jwt_user_id = get_jwt_identity()
+        if jwt_user_id != model.user_id:
+            abort(401, message="Authenticated user doesn't match JWT user")
 
         try:
             question = Question(

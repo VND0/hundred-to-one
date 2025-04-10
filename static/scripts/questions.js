@@ -10,6 +10,15 @@ const dialog = document.querySelector("dialog")
 
 const userId = document.querySelector("body").dataset.userId
 
+let jwtToken
+const cookieArr = document.cookie.split("; ")
+cookieArr.forEach((elem) => {
+    const parsed = elem.split("=")
+    if (parsed[0] === "jwtToken") {
+        jwtToken = parsed[1]
+    }
+})
+
 async function handleApiError(response) {
     if (!response.ok) {
         if (response.status === 409) {
@@ -31,7 +40,7 @@ async function addQuestionRequest(value) {
     try {
         response = await fetch("/api/questions", {
             method: "POST", headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "application/json", "Authorization": `Bearer ${jwtToken}`
             }, body: JSON.stringify(body)
         })
     } catch (error) {
@@ -44,7 +53,9 @@ async function addQuestionRequest(value) {
 }
 
 async function deleteQuestionRequest(questionId) {
-    const response = await fetch(`/api/questions/${questionId}`, {method: "DELETE"})
+    const response = await fetch(`/api/questions/${questionId}`, {
+        method: "DELETE", headers: {"Authorization": `Bearer ${jwtToken}`}
+    })
     await handleApiError(response)
     return response.ok
 }
@@ -52,7 +63,7 @@ async function deleteQuestionRequest(questionId) {
 async function changeQuestionRequest(questionId, newValue) {
     const response = await fetch(`/api/questions/${questionId}`, {
         method: "PUT", headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json", "Authorization": `Bearer ${jwtToken}`,
         }, body: JSON.stringify({
             question: newValue
         })

@@ -1,6 +1,7 @@
 import uuid
 
 from flask import request, Response, redirect
+from flask_jwt_extended import create_access_token
 from flask_login import login_user, current_user, logout_user
 from pydantic import ValidationError
 from sqlalchemy.exc import IntegrityError
@@ -78,7 +79,10 @@ def handle_registration() -> str | Response:
     login_user(new_user)
     add_questions(new_user.id)
 
-    return redirect("/profile")
+    access_token = create_access_token(identity=new_user.id)
+    response = redirect("/profile")
+    response.set_cookie("jwtToken", access_token)
+    return response
 
 
 def handle_login() -> str | Response:
@@ -99,7 +103,10 @@ def handle_login() -> str | Response:
 
     login_user(user)
 
-    return redirect("/profile")
+    access_token = create_access_token(identity=user.id)
+    response = redirect("/profile")
+    response.set_cookie("jwtToken", access_token)
+    return response
 
 
 def handle_edit_data() -> str | Response:

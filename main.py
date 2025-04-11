@@ -6,13 +6,13 @@ from flask_login import LoginManager, logout_user, login_required, current_user
 from flask_restful import Api
 
 import tools
-from answers_resource import AnswersListResource, AnswersResource
+from resources.answers_resource import AnswersListResource, AnswersResource
 from database.database import db
 from database.db_models import User, Question, Poll, Game
-from games_resource import GamesResource
-from poll_questions_resource import PollQuestionResource
-from polls_resource import PollResource, PollsListResource
-from questions_resource import QuestionResource, QuestionListResource
+from resources.games_resource import GamesResource
+from resources.poll_questions_resource import PollQuestionResource
+from resources.polls_resource import PollResource, PollsListResource
+from resources.questions_resource import QuestionResource, QuestionListResource
 
 app = Flask(__name__)
 

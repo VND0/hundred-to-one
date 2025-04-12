@@ -7,21 +7,36 @@
             <a class="link link-info font-bold text-xl" id="backLink" href="#">Назад</a>
         </div>
 
-        {% set word_amount = question.question.strip().split() | length %}
-        <span class="font-semibold opacity-50 italic {{ 'break-words' if word_amount > 1 else 'break-all' }}">
+        <span class="font-semibold opacity-50 italic break-all">
             {{ question.question }}
         </span>
 
-        <div id="allAnswers" class="bg-base-300 rounded-lg space-y-6 mt-4 p-6" data-question-id="{{ question.id }}">
-            <h2 class="text-xl font-bold text-center">Список ответов</h2>
+        <div class="bg-base-300 rounded-lg space-y-6 mt-4 p-6">
+            <form id="addForm">
+                <h2 class="text-xl font-bold text-center mb-4">Добавить свой ответ</h2>
 
-            <div class="divider divider-start text-lg font-semibold">Топ-6 популярных ответов</div>
+                <div class="join w-full">
+                    <div class="flex-1">
+                        <label class="input join-item w-full">
+                            <input type="text" placeholder="Текст ответа" minlength="1" maxlength="40" required
+                                   class="text-base" id="addInput" />
+                        </label>
+                    </div>
+                    <button class="btn btn-accent join-item">Добавить</button>
+                </div>
+            </form>
 
-            <ul id="popularAnswers" class="space-y-4 px-2"></ul>
+            <div id="allAnswers" class="space-y-6" data-question-id="{{ question.id }}">
+                <h2 class="text-xl font-bold text-center mb-4">Список ответов</h2>
 
-            <div class="divider divider-start text-lg font-semibold">Остальные ответы</div>
+                <div class="divider divider-start text-lg font-semibold">Топ-6 популярных ответов</div>
 
-            <ul id="otherAnswers" class="space-y-4 px-2"></ul>
+                <ul id="popularAnswers" class="space-y-4 px-2"></ul>
+
+                <div class="divider divider-start text-lg font-semibold">Остальные ответы</div>
+
+                <ul id="otherAnswers" class="space-y-4 px-2"></ul>
+            </div>
         </div>
     </div>
 

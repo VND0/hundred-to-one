@@ -1,4 +1,4 @@
-import {formError, formMessage} from "./toasts.js";
+import {formError, formMessage, getJwt} from "./tools.js";
 
 const addForm = document.querySelector("#addForm")
 const pInput = document.querySelector("#addInput")
@@ -8,14 +8,7 @@ const editInput = document.querySelector("#editInput")
 const saveEdit = document.querySelector("#saveEdit")
 const dialog = document.querySelector("dialog")
 
-let jwtToken
-const cookieArr = document.cookie.split("; ")
-cookieArr.forEach((elem) => {
-    const parsed = elem.split("=")
-    if (parsed[0] === "jwtToken") {
-        jwtToken = parsed[1]
-    }
-})
+let jwtToken = getJwt()
 
 async function handleApiError(response) {
     if (response.ok) return

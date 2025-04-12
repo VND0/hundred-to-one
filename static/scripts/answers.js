@@ -1,5 +1,10 @@
+import {formError, getJwt} from "./tools.js";
+
 const tmplt = document.querySelector("#answerTemplate")
 const backLink = document.querySelector("#backLink")
+
+const addForm = document.querySelector("#addForm")
+const addInput = document.querySelector("#addInput")
 
 const allAnswers = document.querySelector("#allAnswers")
 const popularAnswers = document.querySelector("#popularAnswers")
@@ -7,14 +12,7 @@ const otherAnswers = document.querySelector("#otherAnswers")
 
 const questionId = allAnswers.dataset.questionId
 
-let jwtToken
-const cookieArr = document.cookie.split("; ")
-cookieArr.forEach((elem) => {
-    const parsed = elem.split("=")
-    if (parsed[0] === "jwtToken") {
-        jwtToken = parsed[1]
-    }
-})
+let jwtToken = getJwt()
 
 const params = new URLSearchParams()
 params.append("question_id", questionId)
@@ -62,6 +60,28 @@ function loadAnswers(answersList) {
     })
 }
 
+async function addAnswerRequest(value) {
+    let response;
+    try {
+        response = await fetch("/api/answers", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${jwtToken}`
+            },
+            body: JSON.stringify({
+                question_id: questionId,
+                answer: value
+            })
+        })
+    } catch (error) {
+        formError("Проблемы с интернетом")
+        return false
+    }
+
+    return response.ok
+}
+
 async function deleteAnswerRequest(answerId, toBeDeleted) {
     const response = await fetch(`/api/answers/${answerId}`, {
         method: "DELETE", headers: {"Content-Type": "application/json", "Authorization": `Bearer ${jwtToken}`}
@@ -77,5 +97,14 @@ async function deleteAnswerRequest(answerId, toBeDeleted) {
 
 backLink.addEventListener("click", () => {
     document.location.href = document.referrer
+})
+
+addForm.addEventListener("submit", async function (evt) {
+    evt.preventDefault()
+
+    const success = await addAnswerRequest(addInput.value)
+    if (success) {
+        window.location.reload()
+    }
 })
 

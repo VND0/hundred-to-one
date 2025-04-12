@@ -228,7 +228,11 @@ def game_info(game_id: str):
     if not game:
         return redirect("/games")
 
-    render_template("game_info.html", title="Отчет по игре", game=game)
+    for question in game.questions:
+        question.answers.sort(key=lambda a: a.quantity, reverse=True)
+        question.answers = question.answers[:6]
+
+    return render_template("game_info.html", title="Отчет по игре", game=game)
 
 
 if __name__ == '__main__':

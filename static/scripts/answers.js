@@ -1,7 +1,11 @@
 const tmplt = document.querySelector("#answerTemplate")
 const backLink = document.querySelector("#backLink")
-const answersListElem = document.querySelector("#answersList")
-const questionId = answersListElem.dataset.questionId
+
+const allAnswers = document.querySelector("#allAnswers")
+const popularAnswers = document.querySelector("#popularAnswers")
+const otherAnswers = document.querySelector("#otherAnswers")
+
+const questionId = allAnswers.dataset.questionId
 
 let jwtToken
 const cookieArr = document.cookie.split("; ")
@@ -17,10 +21,12 @@ params.append("question_id", questionId)
 fetch(`/api/answers?${params}`, {
     method: "GET", headers: {"Content-Type": "application/json", "Authorization": `Bearer ${jwtToken}`}
 }).then((response) => response.json()).then((data) => {
-    if (data.length !== 0) {
-        answersListElem.innerHTML = ""
+    if (data.length === 0) {
+        allAnswers.innerHTML = "<h2 class='text-xl font-bold text-center'>Список ответов пустой</h2>"
+
+    } else {
+        loadAnswers(data)
     }
-    loadAnswers(data)
 })
 
 function loadAnswers(answersList) {
@@ -39,7 +45,6 @@ function loadAnswers(answersList) {
 
         newElem.querySelector("span").innerHTML = `${answer.answer}`
         answerQuantity.innerHTML = `Кол-во: ${answer.quantity}`
-        answersListElem.appendChild(newElem)
 
         if (ind < 6) {
             newElem.classList.add("border-2")
@@ -47,6 +52,10 @@ function loadAnswers(answersList) {
 
             pointsStats.innerText += `Очки: ${points}`
             pointsStats.classList.remove("hidden")
+
+            popularAnswers.appendChild(newElem)
+        } else {
+            otherAnswers.appendChild(newElem)
         }
 
         newElem.querySelector("button").addEventListener("click", () => deleteAnswerRequest(answer.id, newElem))

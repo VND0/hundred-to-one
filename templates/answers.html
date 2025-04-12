@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="max-w-3xl mt-8 mx-auto px-4">
+    <div class="max-w-3xl mx-auto py-8 px-4">
         <div class="flex justify-between items-center">
             <h1 class="font-bold text-2xl">Ответы на вопрос</h1>
             <a class="link link-info font-bold text-xl" id="backLink" href="#">Назад</a>
@@ -12,9 +12,17 @@
             {{ question.question }}
         </span>
 
-        <ul id="answersList" class="space-y-4 bg-base-300 p-5 rounded-lg mt-4" data-question-id="{{ question.id }}">
-            <li class="text-center">Нет ответов</li>
-        </ul>
+        <div id="allAnswers" class="bg-base-300 rounded-lg space-y-6 mt-4 p-6" data-question-id="{{ question.id }}">
+            <h2 class="text-xl font-bold text-center">Список ответов</h2>
+
+            <div class="divider divider-start text-lg font-semibold">Топ-6 популярных ответов</div>
+
+            <ul id="popularAnswers" class="space-y-4 px-2"></ul>
+
+            <div class="divider divider-start text-lg font-semibold">Остальные ответы</div>
+
+            <ul id="otherAnswers" class="space-y-4 px-2"></ul>
+        </div>
     </div>
 
     <template id="answerTemplate">

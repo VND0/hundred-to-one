@@ -235,6 +235,12 @@ def game_info(game_id: str):
     return render_template("game_info.html", title="Отчет по игре", game=game)
 
 
+@app.route("/excel-import", methods=["GET"])
+@login_required
+def excel_import():
+    return render_template("excel_import.html", title="Импорт игры")
+
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()

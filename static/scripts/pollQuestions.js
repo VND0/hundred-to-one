@@ -1,13 +1,6 @@
-import {formError} from "./toasts.js";
+import {formError, getJwt} from "./tools.js";
 
-let jwtToken
-const cookieArr = document.cookie.split("; ")
-cookieArr.forEach((elem) => {
-    const parsed = elem.split("=")
-    if (parsed[0] === "jwtToken") {
-        jwtToken = parsed[1]
-    }
-})
+let jwtToken = getJwt()
 
 let requestData = {
     toAdded: [], toOther: [],

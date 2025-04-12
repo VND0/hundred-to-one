@@ -1,4 +1,4 @@
-import {formError} from "./toasts.js";
+import {formError, getJwt} from "./tools.js";
 
 const form = document.querySelector("#addForm")
 const qInput = document.querySelector("#addInput")
@@ -10,14 +10,7 @@ const dialog = document.querySelector("dialog")
 
 const userId = document.querySelector("body").dataset.userId
 
-let jwtToken
-const cookieArr = document.cookie.split("; ")
-cookieArr.forEach((elem) => {
-    const parsed = elem.split("=")
-    if (parsed[0] === "jwtToken") {
-        jwtToken = parsed[1]
-    }
-})
+let jwtToken = getJwt()
 
 async function handleApiError(response) {
     if (!response.ok) {

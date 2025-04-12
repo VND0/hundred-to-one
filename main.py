@@ -235,9 +235,14 @@ def game_info(game_id: str):
     return render_template("game_info.html", title="Отчет по игре", game=game)
 
 
-@app.route("/excel-import", methods=["GET"])
+@app.route("/excel-import", methods=["GET", "POST"])
 @login_required
 def excel_import():
+    if request.method == "POST":
+        file = request.files.get("file")
+        if not file.filename:
+            abort(400, "No file chosen")
+
     return render_template("excel_import.html", title="Импорт игры")
 
 

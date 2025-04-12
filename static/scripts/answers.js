@@ -31,17 +31,22 @@ function loadAnswers(answersList) {
 
     answersList.forEach((answer, ind) => {
         const newElem = tmplt.content.cloneNode(true).childNodes[1]
+
         const points = Math.round(1.0 * answer.quantity / pointsSum * 100)
         const pointsStats = newElem.querySelector(".points-stats")
 
+        const answerQuantity = newElem.querySelector(".answer-quantity")
+
         newElem.querySelector("span").innerHTML = `${answer.answer}`
-        pointsStats.innerHTML = `ответов: ${answer.quantity}`
+        answerQuantity.innerHTML = `Кол-во: ${answer.quantity}`
         answersListElem.appendChild(newElem)
 
         if (ind < 6) {
-            newElem.classList.add("border-3")
+            newElem.classList.add("border-2")
             newElem.classList.add("border-success")
-            pointsStats.innerText = `очков: ${points}, ` + pointsStats.innerText
+
+            pointsStats.innerText += `Очки: ${points}`
+            pointsStats.classList.remove("hidden")
         }
 
         newElem.querySelector("button").addEventListener("click", () => deleteAnswerRequest(answer.id, newElem))

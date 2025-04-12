@@ -3,9 +3,20 @@ const backLink = document.querySelector("#backLink")
 const answersListElem = document.querySelector("#answersList")
 const questionId = answersListElem.dataset.questionId
 
+let jwtToken
+const cookieArr = document.cookie.split("; ")
+cookieArr.forEach((elem) => {
+    const parsed = elem.split("=")
+    if (parsed[0] === "jwtToken") {
+        jwtToken = parsed[1]
+    }
+})
+
 const params = new URLSearchParams()
 params.append("question_id", questionId)
-fetch(`/api/answers?${params}`, {method: "GET"}).then((response) => response.json()).then((data) => {
+fetch(`/api/answers?${params}`, {
+    method: "GET", headers: {"Content-Type": "application/json", "Authorization": `Bearer ${jwtToken}`}
+}).then((response) => response.json()).then((data) => {
     if (data.length !== 0) {
         answersListElem.innerHTML = ""
     }
@@ -38,7 +49,9 @@ function loadAnswers(answersList) {
 }
 
 async function deleteAnswerRequest(answerId, toBeDeleted) {
-    const response = await fetch(`/api/answers/${answerId}`, {method: "DELETE"})
+    const response = await fetch(`/api/answers/${answerId}`, {
+        method: "DELETE", headers: {"Content-Type": "application/json", "Authorization": `Bearer ${jwtToken}`}
+    })
     if (response.ok) {
         toBeDeleted.remove()
     } else {

@@ -63,21 +63,18 @@ class QuestionResource(Resource):
 class QuestionListResource(Resource):
     @jwt_required()
     def post(self):
+        jwt_user_id = get_jwt_identity()
         try:
-            model = models.QuestionCreate.model_validate(request.get_json())
+            model = models.Question.model_validate(request.get_json())
         except ValidationError as e:
             error = get_errors(e)
             abort(400, message=error)
-
-        jwt_user_id = get_jwt_identity()
-        if jwt_user_id != model.user_id:
-            abort(401, message="Authenticated user doesn't match JWT user")
 
         try:
             question = Question(
                 id=str(uuid.uuid4()),
                 question=model.question,
-                user_id=model.user_id
+                user_id=jwt_user_id
             )
             db.session.add(question)
             db.session.commit()

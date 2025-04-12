@@ -1,4 +1,5 @@
 from flask import jsonify
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_restful import Resource, request, abort
 from pydantic import ValidationError
 from sqlalchemy.exc import IntegrityError
@@ -10,8 +11,10 @@ from tools import get_errors
 
 
 class PollQuestionResource(Resource):
+    @jwt_required()
     def patch(self, poll_id: str):
-        poll: Poll = db.session.query(Poll).filter(Poll.id == poll_id).one_or_none()
+        jwt_user_id = get_jwt_identity()
+        poll: Poll = db.session.query(Poll).filter(Poll.id == poll_id and Poll.user_id == jwt_user_id).one_or_none()
         if poll is None:
             abort(404, message=f"Poll {poll_id} not found")
 
@@ -27,7 +30,8 @@ class PollQuestionResource(Resource):
                     poll.questions.remove(question)
 
         for question_id in model.to_added:
-            question = db.session.query(Question).filter(Question.id == question_id).one()
+            question = db.session.query(Question).filter(Question.id == question_id and
+                                                         Question.user_id == jwt_user_id).one()
             poll.questions.append(question)
 
         try:

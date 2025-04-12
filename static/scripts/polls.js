@@ -8,7 +8,14 @@ const editInput = document.querySelector("#editInput")
 const saveEdit = document.querySelector("#saveEdit")
 const dialog = document.querySelector("dialog")
 
-const userId = document.querySelector("body").dataset.userId
+let jwtToken
+const cookieArr = document.cookie.split("; ")
+cookieArr.forEach((elem) => {
+    const parsed = elem.split("=")
+    if (parsed[0] === "jwtToken") {
+        jwtToken = parsed[1]
+    }
+})
 
 async function handleApiError(response) {
     if (response.ok) return
@@ -23,11 +30,12 @@ async function handleApiError(response) {
 }
 
 async function addPollRequest(poll) {
-    const body = {poll, userId}
     let response;
     try {
         response = await fetch("/api/polls", {
-            method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)
+            method: "POST", headers: {
+                "Content-Type": "application/json", "Authorization": `Bearer ${jwtToken}`
+            }, body: JSON.stringify({poll})
         })
     } catch (error) {
         formError("Проблемы с Интернетом")
@@ -41,7 +49,9 @@ async function addPollRequest(poll) {
 async function delPollRequest(pollId) {
     let response;
     try {
-        response = await fetch(`/api/polls/${pollId}`, {method: "DELETE"})
+        response = await fetch(`/api/polls/${pollId}`, {
+            method: "DELETE", headers: {"Content-Type": "application/json", "Authorization": `Bearer ${jwtToken}`}
+        })
     } catch (error) {
         formError("Проблемы с Интернетом")
         return false
@@ -56,7 +66,9 @@ async function editPollRequest(pollId, newName) {
     let response;
     try {
         response = await fetch(`/api/polls/${pollId}`, {
-            method: "PUT", headers: {"Content-Type": "application/json"}, body: JSON.stringify({poll: newName})
+            method: "PUT", headers: {
+                "Content-Type": "application/json", "Authorization": `Bearer ${jwtToken}`
+            }, body: JSON.stringify({poll: newName})
         })
     } catch (error) {
         formError("Проблемы с Интернетом")

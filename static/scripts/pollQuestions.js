@@ -1,5 +1,14 @@
 import {formError} from "./toasts.js";
 
+let jwtToken
+const cookieArr = document.cookie.split("; ")
+cookieArr.forEach((elem) => {
+    const parsed = elem.split("=")
+    if (parsed[0] === "jwtToken") {
+        jwtToken = parsed[1]
+    }
+})
+
 let requestData = {
     toAdded: [], toOther: [],
 }
@@ -72,7 +81,9 @@ saveButton.addEventListener("click", async (evt) => {
 
     const pollId = evt.target.dataset.pollId
     const response = await fetch(`/api/poll-questions/${pollId}`, {
-        method: "PATCH", headers: {"Content-Type": "application/json"}, body: JSON.stringify(requestData)
+        method: "PATCH", headers: {
+            "Content-Type": "application/json", "Authorization": `Bearer ${jwtToken}`
+        }, body: JSON.stringify(requestData)
     })
 
     const body = await response.json()

@@ -33,15 +33,12 @@ async function handleApiError(response) {
 }
 
 async function addQuestionRequest(value) {
-    const body = {
-        question: value, userId
-    }
     let response;
     try {
         response = await fetch("/api/questions", {
             method: "POST", headers: {
                 "Content-Type": "application/json", "Authorization": `Bearer ${jwtToken}`
-            }, body: JSON.stringify(body)
+            }, body: JSON.stringify({question: value})
         })
     } catch (error) {
         formError("Проблемы с Интернетом")

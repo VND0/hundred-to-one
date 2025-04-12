@@ -7,20 +7,15 @@
                 <h1 class="text-2xl font-bold text-center">Ошибка: Такого опроса не существует</h1>
             {% else %}
                 <form id="pollForm" class="bg-base-300 rounded-xl p-6" method="post">
-                    {% set p_word_amount = poll.poll.strip().split() | length %}
-
                     <h1 class="text-2xl font-bold">Прохождение опроса</h1>
 
-                    <span class="font-semibold opacity-50 italic {{ 'break-words' if p_word_amount > 1 else 'break-all' }}">
-                        {{ poll.poll }}
-                    </span>
+                    <span class="font-semibold opacity-50 italic break-all">{{ poll.poll }}</span>
 
                     <ul class="my-4 space-y-2">
                         {% for question in poll.questions %}
-                            {% set q_word_amount = poll.poll.strip().split() | length %}
                             <li>
                                 <fieldset class="fieldset">
-                                    <legend class="fieldset-legend text-lg {{ 'break-words' if p_word_amount > 1 else 'break-all' }}">
+                                    <legend class="fieldset-legend text-lg break-all">
                                         {{ loop.index }}. {{ question.question }}
                                     </legend>
 

@@ -23,9 +23,8 @@
 
         <ul id="questionsList" class="space-y-5">
             {% for question in questions %}
-                {% set word_amount = question.question.strip().split() | length %}
                 <li class="flex items-center gap-4 w-full bg-base-300 rounded-lg px-4 py-2" data-id="{{ question.id }}">
-                    <span class="flex-1 font-semibold {{ 'break-words' if word_amount > 1 else 'break-all' }}">
+                    <span class="flex-1 font-semibold break-all">
                         {{ question.question }}
                     </span>
 

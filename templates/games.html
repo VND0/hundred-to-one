@@ -35,10 +35,9 @@
                         <div class="collapse-title bg-base-200 font-semibold">Вопросы для игры</div>
                         <ul class="collapse-content bg-base-200 space-y-4">
                             {% for question in game.questions %}
-                                {% set word_amount = question.question.strip().split() | length %}
                                 <li class="flex items-center gap-2 w-full bg-base-100 rounded-lg px-4 py-2"
                                     data-question-id="{{ question.id }}">
-                                    <span class="flex-1 font-semibold {{ 'break-words' if word_amount > 1 else 'break-all' }}">
+                                    <span class="flex-1 font-semibold break-all">
                                         {{ question.question }}
                                     </span>
 

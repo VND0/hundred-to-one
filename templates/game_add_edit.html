@@ -21,9 +21,8 @@
             <ul id="questionsList" class="space-y-4 mb-4">
                 {% for question in questions %}
                     {% if question.answers | length >= 6 %}
-                        {% set word_amount = question.question.strip().split() | length %}
                         <li class="flex items-center gap-2 w-full bg-base-200 rounded-lg px-4 py-2">
-                            <span class="flex-1 font-semibold {{ 'break-words' if word_amount > 1 else 'break-all' }}">
+                            <span class="flex-1 font-semibold break-all">
                                 {{ question.question }}
                             </span>
 

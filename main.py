@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 
 from flask import Flask, render_template, request, redirect, abort, Response
 from flask_jwt_extended import JWTManager
@@ -6,9 +7,9 @@ from flask_login import LoginManager, logout_user, login_required, current_user
 from flask_restful import Api
 
 import tools
-from resources.answers_resource import AnswersListResource, AnswersResource
 from database.database import db
 from database.db_models import User, Question, Poll, Game
+from resources.answers_resource import AnswersListResource, AnswersResource
 from resources.games_resource import GamesResource
 from resources.poll_questions_resource import PollQuestionResource
 from resources.polls_resource import PollResource, PollsListResource
@@ -30,6 +31,7 @@ login_manager.login_view = "auth"
 jwt = JWTManager(app)
 
 api = Api(app)
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=31)
 
 api.add_resource(QuestionResource, "/api/questions/<question_id>")
 api.add_resource(QuestionListResource, "/api/questions")

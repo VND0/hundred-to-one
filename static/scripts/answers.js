@@ -16,6 +16,7 @@ let jwtToken = getJwt()
 
 const params = new URLSearchParams()
 params.append("question_id", questionId)
+
 fetch(`/api/answers?${params}`, {
     method: "GET", headers: {"Content-Type": "application/json", "Authorization": `Bearer ${jwtToken}`}
 }).then((response) => response.json()).then((data) => {
@@ -26,6 +27,18 @@ fetch(`/api/answers?${params}`, {
         loadAnswers(data)
     }
 })
+
+async function handleApiError(response) {
+    if (!response.ok) {
+        if (response.status === 404) {
+            return formError("Такого вопроса не существует")
+        }
+        else {
+            const body = await response.json()
+            return formError(body.message)
+        }
+    }
+}
 
 function loadAnswers(answersList) {
     let pointsSum = 0
@@ -63,14 +76,13 @@ function loadAnswers(answersList) {
 async function addAnswerRequest(value) {
     let response;
     try {
-        response = await fetch("/api/answers", {
+        response = await fetch(`/api/answers?${params}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${jwtToken}`
             },
             body: JSON.stringify({
-                question_id: questionId,
                 answer: value
             })
         })
@@ -79,6 +91,7 @@ async function addAnswerRequest(value) {
         return false
     }
 
+    await handleApiError(response)
     return response.ok
 }
 
@@ -88,16 +101,8 @@ async function deleteAnswerRequest(answerId, toBeDeleted) {
     })
     if (response.ok) {
         toBeDeleted.remove()
-    } else {
-        const data = await response.json()
-        console.log(response.status)
-        console.log(data)
     }
 }
-
-backLink.addEventListener("click", () => {
-    document.location.href = document.referrer
-})
 
 addForm.addEventListener("submit", async function (evt) {
     evt.preventDefault()
@@ -108,3 +113,6 @@ addForm.addEventListener("submit", async function (evt) {
     }
 })
 
+backLink.addEventListener("click", () => {
+    document.location.href = document.referrer
+})

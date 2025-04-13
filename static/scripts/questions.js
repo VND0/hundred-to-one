@@ -8,8 +8,6 @@ const editInput = document.querySelector("#editInput")
 const saveEdit = document.querySelector("#saveEdit")
 const dialog = document.querySelector("dialog")
 
-const userId = document.querySelector("body").dataset.userId
-
 let jwtToken = getJwt()
 
 async function handleApiError(response) {

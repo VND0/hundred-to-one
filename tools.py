@@ -1,10 +1,12 @@
 import uuid
 
+import openpyxl
 from flask import request, Response, redirect
 from flask_jwt_extended import create_access_token
 from flask_login import login_user, current_user, logout_user
 from pydantic import ValidationError
 from sqlalchemy.exc import IntegrityError
+from werkzeug.datastructures import FileStorage
 
 import models
 from database.database import db
@@ -267,3 +269,61 @@ def handle_game_edit(game_id: str):
         return type(e).__name__
 
     return redirect("/games")
+
+
+def parse_excel_game(file: FileStorage) -> Response | str:
+    wb = openpyxl.load_workbook(filename=file.stream)
+    sheet = wb.active
+
+    # Parsing questions
+    question_indexes = ("B2", "B10", "B19", "B27", "B36", "B44", "B53")
+    questions = [sheet[index].value for index in question_indexes]
+    try:
+        for question in questions:
+            models.Question(question=question)
+            pass
+    except ValidationError as e:
+        return f"{get_errors(e)}. Вопрос: {question}."
+    if len(set(questions)) != len(questions):
+        return f"Вопросы повторяются."
+
+    # Parsing answers
+    answers_indexes = ("B3:B8", "B11:B16", "B20:B25", "B28:B33", "B37:B42", "B45:B50", "B54:B59")
+    answers = []
+    try:
+        for index in answers_indexes:
+            answers.append([])
+            row = sheet[index]
+            for answer in row:
+                val = answer[0].value
+                models.Answer(answer=val)
+                answers[-1].append(val)
+
+            if len(answers[-1]) != len(set(answers[-1])):
+                return f"Ответы повторяются."
+    except ValidationError as e:
+        return f"{get_errors(e)}. Ответ: {val}"
+
+    # Parsing scores
+    scores_indexes = ("D3:D8", "D11:D16", "D20:D25", "D28:D33", "D37:D42", "D45:D50")
+    scores = []
+    try:
+        for index in scores_indexes:
+            scores.append([])
+            row = sheet[index]
+            for score in row:
+                val = score[0].value
+                assert type(val) is int
+                assert 1 <= val <= 95
+                scores[-1].append(val)
+    except AssertionError:
+        return f"Одно или несколько очков - не целое число в диапазоне [1;95]"
+    scores.append([15, 30, 60, 120, 180, 240])
+
+    add_game_to_db(questions, answers, scores)
+
+
+def add_game_to_db(questions: list[str], answers: list[str], scores: list[str]):
+    # TODO: add getting game's name, add data to db and open page with game
+    # You may enter game's name on the page or modify indexes
+    pass

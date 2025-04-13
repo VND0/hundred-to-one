@@ -243,6 +243,12 @@ def excel_import():
         if not file.filename:
             abort(400, "No file chosen")
 
+        response = tools.parse_excel_game(file)
+        if type(response) is Response:
+            return response
+        else:
+            raise NotImplementedError
+
     return render_template("excel_import.html", title="Импорт игры")
 
 

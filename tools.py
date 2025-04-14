@@ -275,20 +275,27 @@ def parse_excel_game(file: FileStorage) -> Response | str:
     wb = openpyxl.load_workbook(filename=file.stream)
     sheet = wb.active
 
+    # Parsing name of the game
+    game_index = "B1"
+    game = sheet[game_index].value
+    try:
+        models.Game(game=game)
+    except ValidationError as e:
+        return get_errors(e)
+
     # Parsing questions
-    question_indexes = ("B2", "B10", "B19", "B27", "B36", "B44", "B53")
+    question_indexes = ("B4", "B12", "B21", "B29", "B38", "B46", "B55")
     questions = [sheet[index].value for index in question_indexes]
     try:
         for question in questions:
             models.Question(question=question)
-            pass
     except ValidationError as e:
         return f"{get_errors(e)}. Вопрос: {question}."
     if len(set(questions)) != len(questions):
         return f"Вопросы повторяются."
 
     # Parsing answers
-    answers_indexes = ("B3:B8", "B11:B16", "B20:B25", "B28:B33", "B37:B42", "B45:B50", "B54:B59")
+    answers_indexes = ("B5:B10", "B13:B18", "B22:B27", "B30:B35", "B39:B44", "B47:B52", "B56:B61")
     answers = []
     try:
         for index in answers_indexes:
@@ -305,7 +312,7 @@ def parse_excel_game(file: FileStorage) -> Response | str:
         return f"{get_errors(e)}. Ответ: {val}"
 
     # Parsing scores
-    scores_indexes = ("D3:D8", "D11:D16", "D20:D25", "D28:D33", "D37:D42", "D45:D50")
+    scores_indexes = ("D5:D10", "D13:D18", "D22:D27", "D30:D35", "D39:D44", "D47:D52")
     scores = []
     try:
         for index in scores_indexes:
@@ -320,10 +327,36 @@ def parse_excel_game(file: FileStorage) -> Response | str:
         return f"Одно или несколько очков - не целое число в диапазоне [1;95]"
     scores.append([15, 30, 60, 120, 180, 240])
 
-    add_game_to_db(questions, answers, scores)
+    add_game_to_db(game, questions, answers, scores)
+    return redirect("/games")
 
 
-def add_game_to_db(questions: list[str], answers: list[str], scores: list[str]):
-    # TODO: add getting game's name, add data to db and open page with game
-    # You may enter game's name on the page or modify indexes
-    pass
+def add_game_to_db(game: str, questions: list[str], answers: list[list[str]], scores: list[list[str]]) -> None:
+    user_id = current_user.id
+    new_game = Game(
+        id=str(uuid.uuid4()),
+        game=game,
+        user_id=user_id
+    )
+    db.session.add(new_game)
+
+    for index, question in enumerate(questions):
+        new_question = Question(
+            id=str(uuid.uuid4()),
+            question=question,
+            user_id=user_id
+        )
+        new_game.questions.append(new_question)
+
+        new_answers = []
+        for answer, score in zip(answers[index], scores[index]):
+            new_answer = Answer(
+                id=str(uuid.uuid4()),
+                answer=answer,
+                question_id=new_question.id,
+                quantity=score
+            )
+            new_answers.append(new_answer)
+        new_question.answers.extend(new_answers)
+
+    db.session.commit()

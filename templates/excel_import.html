@@ -15,5 +15,8 @@
             <input type="file" class="file-input file-input-success block" name="file" accept=".xlsx" required/>
             <input type="submit" class="btn btn-success btn-soft block" value="Отправить">
         </form>
+        {% if error %}
+            <div class="alert alert-warning alert-soft mt-10" role="alert">{{ error }}</div>
+        {% endif %}
     </div>
 {% endblock %}

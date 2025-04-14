@@ -238,6 +238,8 @@ def game_info(game_id: str):
 @app.route("/excel-import", methods=["GET", "POST"])
 @login_required
 def excel_import():
+    error = None
+
     if request.method == "POST":
         file = request.files.get("file")
         if not file.filename:
@@ -247,9 +249,9 @@ def excel_import():
         if type(response) is Response:
             return response
         else:
-            raise NotImplementedError
+            error = response
 
-    return render_template("excel_import.html", title="Импорт игры")
+    return render_template("excel_import.html", title="Импорт игры", error=error)
 
 
 if __name__ == '__main__':

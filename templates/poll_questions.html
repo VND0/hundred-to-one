@@ -13,7 +13,8 @@
             <div class="divider divider-start text-xl font-semibold">Добавленные ({{ poll.questions | length }})</div>
             <ul id="pollQuestions" class="space-y-4 px-2">
                 {% for question in poll.questions %}
-                    <li class="flex items-center gap-2 w-full bg-base-300 rounded-lg px-4 py-2" data-question-id="{{ question.id }}">
+                    <li class="flex items-center gap-2 w-full bg-base-300 rounded-lg shadow-sm px-4 py-2"
+                        data-question-id="{{ question.id }}">
                         <span class="flex-1 font-semibold text-wrap">
                             {{ question.question }}
                         </span>
@@ -34,7 +35,8 @@
             <div class="divider divider-start text-xl font-semibold">Доступные ({{ other_questions | length }})</div>
             <ul id="noPollQuestions" class="space-y-4 px-2">
                 {% for question in other_questions %}
-                    <li class="flex items-center gap-4 w-full bg-base-300 rounded-lg px-4 py-2" data-question-id="{{ question.id }}">
+                    <li class="flex items-center gap-4 w-full bg-base-300 rounded-lg shadow-sm px-4 py-2"
+                        data-question-id="{{ question.id }}">
                         <span class="flex-1 font-semibold text-wrap">
                             {{ question.question }}
                         </span>

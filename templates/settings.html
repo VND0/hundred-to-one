@@ -1,18 +1,18 @@
 {% extends 'base.html' %}
 {% block content %}
-    <main class="flex flex-col justify-center space-y-4 max-w-lg min-h-[calc(100vh-5rem)] -mt-10 mx-auto">
+    <main class="flex flex-col justify-center space-y-4 max-w-lg min-h-[calc(100vh-5rem)] mx-auto px-4">
         <div class="flex justify-between items-center">
             <h1 class="font-bold text-2xl">Настройки профиля</h1>
             <a class="link link-info font-bold text-xl" href="/profile">Назад</a>
         </div>
 
-        <div class="tabs tabs-lift">
+        <div class="tabs tabs-lift mt-2">
             <!-- Изменение данных -->
             <input type="radio" name="my_tabs_2" class="tab [--tab-bg:var(--color-base-300)] text-base"
-                   aria-label="Изменение профиля" {{ "checked" if action_type == "edit_data" }} />
+                   aria-label="Изменение" {{ "checked" if action_type == "edit_data" }} />
 
-            <form class="tab-content bg-base-300 border-base-300 px-8 py-6" method="post">
-                <h1 class="text-xl font-bold mb-6">Изменение профиля</h1>
+            <form class="tab-content bg-base-300 border-base-300 shadow-lg px-8 py-6" method="post">
+                <h2 class="text-xl font-bold mb-6">Изменение профиля</h2>
 
                 <label class="floating-label block w-full mb-6">
                     <span>Никнейм</span>
@@ -48,8 +48,8 @@
             <input type="radio" name="my_tabs_2" class="tab [--tab-bg:var(--color-base-300)] text-base"
                    aria-label="Смена пароля" {{ "checked" if action_type == "new_password" }} />
 
-            <form class="tab-content bg-base-300 border-base-300 px-8 py-6" method="post">
-                <h1 class="text-xl font-bold mb-6">Смена пароля</h1>
+            <form class="tab-content bg-base-300 border-base-300 shadow-lg px-8 py-6" method="post">
+                <h2 class="text-xl font-bold mb-6">Смена пароля</h2>
 
                 <label class="floating-label block w-full mb-6">
                     <span>Старый пароль</span>
@@ -82,10 +82,10 @@
 
             <!-- Удаление аккаунта -->
             <input type="radio" name="my_tabs_2" class="tab [--tab-bg:var(--color-base-300)] text-base"
-                   aria-label="Удаление аккаунта" {{ "checked" if action_type == "remove" }} />
+                   aria-label="Удаление" {{ "checked" if action_type == "remove" }} />
 
-            <form class="tab-content bg-base-300 border-base-300 px-8 py-6" id="removeForm" method="post">
-                <h1 class="text-xl font-bold mb-6">Удаление аккаунта</h1>
+            <form class="tab-content bg-base-300 border-base-300 shadow-lg px-8 py-6" id="removeForm" method="post">
+                <h2 class="text-xl font-bold mb-6">Удаление аккаунта</h2>
 
                 <label class="floating-label block w-full mb-4">
                     <span>Пароль</span>

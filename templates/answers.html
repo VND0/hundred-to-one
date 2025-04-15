@@ -11,7 +11,7 @@
             {{ question.question }}
         </span>
 
-        <div class="bg-base-300 rounded-lg space-y-6 mt-4 p-6">
+        <div class="bg-base-300 rounded-lg shadow-md space-y-6 mt-4 p-6">
             <form id="addForm">
                 <h2 class="text-xl font-bold text-center mb-4">Добавить свой ответ</h2>
 
@@ -41,11 +41,13 @@
     </div>
 
     <template id="answerTemplate">
-        <li class="flex items-center max-sm:flex-col gap-2 w-full bg-base-200 rounded-xl py-1.5 px-4">
+        <li class="flex items-center max-sm:flex-col-reverse gap-2 w-full bg-base-200 rounded-xl py-1.5 px-4">
             <span class="flex-1 font-semibold text-base max-sm:text-center text-wrap break-all answer-text"></span>
-            <div>
-                <div class="points-stats badge badge-soft badge-info py-2 font-semibold hidden"></div>
-                <div class="answer-quantity badge badge-soft badge-info py-2 font-semibold"></div>
+            <div class="flex justify-between items-center max-sm:w-full gap-2">
+                <div class="flex items-center gap-2">
+                    <div class="points-stats badge badge-soft badge-info font-semibold hidden"></div>
+                    <div class="answer-quantity badge badge-soft badge-info font-semibold"></div>
+                </div>
                 <button class="btn btn-xs btn-error delete-btn">✕</button>
             </div>
         </li>

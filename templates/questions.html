@@ -23,7 +23,7 @@
 
         <ul id="questionsList" class="space-y-5 px-2">
             {% for question in questions %}
-                <li class="flex items-center gap-4 w-full bg-base-300 rounded-lg px-4 py-2" data-id="{{ question.id }}">
+                <li class="flex items-center gap-4 w-full bg-base-300 rounded-lg shadow-sm px-4 py-2" data-id="{{ question.id }}">
                     <span class="flex-1 font-semibold text-wrap">
                         {{ question.question }}
                     </span>

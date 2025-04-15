@@ -61,8 +61,8 @@ function loadAnswers(answersList) {
         answerQuantity.innerHTML = `Кол-во: ${answer.quantity}`
 
         if (ind < 6) {
-            newElem.classList.add("border-2")
-            newElem.classList.add("border-success")
+            newElem.classList.add("border")
+            newElem.classList.add("border-accent")
 
             pointsStats.innerText += `Очки: ${points}`
             pointsStats.classList.remove("hidden")

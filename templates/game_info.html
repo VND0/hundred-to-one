@@ -11,7 +11,7 @@
 
         <ul class="space-y-6 mt-6" id="questionsList">
             {% for question in game.questions %}
-                <li class="flex flex-col gap-3 w-full bg-base-300 rounded-xl py-4 px-6">
+                <li class="flex flex-col gap-3 w-full bg-base-300 rounded-xl p-6">
                     <h2 class="flex-1 text-xl font-bold text-wrap game-name">{{ question.question }}</h2>
                     <ul class="space-y-2">
                         {% for answer in question.answers %}

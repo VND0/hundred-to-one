@@ -3,7 +3,7 @@
 {% block content %}
     <div class="max-w-3xl space-y-6 mx-auto py-8 px-4">
         <div class="flex justify-between items-center">
-            <h1 class="font-bold text-2xl">Список игр</h1>
+            <h1 class="font-bold text-2xl">Игры</h1>
             <div class="flex">
                 <a class="link link-info font-bold text-xl" href="/games/game-add">Добавить игру</a>
                 <div class="divider divider-horizontal"></div>
@@ -14,9 +14,11 @@
             </div>
         </div>
 
-        <ul class="space-y-6 pb-8" id="gamesList">
+        <div class="divider text-xl font-semibold my-8">Список игр</div>
+
+        <ul class="space-y-6 pb-8 px-2" id="gamesList">
             {% for game in games %}
-                <li class="flex flex-col gap-4 w-full bg-base-300 rounded-xl py-4 px-6" data-id="{{ game.id }}">
+                <li class="flex flex-col gap-4 w-full bg-base-300 rounded-xl shadow-md py-4 px-6" data-id="{{ game.id }}">
                     <div class="flex gap-2 items-center">
                         <h2 class="flex-1 text-xl font-bold truncate game-name">{{ game.game }}</h2>
 
@@ -34,7 +36,7 @@
                     </div>
 
                     <div class="collapse collapse-arrow bg-base-100 border border-base-300">
-                        <input type="checkbox" name="game-questions"/>
+                        <input type="checkbox" name="game-questions" />
                         <div class="collapse-title bg-base-200 font-semibold">Вопросы для игры</div>
                         <ul class="collapse-content bg-base-200 space-y-4">
                             {% for question in game.questions %}
@@ -53,12 +55,11 @@
                     </div>
 
                     <div class="flex justify-around">
-                        <a class="flex-1 text-center" href="#">
-                            <button class="btn btn-block btn-soft btn-info max-w-3/5">Начать игру</button>
+                        <a class="btn btn-soft btn-info flex-1 max-w-1/3 max-sm:max-w-2/5" href="#">
+                            Начать игру
                         </a>
-
-                        <a class="flex-1 text-center" href="/game-info/{{ game.id }}">
-                            <button class="btn btn-block btn-soft btn-accent max-w-3/5">Отчёт для ведущего</button>
+                        <a class="btn btn-soft btn-accent flex-1 max-w-1/3 max-sm:max-w-2/5" href="/game-info/{{ game.id }}">
+                            Для ведущего
                         </a>
                     </div>
                 </li>

@@ -23,7 +23,7 @@
 
         <ul id="pollsList" class="space-y-6 px-2">
             {% for poll in polls %}
-                <li class="flex flex-col gap-1 w-full bg-base-300 rounded-xl p-4" data-id="{{ poll.id }}">
+                <li class="flex flex-col gap-1 w-full bg-base-300 rounded-xl shadow-md p-4" data-id="{{ poll.id }}">
                     <div class="flex gap-2 items-center">
                         <h2 class="flex-1 text-xl font-bold truncate poll-name">{{ poll.poll }}</h2>
 
@@ -45,15 +45,15 @@
                     <div class="flex justify-around">
                         <div class="flex flex-1 flex-col items-center gap-2">
                             <span class="flex-1 font-semibold">Вопросы: {{ poll.questions | length }}</span>
-                            <a class="block  w-1/2 max-sm:w-2/3" href="/poll-questions/{{ poll.id }}">
-                                <button class="btn btn-sm btn-soft btn-info w-full">Изменить</button>
+                            <a class="btn btn-sm btn-block btn-soft btn-info max-w-1/2 max-sm:max-w-2/3"
+                               href="/poll-questions/{{ poll.id }}">Изменить
                             </a>
                         </div>
 
                         <div class="flex flex-1 flex-col items-center gap-2">
                             <span class="flex-1 font-semibold">Ссылка на опрос</span>
-                            <a class="block w-1/2 max-sm:w-2/3">
-                                <button class="btn btn-sm btn-soft btn-success w-full to-clipboard">Копировать</button>
+                            <a class="btn btn-sm btn-block btn-soft btn-success max-w-1/2 max-sm:max-w-2/3 to-clipboard">
+                                Копировать
                             </a>
                         </div>
                     </div>

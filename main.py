@@ -221,7 +221,7 @@ def game_edit(game_id: str):
                            questions=questions, game=game)
 
 
-@app.route("/game-info/<game_id>")
+@app.route("/games/game-info/<game_id>")
 @login_required
 def game_info(game_id: str):
     game = db.session.query(Game).filter(Game.id == game_id).one_or_none()
@@ -235,7 +235,7 @@ def game_info(game_id: str):
     return render_template("game_info.html", title="Отчет по игре", game=game)
 
 
-@app.route("/excel-import", methods=["GET", "POST"])
+@app.route("/games/excel-import", methods=["GET", "POST"])
 @login_required
 def excel_import():
     error = None

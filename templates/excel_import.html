@@ -1,22 +1,35 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div class="max-w-3xl mx-auto py-8 px-4">
-        <div class="flex w-full items-center">
-            <span class="text-lg">
-                Вы можете скачать шаблон игры в Excel. Его надо заполнить и загрузить. Игра появится в аккаунте.
-            </span>
-            <div class="divider divider-horizontal"></div>
-            <a class="btn btn-info btn-ghost btn-outline"
-               href="{{ url_for('static', filename='game_template.xlsx') }}" download="GameTemplate.xlsx">
-                Скачать
-            </a>
+    <main class=" max-w-3xl mx-auto py-8 px-4">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="font-bold text-2xl">Игра из шаблона</h1>
+            <a class="link link-info font-bold text-xl" href="/games">Назад</a>
         </div>
-        <form method="post" enctype="multipart/form-data" class="mt-10 space-x-5 space-y-5">
-            <input type="file" class="file-input file-input-success block" name="file" accept=".xlsx" required/>
-            <input type="submit" class="btn btn-success btn-soft block" value="Отправить">
-        </form>
-        {% if error %}
-            <div class="alert alert-warning alert-soft mt-10" role="alert">{{ error }}</div>
-        {% endif %}
-    </div>
+
+        <div class="bg-base-300 text-center rounded-xl shadow-md space-y-4 p-6">
+            <h2 class="font-bold text-xl">Инструкция по созданию</h2>
+
+            <div class="space-y-2">
+                <p class="text-lg font-semibold">
+                    Для создания игры из шаблона вам необходимо скачать excel-файл, нажав на кнопку ниже и заполнить
+                    его, соблюдая ограничения и правила. Готовый шаблон нужно отправить с помощью формы.
+                </p>
+
+                <a class="btn btn-success" href="{{ url_for('static', filename='game_template.xlsx') }}" download="GameTemplate.xlsx">
+                    Скачать шаблон
+                </a>
+            </div>
+
+            <h2 class="font-bold text-xl">Форма для готового шаблона</h2>
+
+            <form class="flex max-sm:flex-col gap-4" method="post" enctype="multipart/form-data">
+                <input type="file" class="file-input file-input-success flex-1" name="file" accept=".xlsx" required/>
+                <input type="submit" class="btn btn-success btn-soft" value="Отправить">
+            </form>
+
+            {% if error %}
+                <div class="alert alert-warning alert-soft mt-10" role="alert">{{ error }}</div>
+            {% endif %}
+        </div>
+    </main>
 {% endblock %}

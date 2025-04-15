@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="max-w-3xl mx-auto py-8 px-4">
+    <main class="max-w-3xl mx-auto py-8 px-4">
         <div class="flex justify-between items-center">
             <h1 class="font-bold text-2xl">Ответы на вопрос</h1>
             <a class="link link-info font-bold text-xl" id="backLink" onclick="history.back()">Назад</a>
@@ -38,7 +38,7 @@
                 <ul id="otherAnswers" class="space-y-4 px-2"></ul>
             </div>
         </div>
-    </div>
+    </main>
 
     <template id="answerTemplate">
         <li class="flex items-center max-sm:flex-col-reverse gap-2 w-full bg-base-200 rounded-xl py-1.5 px-4">

@@ -91,7 +91,6 @@ pollsList.forEach((elem) => {
     const href = `/public/polls/${id}`
     const publicLink = window.location.host + href;
 
-    publicLinkA.setAttribute("href", href)
     toClipboardBtn.addEventListener("click", () => {
         navigator.clipboard.writeText(publicLink)
         formMessage("Скопировано в буфер обмена")

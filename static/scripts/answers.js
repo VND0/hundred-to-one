@@ -12,17 +12,20 @@ const otherAnswers = document.querySelector("#otherAnswers")
 
 const questionId = allAnswers.dataset.questionId
 
-let jwtToken = getJwt()
-
 const params = new URLSearchParams()
 params.append("question_id", questionId)
 
+let jwtToken = getJwt()
+
 fetch(`/api/answers?${params}`, {
-    method: "GET", headers: {"Content-Type": "application/json", "Authorization": `Bearer ${jwtToken}`}
+    method: "GET",
+    headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${jwtToken}`
+    }
 }).then((response) => response.json()).then((data) => {
     if (data.length === 0) {
         allAnswers.innerHTML = "<h2 class='text-xl font-bold text-center'>Список ответов пустой</h2>"
-
     } else {
         loadAnswers(data)
     }
@@ -101,6 +104,7 @@ async function deleteAnswerRequest(answerId, toBeDeleted) {
     })
     if (response.ok) {
         toBeDeleted.remove()
+        window.location.reload()
     }
 }
 
@@ -111,8 +115,4 @@ addForm.addEventListener("submit", async function (evt) {
     if (success) {
         window.location.reload()
     }
-})
-
-backLink.addEventListener("click", () => {
-    document.location.href = document.referrer
 })

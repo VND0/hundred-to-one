@@ -1,22 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="max-w-3xl space-y-6 mx-auto py-8 px-4">
-        <h1 class="font-bold text-2xl text-center text-wrap">{{ game.game }}</h1>
-        <ul class="space-y-6 pb-8" id="questionsList">
+    <div class="max-w-3xl mx-auto py-8 px-4">
+        <div class="flex justify-between items-center">
+            <h1 class="font-bold text-2xl">Отчёт по игре</h1>
+            <a class="link link-info font-bold text-xl" href="/games">Назад</a>
+        </div>
+
+        <span class="font-semibold opacity-50 italic">{{ game.game }}</span>
+
+        <ul class="space-y-6 mt-6" id="questionsList">
             {% for question in game.questions %}
                 <li class="flex flex-col gap-3 w-full bg-base-300 rounded-xl py-4 px-6">
                     <h2 class="flex-1 text-xl font-bold text-wrap game-name">{{ question.question }}</h2>
-                    <div class="bg-base-100 rounded-xl">
-                        <div class="py-2 px-2 bg-base-200 font-semibold">Ответы</div>
-                        <ol class="bg-base-200 space-y-2">
-                            {% for answer in question.answers %}
-                                <li class="flex items-center w-full bg-base-100 rounded-lg px-2 py-2 font-semibold break-all text-sm gap-2">
-                                    <span class="text-accent">{{ loop.index }}.</span> <span>{{ answer.answer }}</span>
-                                </li>
-                            {% endfor %}
-                        </ol>
-                    </div>
+                    <ul class="space-y-2">
+                        {% for answer in question.answers %}
+                            <li class="w-full bg-base-200 rounded-lg font-semibold text-wrap break-all px-2 py-2">
+                                <span>{{ loop.index }}. {{ answer.answer }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
                 </li>
             {% endfor %}
         </ul>

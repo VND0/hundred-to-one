@@ -11,11 +11,10 @@
 
         <div class="mt-6">
             <div class="divider divider-start text-xl font-semibold">Добавленные ({{ poll.questions | length }})</div>
-            <ul id="pollQuestions" class="px-4 space-y-4">
+            <ul id="pollQuestions" class="space-y-4 px-2">
                 {% for question in poll.questions %}
-                    {% set word_amount = question.question.strip().split() | length %}
                     <li class="flex items-center gap-2 w-full bg-base-300 rounded-lg px-4 py-2" data-question-id="{{ question.id }}">
-                        <span class="flex-1 font-semibold {{ 'break-words' if word_amount > 1 else 'break-all' }}">
+                        <span class="flex-1 font-semibold text-wrap">
                             {{ question.question }}
                         </span>
 
@@ -33,16 +32,16 @@
 
         <div class="my-8">
             <div class="divider divider-start text-xl font-semibold">Доступные ({{ other_questions | length }})</div>
-            <ul id="noPollQuestions" class="px-4 space-y-4">
+            <ul id="noPollQuestions" class="space-y-4 px-2">
                 {% for question in other_questions %}
                     <li class="flex items-center gap-4 w-full bg-base-300 rounded-lg px-4 py-2" data-question-id="{{ question.id }}">
-                        <span class="flex-1 font-semibold break-all">
+                        <span class="flex-1 font-semibold text-wrap">
                             {{ question.question }}
                         </span>
 
                         <div class="flex self-start items-center gap-2">
                             <a href="/answers/{{ question.id }}"
-                               class="btn btn-xs btn-soft {{ 'btn-info' if question.answers | length < 100 else 'btn-success' }}">
+                               class="btn btn-xs btn-soft btn-info">
                                 Ответы: {{ question.answers | length }}
                             </a>
 

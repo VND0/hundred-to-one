@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <main class="flex items-center min-h-[calc(100vh-5rem)]">
-        <div class="tabs tabs-lift max-w-lg mx-auto -mt-20">
+    <main class="flex items-center min-h-[calc(100vh-5rem)] px-4">
+        <div class="tabs tabs-lift max-w-lg mx-auto">
             <!-- Регистрация -->
             <input type="radio" name="my_tabs_2" class="tab [--tab-bg:var(--color-base-300)] text-base"
                    aria-label="Регистрация" {{ "checked" if action_type == "registration" }} />

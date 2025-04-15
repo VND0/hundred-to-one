@@ -7,7 +7,7 @@
             <a class="link link-info font-bold text-xl" href="/profile">Назад</a>
         </div>
 
-        <form id="addForm" class="mt-4 mb-6">
+        <form id="addForm" class="my-8">
             <div class="join w-full">
                 <div class="flex-1">
                     <label class="input join-item w-full">
@@ -21,7 +21,7 @@
 
         <div class="divider text-xl font-semibold mb-6">Список опросов</div>
 
-        <ul id="pollsList" class="space-y-6">
+        <ul id="pollsList" class="space-y-6 px-2">
             {% for poll in polls %}
                 <li class="flex flex-col gap-1 w-full bg-base-300 rounded-xl p-4" data-id="{{ poll.id }}">
                     <div class="flex gap-2 items-center">
@@ -45,17 +45,15 @@
                     <div class="flex justify-around">
                         <div class="flex flex-1 flex-col items-center gap-2">
                             <span class="flex-1 font-semibold">Вопросы: {{ poll.questions | length }}</span>
-                            <a class="block w-1/2" href="/poll-questions/{{ poll.id }}">
+                            <a class="block  w-1/2 max-sm:w-2/3" href="/poll-questions/{{ poll.id }}">
                                 <button class="btn btn-sm btn-soft btn-info w-full">Изменить</button>
                             </a>
                         </div>
 
                         <div class="flex flex-1 flex-col items-center gap-2">
-                            <a class="flex-1 public-link link link-info font-semibold" href="#">
-                                Ссылка на опрос
-                            </a>
-                            <a class="block w-1/2">
-                                <button class="btn btn-sm btn-soft btn-success w-full to-clipboard">Скопировать</button>
+                            <span class="flex-1 font-semibold">Ссылка на опрос</span>
+                            <a class="block w-1/2 max-sm:w-2/3">
+                                <button class="btn btn-sm btn-soft btn-success w-full to-clipboard">Копировать</button>
                             </a>
                         </div>
                     </div>

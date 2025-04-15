@@ -56,7 +56,7 @@ def load_user(user_id):
 def index():
     if current_user.is_authenticated:
         return redirect("/profile")
-    return render_template("index.html", title="Welcome")
+    return render_template("index.html", title="Hundred To One")
 
 
 @app.route("/auth", methods=["POST", "GET"])

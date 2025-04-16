@@ -84,3 +84,12 @@ def excel_import():
             error = response
 
     return render_template("excel_import.html", title="Импорт игры", error=error)
+
+
+@bp.route("/game-play/<game_id>")
+@login_required
+def game_play(game_id: str):
+    game = db.session.query(Game).filter(Game.id == game_id).one_or_none()
+    if not game:
+        return redirect("/games")
+    return render_template("game_play.html", title=game.game)

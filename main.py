@@ -6,11 +6,14 @@ from flask_jwt_extended import JWTManager
 from flask_login import LoginManager, logout_user, login_required, current_user
 from flask_restful import Api
 
+import tools
+
 import games_bp
 import polls_system_bp
-import tools
+
 from database.database import db
 from database.db_models import User
+
 from resources.answers_resource import AnswersListResource, AnswersResource
 from resources.games_resource import GamesResource
 from resources.poll_questions_resource import PollQuestionResource

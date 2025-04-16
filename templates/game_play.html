@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ru" data-theme="retro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='images/icon.png') }}">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css"/>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" rel="stylesheet" type="text/css"/>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>{{ title }}</title>
+</head>
+<body class="min-h-screen bg-base-200" data-user-id="{{ current_user.id if current_user.is_authenticated else '' }}">
+    <main class="flex justify-around items-center gap-x-4 max-w-7xl min-h-screen mx-auto px-4">
+        <div class="flex flex-col items-center bg-indigo-300 rounded-xl shadow-md gap-y-4 p-6">
+            <h2 class="font-bold text-xl">Команда 1</h2>
+            <span class="font-semibold text-lg tracking-wider">000</span>
+            {% for _ in range(3) %}
+                <button class="btn btn-xs btn-square btn-error delete-btn">✕</button>
+            {% endfor %}
+        </div>
+
+        <div class="flex-1 max-w-2xl">
+            <div class="max-w-full bg-base-300 rounded-xl shadow-lg space-y-6 p-8">
+                <h2 class="font-bold text-xl text-center">За что работают программисты?</h2>
+                <ul class="space-y-4">
+                    {% for _ in range(2) %}
+                        <li class="flex justify-between max-w-full bg-slate-700 text-lg text-white rounded-xl py-2 px-4">
+                            <span class="font-semibold">Some text for answer</span>
+                            <span class="font-bold">52</span>
+                        </li>
+                    {% endfor %}
+                    {% for _ in range(4) %}
+                        <li class="max-w-full bg-base-200 font-bold text-xl text-center rounded-xl py-2 px-4">
+                            {{ loop.index + 2 }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="flex flex-col items-center bg-red-300 rounded-xl shadow-md gap-y-4 p-6">
+            <h2 class="font-bold text-xl">Команда 2</h2>
+            <span class="font-semibold text-lg tracking-wider">000</span>
+            {% for _ in range(3) %}
+                <button class="btn btn-xs btn-square btn-error delete-btn">✕</button>
+            {% endfor %}
+        </div>
+    </main>
+</body>
+</html>

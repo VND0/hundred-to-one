@@ -6,9 +6,11 @@ from flask_jwt_extended import JWTManager
 from flask_login import LoginManager, logout_user, login_required, current_user
 from flask_restful import Api
 
+import games_bp
+import polls_system_bp
 import tools
 from database.database import db
-from database.db_models import User, Question, Poll, Game
+from database.db_models import User
 from resources.answers_resource import AnswersListResource, AnswersResource
 from resources.games_resource import GamesResource
 from resources.poll_questions_resource import PollQuestionResource
@@ -45,6 +47,9 @@ api.add_resource(AnswersListResource, "/api/answers")
 api.add_resource(AnswersResource, "/api/answers/<answer_id>")
 
 api.add_resource(GamesResource, "/api/games/<game_id>")
+
+app.register_blueprint(games_bp.bp)
+app.register_blueprint(polls_system_bp.bp)
 
 
 @login_manager.user_loader
@@ -121,137 +126,6 @@ def user_settings():
         return form_response
     return render_template("settings.html", title=f"Настройки {current_user.nickname}",
                            error=form_response, action_type=action_type)
-
-
-@app.route("/questions")
-@login_required
-def questions_list():
-    questions = db.session.query(Question).filter(Question.user_id == current_user.id).all()
-    return render_template("questions.html", title="Мои вопросы", questions=questions)
-
-
-@app.route("/answers/<question_id>")
-@login_required
-def question_answers(question_id: str):
-    question = db.session.query(Question).filter(Question.id == question_id).one_or_none()
-    if not question:
-        return redirect("/questions")
-
-    return render_template("answers.html", title="Ответы на вопрос", question=question)
-
-
-@app.route("/polls")
-@login_required
-def polls_list():
-    polls = db.session.query(Poll).filter(Poll.user_id == current_user.id).all()
-    return render_template("polls.html", title="Мои опросы", polls=polls)
-
-
-@app.route("/poll-questions/<poll_id>")
-@login_required
-def poll_questions(poll_id: str):
-    poll = db.session.query(Poll).filter(Poll.id == poll_id and Poll.user_id == current_user.id).one_or_none()
-    if not poll:
-        return redirect("/polls")
-
-    all_questions = db.session.query(Question).filter(Question.user_id == current_user.id).all()
-    other_questions = [question for question in all_questions if question not in poll.questions]
-
-    return render_template("poll_questions.html", title="Вопросы для опроса", other_questions=other_questions,
-                           poll=poll)
-
-
-@app.route("/public/polls/<poll_id>", methods=["POST", "GET"])
-def poll_form(poll_id: str):
-    form_response = None
-    poll = db.session.query(Poll).filter(Poll.id == poll_id).one_or_none()
-
-    if request.method == "POST":
-        form_response = tools.handle_poll_form(poll_id)
-
-    if type(form_response) is Response:
-        return form_response
-
-    return render_template("poll_form.html", title="Прохождение опроса", poll=poll,
-                           error=form_response, public=True)
-
-
-@app.route("/public/polls/done")
-def poll_form_done():
-    return render_template("poll_form_done.html", title="Опрос пройден", public=True)
-
-
-@app.route("/games")
-@login_required
-def games_list():
-    games = db.session.query(Game).filter(Game.user_id == current_user.id).all()
-    return render_template("games.html", title="Мои игры", games=games)
-
-
-@app.route("/games/game-add", methods=["POST", "GET"])
-@login_required
-def game_add():
-    form_response = None
-    questions = db.session.query(Question).filter(Question.user_id == current_user.id).all()
-
-    if request.method == "POST":
-        form_response = tools.handle_game_form()
-
-    if type(form_response) is Response:
-        return form_response
-
-    return render_template("game_add_edit.html", title="Создание игры", error=form_response,
-                           questions=questions, game=Game())
-
-
-@app.route("/games/game-edit/<game_id>", methods=["POST", "GET"])
-@login_required
-def game_edit(game_id: str):
-    form_response = None
-    questions = db.session.query(Question).filter(Question.user_id == current_user.id).all()
-
-    if request.method == "POST":
-        form_response = tools.handle_game_edit(game_id)
-
-    if type(form_response) is Response:
-        return form_response
-
-    game = db.session.query(Game).filter(Game.id == game_id).one()
-    return render_template("game_add_edit.html", title="Изменение игры", error=form_response,
-                           questions=questions, game=game)
-
-
-@app.route("/games/game-info/<game_id>")
-@login_required
-def game_info(game_id: str):
-    game = db.session.query(Game).filter(Game.id == game_id).one_or_none()
-    if not game:
-        return redirect("/games")
-
-    for question in game.questions:
-        question.answers.sort(key=lambda a: a.quantity, reverse=True)
-        question.answers = question.answers[:6]
-
-    return render_template("game_info.html", title="Отчет по игре", game=game)
-
-
-@app.route("/games/excel-import", methods=["GET", "POST"])
-@login_required
-def excel_import():
-    error = None
-
-    if request.method == "POST":
-        file = request.files.get("file")
-        if not file.filename:
-            abort(400, "No file chosen")
-
-        response = tools.parse_excel_game(file)
-        if type(response) is Response:
-            return response
-        else:
-            error = response
-
-    return render_template("excel_import.html", title="Импорт игры", error=error)
 
 
 if __name__ == '__main__':

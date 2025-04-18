@@ -45,14 +45,16 @@ async function handleApiError(response) {
 
 function loadAnswers(answersList) {
     let pointsSum = 0
+    let answersAmount = 0
+
     for (let ind = 0; ind < Math.min(6, answersList.length); ind++) {
-        pointsSum += answersList[ind].quantity
+        answersAmount += answersList[ind].quantity
     }
 
     answersList.forEach((answer, ind) => {
         const newElem = tmplt.content.cloneNode(true).childNodes[1]
 
-        const points = Math.round(1.0 * answer.quantity / pointsSum * 100)
+        const points = Math.round(1.0 * answer.quantity / answersAmount * 100)
         const pointsStats = newElem.querySelector(".points-stats")
 
         const answerQuantity = newElem.querySelector(".answer-quantity")
@@ -61,15 +63,28 @@ function loadAnswers(answersList) {
         answerQuantity.innerHTML = `Кол-во: ${answer.quantity}`
 
         if (ind < 6) {
+            pointsSum += points
+
             newElem.classList.add("border")
             newElem.classList.add("border-accent")
 
-            pointsStats.innerText += `Очки: ${points}`
+            pointsStats.innerText = `Очки: ${points}`
             pointsStats.classList.remove("hidden")
 
             popularAnswers.appendChild(newElem)
         } else {
             otherAnswers.appendChild(newElem)
+        }
+
+        if (ind === 5) {
+            if (pointsSum < 100) {
+                const newPoints = Math.round(1.0 * answersList[0].quantity / answersAmount * 100) + 100 - pointsSum
+                popularAnswers.firstElementChild.querySelector(".points-stats").innerText = `Очки: ${newPoints}`
+            }
+            else if (pointsSum > 100) {
+                const newPoints = Math.round(1.0 * answersList[5].quantity / answersAmount * 100) - pointsSum + 100
+                popularAnswers.lastElementChild.querySelector(".points-stats").innerText = `Очки: ${newPoints}`
+            }
         }
 
         newElem.querySelector("button").addEventListener("click", () => deleteAnswerRequest(answer.id, newElem))

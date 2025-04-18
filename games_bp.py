@@ -90,6 +90,6 @@ def excel_import():
 @login_required
 def game_play(game_id: str):
     game = db.session.query(Game).filter(Game.id == game_id).one_or_none()
-    if not game:
+    if not game or len(game.questions) != 7:
         return redirect("/games")
     return render_template("game_play.html", title=game.game)

@@ -12,20 +12,14 @@ from database.db_models import Question, Answer
 from tools import get_errors
 
 
-def abort_if_question_not_found(question_id: str) -> None:
-    question = db.session.query(Question).filter(Question.id == question_id).one_or_none()
-    if not question:
-        abort(404, message=f"Question {question_id} not found")
-
-
 class QuestionResource(Resource):
     @jwt_required()
     def put(self, question_id: str):
         jwt_user_id = get_jwt_identity()
-
-        abort_if_question_not_found(question_id)
         question = db.session.query(Question).filter(Question.id == question_id and
-                                                     Question.user_id == jwt_user_id).one()
+                                                     Question.user_id == jwt_user_id).one_or_none()
+        if not question:
+            abort(404, message=f"Question {question_id} not found")
 
         try:
             model = models.Question.model_validate(request.get_json())
@@ -44,12 +38,10 @@ class QuestionResource(Resource):
     @jwt_required()
     def delete(self, question_id: str):
         jwt_user_id = get_jwt_identity()
-
-        abort_if_question_not_found(question_id)
         question = db.session.query(Question).filter(Question.id == question_id and
-                                                     Question.user_id == jwt_user_id).one()
-
-        db.session.query(Answer).filter(Answer.question_id == question_id).delete()
+                                                     Question.user_id == jwt_user_id).one_or_none()
+        if not question:
+            abort(404, message=f"Question {question_id} not found")
 
         try:
             db.session.delete(question)

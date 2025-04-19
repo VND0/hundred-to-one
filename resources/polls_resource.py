@@ -12,10 +12,40 @@ from database.db_models import Poll
 from tools import get_errors
 
 
-def abort_if_poll_not_found(poll_id: str) -> None:
-    question = db.session.query(Poll).filter(Poll.id == poll_id and Poll.user_id == get_jwt_identity()).one_or_none()
-    if not question:
-        abort(404, message=f"Poll {poll_id} not found")
+class PollResource(Resource):
+    @jwt_required()
+    def put(self, poll_id: str):
+        jwt_user_id = get_jwt_identity()
+        poll = db.session.query(Poll).filter(Poll.id == poll_id and Poll.user_id == jwt_user_id).one_or_none()
+        if not poll:
+            abort(404, message=f"Poll {poll_id} not found")
+
+        try:
+            model = models.Poll.model_validate(request.get_json())
+        except ValidationError as e:
+            error = get_errors(e)
+            abort(400, message=error)
+
+        try:
+            poll.poll = model.poll
+            db.session.commit()
+        except IntegrityError:
+            abort(409, message="Polls must be unique")
+
+    @jwt_required()
+    def delete(self, poll_id: str):
+        jwt_user_id = get_jwt_identity()
+        poll = db.session.query(Poll).filter(Poll.id == poll_id and Poll.user_id == jwt_user_id).one_or_none()
+        if not poll:
+            abort(404, message=f"Poll {poll_id} not found")
+
+        try:
+            db.session.delete(poll)
+            db.session.commit()
+        except IntegrityError as e:
+            abort(409, message=type(e).__name__)
+
+        return jsonify(204, {"success": "OK"})
 
 
 class PollsListResource(Resource):
@@ -41,35 +71,3 @@ class PollsListResource(Resource):
         db.session.refresh(poll)
 
         return jsonify(201, {"poll_id": poll.id})
-
-
-class PollResource(Resource):
-    @jwt_required()
-    def put(self, poll_id: str):
-        jwt_user_id = get_jwt_identity()
-        abort_if_poll_not_found(poll_id)
-        try:
-            model = models.Poll.model_validate(request.get_json())
-        except ValidationError as e:
-            error = get_errors(e)
-            abort(400, message=error)
-
-        poll = db.session.query(Poll).filter(Poll.id == poll_id and Poll.user_id == jwt_user_id).one()
-        poll.poll = model.poll
-        try:
-            db.session.commit()
-        except IntegrityError:
-            abort(409, message="Polls must be unique")
-
-    @jwt_required()
-    def delete(self, poll_id: str):
-        jwt_user_id = get_jwt_identity()
-        abort_if_poll_not_found(poll_id)
-        db.session.query(Poll).filter(Poll.id == poll_id and Poll.user_id == jwt_user_id).delete()
-
-        try:
-            db.session.commit()
-        except IntegrityError as e:
-            abort(409, message=type(e).__name__)
-
-        return jsonify(204, {"success": "OK"})

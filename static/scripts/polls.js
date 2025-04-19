@@ -39,7 +39,7 @@ async function addPollRequest(poll) {
     return response.ok
 }
 
-async function delPollRequest(pollId) {
+async function deletePollRequest(pollId) {
     let response;
     try {
         response = await fetch(`/api/polls/${pollId}`, {
@@ -97,7 +97,7 @@ pollsList.forEach((elem) => {
     })
 
     deleteBtn.addEventListener("click", async () => {
-        const success = await delPollRequest(id)
+        const success = await deletePollRequest(id)
         if (success) {
             elem.remove()
         }

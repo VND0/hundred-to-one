@@ -14,7 +14,7 @@ class PollQuestionResource(Resource):
     @jwt_required()
     def patch(self, poll_id: str):
         jwt_user_id = get_jwt_identity()
-        poll: Poll = db.session.query(Poll).filter(Poll.id == poll_id and Poll.user_id == jwt_user_id).one_or_none()
+        poll = db.session.query(Poll).filter(Poll.id == poll_id and Poll.user_id == jwt_user_id).one_or_none()
         if poll is None:
             abort(404, message=f"Poll {poll_id} not found")
 

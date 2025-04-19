@@ -168,14 +168,6 @@ def handle_remove_account() -> str | Response:
 
     user = db.session.query(User).filter(User.id == current_user.id).one()
 
-    for question in user.questions:
-        for answer in question.answers:
-            db.session.delete(answer)
-        db.session.delete(question)
-
-    for poll in user.polls:
-        db.session.delete(poll)
-
     db.session.delete(user)
     db.session.commit()
 

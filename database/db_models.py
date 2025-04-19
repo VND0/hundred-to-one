@@ -32,17 +32,20 @@ class User(db.Model, SerializerMixin, UserMixin):
 
     questions: Mapped[list["Question"]] = relationship(
         argument="Question",
-        back_populates="user"
+        back_populates="user",
+        cascade="all, delete"
     )
 
     polls: Mapped[list["Poll"]] = relationship(
         argument="Poll",
-        back_populates="user"
+        back_populates="user",
+        cascade="all, delete"
     )
 
     games: Mapped[list["Game"]] = relationship(
         argument="Game",
-        back_populates="user"
+        back_populates="user",
+        cascade="all, delete"
     )
 
     def set_password(self, password):
@@ -66,7 +69,20 @@ class Question(db.Model, SerializerMixin):
 
     answers: Mapped[list["Answer"]] = relationship(
         argument="Answer",
-        back_populates="question"
+        back_populates="question",
+        cascade="all, delete"
+    )
+
+    polls: Mapped[list["Poll"]] = relationship(
+        argument="Poll",
+        secondary=poll_question,
+        back_populates="questions"
+    )
+
+    games: Mapped[list["Game"]] = relationship(
+        argument="Game",
+        secondary=game_question,
+        back_populates="questions"
     )
 
     __table_args__ = (
@@ -105,7 +121,9 @@ class Poll(db.Model, SerializerMixin):
     )
 
     questions: Mapped[list["Question"]] = relationship(
-        secondary=poll_question
+        argument="Question",
+        secondary=poll_question,
+        back_populates="polls"
     )
 
     __table_args__ = (
@@ -126,5 +144,7 @@ class Game(db.Model, SerializerMixin):
     )
 
     questions: Mapped[list["Question"]] = relationship(
-        secondary=game_question
+        argument="Question",
+        secondary=game_question,
+        back_populates="games"
     )

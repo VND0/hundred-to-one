@@ -1,22 +1,27 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <main class="max-w-3xl space-y-6 mx-auto py-8 px-4">
+    <main class="max-w-3xl mx-auto py-8 px-4">
         <div class="flex justify-between items-center">
             <h1 class="font-bold text-2xl">Игры</h1>
-            <div class="flex">
-                <a class="link link-info font-bold text-xl" href="/games/game-add">Добавить игру</a>
-                <div class="divider divider-horizontal"></div>
-                <a href="/games/excel-import" class="link link-info font-bold text-xl">Из файла</a>
-                <div class="divider divider-horizontal"></div>
-                <a class="link link-info font-bold text-xl" href="/profile">Назад</a>
-
-            </div>
+            <a class="link link-info font-bold text-xl" href="/profile">Назад</a>
         </div>
 
-        <div class="divider text-xl font-semibold my-8">Список игр</div>
+        <div class="divider text-xl font-semibold my-6">Добавление игры</div>
 
-        <ul class="space-y-6 pb-8 px-2" id="gamesList">
+        <div class="flex justify-center items-center gap-x-18 max-[725px]:gap-x-16 max-[625px]:gap-x-8 px-2">
+            <a class="btn btn-soft btn-info flex-1 max-w-1/5 max-[625px]:max-w-1/4 max-[500px]:max-w-1/3" href="/games/game-add">
+                На сайте
+            </a>
+            <div class="divider divider-horizontal font-semibold">ИЛИ</div>
+            <a class="btn btn-soft btn-success flex-1 max-w-1/5 max-[625px]:max-w-1/4 max-[500px]:max-w-1/3" href="/games/excel-import">
+                Шаблон
+            </a>
+        </div>
+
+        <div class="divider text-xl font-semibold my-6">Список игр</div>
+
+        <ul class="space-y-6 px-2" id="gamesList">
             {% for game in games %}
                 <li class="flex flex-col gap-4 w-full bg-base-300 rounded-xl shadow-md py-4 px-6" data-id="{{ game.id }}">
                     <div class="flex gap-2 items-center">
@@ -64,12 +69,12 @@
                     </div>
 
                     <div class="flex justify-around">
-                        <a class="btn btn-soft btn-info flex-1 max-w-1/3 max-sm:max-w-2/5
+                        <a class="btn btn-soft btn-info flex-1 max-w-1/4 max-[625px]:max-w-1/3
                            {{ 'btn-disabled' if game.questions | length != 7 }}"
                            href="/games/game-play/{{ game.id }}">
                             Начать игру
                         </a>
-                        <a class="btn btn-soft btn-accent flex-1 max-w-1/3 max-sm:max-w-2/5"
+                        <a class="btn btn-soft btn-accent flex-1 max-w-1/4 max-[625px]:max-w-1/3"
                            href="/games/game-info/{{ game.id }}">
                             Для ведущего
                         </a>

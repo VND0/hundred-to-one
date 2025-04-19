@@ -7,7 +7,7 @@
             <a class="link link-info font-bold text-xl" href="/games">Назад</a>
         </div>
 
-        <form id="addForm" class="bg-base-300 rounded-lg mt-4 p-6" method="post">
+        <form id="addForm" class="bg-base-300 rounded-lg shadow-lg mt-4 mx-auto p-6" method="post">
             <h1 class="text-2xl font-bold text-center text-wrap mb-4">{{ game.game or 'Новая игра' }}</h1>
 
             <label class="floating-label block w-full mb-6">
@@ -18,7 +18,7 @@
 
             <div class="divider divider-error text-lg font-semibold" id="listTitle">Вопросы для игры (0 / 7)</div>
 
-            <ul id="questionsList" class="space-y-4 mb-4">
+            <ul id="questionsList" class="space-y-4 mb-4 px-2">
                 {% for question in questions %}
                     {% if question.answers | length >= 6 %}
                         <li class="flex items-center gap-2 w-full bg-base-200 rounded-lg px-4 py-2">

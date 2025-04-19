@@ -67,18 +67,20 @@ function addHandlersToTeams(callback1, callback2) {
     }
     toggleTeamOutlines()
 
-    function forTeam1(evt) {
+    function forTeam1() {
         toggleTeamOutlines()
         callback1()
-        evt.target.removeEventListener("click", forTeam1)
+        team1Block.removeEventListener("click", forTeam1)
+        team2Block.removeEventListener("click", forTeam2)
     }
 
     team1Block.addEventListener("click", forTeam1)
 
-    function forTeam2(evt) {
+    function forTeam2() {
         toggleTeamOutlines()
         callback2()
-        evt.target.removeEventListener("click", forTeam2)
+        team1Block.removeEventListener("click", forTeam1)
+        team2Block.removeEventListener("click", forTeam2)
     }
 
     team2Block.addEventListener("click", forTeam2)
@@ -121,7 +123,9 @@ async function draw(questionIndex, callback) {
     })
 }
 
-draw(0, (result) => {
-    alert(result)
-    answersList.innerHTML = ""
-})
+function simpleGame(winner) {
+    const question = gameInfo.questions[1]
+    console.log(winner)
+}
+
+draw(0, simpleGame)

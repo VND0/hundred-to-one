@@ -15,6 +15,10 @@ class GamesResource(Resource):
         if game is None:
             abort(404, message=f"Game {game_id} not found.")
 
+        for question in game.questions:
+            question.answers.sort(key=lambda a: a.quantity, reverse=True)
+            question.answers = question.answers[:6]
+
         return game.to_dict(rules=("-user", "-questions.user", "-questions.polls", "-questions.games",
                                    "-questions.answers.question"))
 

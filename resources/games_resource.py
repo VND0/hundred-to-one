@@ -15,7 +15,8 @@ class GamesResource(Resource):
         if game is None:
             abort(404, message=f"Game {game_id} not found.")
 
-        return game.to_dict(rules=("-user", "-questions.user", "-questions.games", "-questions.answers.question"))
+        return game.to_dict(rules=("-user", "-questions.user", "-questions.polls", "-questions.games",
+                                   "-questions.answers.question"))
 
     @jwt_required()
     def delete(self, game_id: str):

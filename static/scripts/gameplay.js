@@ -59,6 +59,14 @@ function toggleTeamOutlines() {
     team2Block.classList.toggle("border-accent")
 }
 
+function clearElements() {
+    round.innerText = ""
+    questionTitle.innerText = ""
+    answersList.innerHTML = ""
+    questionTitle.innerText = ""
+    bank.innerText = "0"
+}
+
 
 class Draw {
     constructor(questionIndex) {
@@ -75,6 +83,7 @@ class Draw {
     draw(callback) {
         this.callback = callback
 
+        clearElements()
         round.innerText = "Розыгрыш"
         questionTitle.innerText = this.question.question
         fillClosedAnswers()
@@ -140,6 +149,7 @@ class SimpleGame {
         this.mistakes = {1: 0, 2: 0}
         this.sumPoints = 0
         this.openedQuestions = 0
+        this.roundFinished = false
 
         this.question.answers.forEach((answer) => {
             this.sumPoints += answer.quantity
@@ -147,13 +157,17 @@ class SimpleGame {
     }
 
     game(winner, callback) {
-        answersList.innerHTML = ""
+        clearElements()
         round.innerText = "Простая игра"
         questionTitle.innerText = this.question.question
 
         this.winner = winner
         this.loser = winner === 1 ? 2 : 1
-        this.callback = callback
+        this.callback = () => {
+            this.roundFinished = true;
+            callback()
+        }
+        this.finalAttempt = false
 
         fillClosedAnswers()
         this.question.answers.forEach((answer, index) => {
@@ -172,25 +186,50 @@ class SimpleGame {
         answersList.replaceChild(openedAnswer, evt.target)
         this.openedQuestions++
         bank.innerText = Number.parseInt(bank.innerText) + points
+        const inBank = Number.parseInt(bank.innerText)
 
-        if (this.openedQuestions === 6) {
-            const inBank = Number.parseInt(bank.innerText)
+        if (this.finalAttempt) {
+            if (this.loser === 1) {
+                team1Score.innerText = Number.parseInt(team1Score.innerText) + inBank
+            } else {
+                team2Score.innerText = Number.parseInt(team2Score.innerText) + inBank
+            }
+
+            this.callback()
+        } else if (this.openedQuestions === 6) {
             if (this.winner === 1) {
                 team1Score.innerText = Number.parseInt(team1Score.innerText) + inBank
             } else {
                 team2Score.innerText = Number.parseInt(team2Score.innerText) + inBank
             }
-            bank.innerText = "0"
+
+            this.callback()
         }
     }
 
     onMistakeMade(evt) {
-        const teamNumber = evt.currentTarget.dataset.teamNumber
-        this.mistakes[teamNumber]++
-        evt.currentTarget.removeEventListener("click", this.onMistakeMakeBound)
-        alert(teamNumber)
+        if (this.roundFinished) return
+
+        if (!this.finalAttempt) {
+            const teamNumber = evt.currentTarget.dataset.teamNumber
+            evt.currentTarget.removeEventListener("click", this.onMistakeMakeBound)
+
+            this.mistakes[teamNumber]++
+            if (this.mistakes[teamNumber] === 3) {
+                this.finalAttempt = true
+            }
+        } else {
+            const inBank = Number.parseInt(bank.innerText)
+            bank.innerText = "0"
+            if (this.winner === 1) {
+                team1Score.innerText = Number.parseInt(team1Score.innerText) + inBank
+            } else {
+                team2Score.innerText = Number.parseInt(team2Score.innerText) + inBank
+            }
+
+            this.callback()
+        }
     }
 }
 
-new Draw(0).draw((winner) => new SimpleGame().game(winner, () => new Draw(2).draw(() => {
-})))
+new Draw(0).draw((winner) => new SimpleGame().game(winner, clearElements))

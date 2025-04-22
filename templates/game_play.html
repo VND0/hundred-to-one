@@ -1,86 +1,72 @@
-<!doctype html>
-<html lang="ru" data-theme="retro">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{{ url_for('static', filename='images/icon.png') }}">
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css"/>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" rel="stylesheet" type="text/css"/>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <title>{{ title }}</title>
-</head>
-<body class="min-h-screen bg-base-200" data-user-id="{{ current_user.id if current_user.is_authenticated else '' }}">
-<header class="flex items-center bg-base-300 h-20 shadow-md px-4">
-    <div class="flex-1 flex justify-between max-w-7xl mx-auto">
-        <h1 class="font-bold text-3xl">Hundred To One</h1>
-        <h2 class="font-bold text-2xl" id="round">Простая игра (2 / 7)</h2>
-    </div>
-</header>
+{% extends 'base.html' %}
 
-<main class="flex flex-col justify-center gap-y-8 max-w-7xl min-h-[calc(100vh-5rem)] mx-auto px-4">
-    <div class="flex justify-around items-center" id="mainContent">
-        <div class="flex flex-col items-center gap-y-4 bg-radial from-indigo-300 from-30% to-indigo-400 border-2
+{% block content %}
+    <h2 class="font-bold text-3xl text-center mt-5" id="round">Простая игра (2 / 7)</h2>
+    <main class="flex flex-col justify-center gap-y-8 max-w-7xl min-h-[calc(100vh-10rem)] mx-auto px-4">
+        <div class="flex justify-around items-center" id="mainContent">
+            <div class="flex flex-col items-center gap-y-4 bg-radial from-indigo-300 from-30% to-indigo-400 border-2
                  rounded-xl shadow-lg p-6" id="team1Block">
-            <h2 class="font-bold text-2xl">Команда 1</h2>
-            <span class="font-bold text-3xl text-white tracking-wider" id="team1Score">0</span>
-            {% for _ in range(3) %}
-                <button class="btn btn-md bg-[var(--color-yellow-400)] hover:bg-[var(--color-yellow-500)] border-none mistake-button"
-                        data-team-number="1">
-                    <svg class="w-10 text-red-400" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none"
-                         stroke="currentColor" stroke-width="10" stroke-linecap="round">
-                        <line x1="10" y1="30" x2="90" y2="70"/>
-                        <line x1="90" y1="30" x2="10" y2="70"/>
-                    </svg>
-                </button>
-            {% endfor %}
-        </div>
+                <h2 class="font-bold text-2xl">Команда 1</h2>
+                <span class="font-bold text-3xl text-white tracking-wider" id="team1Score">0</span>
+                {% for _ in range(3) %}
+                    <button class="btn btn-md bg-[var(--color-yellow-400)] hover:bg-[var(--color-yellow-500)] border-none mistake-button"
+                            data-team-number="1">
+                        <svg class="w-10 text-red-400" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"
+                             fill="none"
+                             stroke="currentColor" stroke-width="10" stroke-linecap="round">
+                            <line x1="10" y1="30" x2="90" y2="70"/>
+                            <line x1="90" y1="30" x2="10" y2="70"/>
+                        </svg>
+                    </button>
+                {% endfor %}
+            </div>
 
-        <div class="flex-1 max-w-2xl">
-            <div class="bg-base-300 rounded-xl shadow-lg space-y-5 p-8">
-                <h2 class="font-bold text-2xl text-center" id="questionTitle">За что работают программисты?</h2>
-                <div class="max-w-24 bg-gradient-to-r from-indigo-400 to-rose-400 border-2 rounded-lg text-center mx-auto py-2 px-4">
-                    <span class="font-bold text-3xl text-white tracking-wider" id="bank">0</span>
+            <div class="flex-1 max-w-2xl">
+                <div class="bg-base-300 rounded-xl shadow-lg space-y-5 p-8">
+                    <h2 class="font-bold text-2xl text-center" id="questionTitle">За что работают программисты?</h2>
+                    <div class="max-w-24 bg-gradient-to-r from-indigo-400 to-rose-400 border-2 rounded-lg text-center mx-auto py-2 px-4">
+                        <span class="font-bold text-3xl text-white tracking-wider" id="bank">0</span>
+                    </div>
+
+                    <ul class="space-y-4" id="answersList"></ul>
                 </div>
+            </div>
 
-                <ul class="space-y-4" id="answersList"></ul>
+            <div class="flex flex-col items-center gap-y-4 bg-radial from-rose-300 from-30% to-rose-400 border-2
+                 rounded-xl shadow-lg p-6" id="team2Block">
+                <h2 class="font-bold text-2xl">Команда 2</h2>
+                <span class="font-bold text-3xl text-white tracking-wider" id="team2Score">0</span>
+                {% for _ in range(3) %}
+                    <button class="btn btn-md bg-[var(--color-yellow-400)] hover:bg-[var(--color-yellow-500)] border-none mistake-button"
+                            data-team-number="2">
+                        <svg class="w-10 text-red-400" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"
+                             fill="none"
+                             stroke="currentColor" stroke-width="10" stroke-linecap="round">
+                            <line x1="10" y1="30" x2="90" y2="70"/>
+                            <line x1="90" y1="30" x2="10" y2="70"/>
+                        </svg>
+                    </button>
+                {% endfor %}
             </div>
         </div>
-
-        <div class="flex flex-col items-center gap-y-4 bg-radial from-rose-300 from-30% to-rose-400 border-2
-                 rounded-xl shadow-lg p-6" id="team2Block">
-            <h2 class="font-bold text-2xl">Команда 2</h2>
-            <span class="font-bold text-3xl text-white tracking-wider" id="team2Score">0</span>
-            {% for _ in range(3) %}
-                <button class="btn btn-md bg-[var(--color-yellow-400)] hover:bg-[var(--color-yellow-500)] border-none mistake-button"
-                        data-team-number="2">
-                    <svg class="w-10 text-red-400" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none"
-                         stroke="currentColor" stroke-width="10" stroke-linecap="round">
-                        <line x1="10" y1="30" x2="90" y2="70"/>
-                        <line x1="90" y1="30" x2="10" y2="70"/>
-                    </svg>
-                </button>
-            {% endfor %}
+        <div role="alert" class="alert alert-soft alert-error hidden" id="widthError">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span>Ширина экрана слишком мала. Пожалуйста, переверните ваше устройство</span>
         </div>
-    </div>
-    <div role="alert" class="alert alert-soft alert-error hidden" id="widthError">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        </svg>
-        <span>Ширина экрана слишком мала. Пожалуйста, переверните ваше устройство</span>
-    </div>
-</main>
-<template id="answerRowClosed">
-    <li class="bg-base-200 rounded-xl py-2 px-4 font-bold text-xl text-center"></li>
-</template>
-<template id="answerRowOpened">
-    <li class="flex justify-between max-w-full bg-slate-700 text-lg text-white rounded-xl py-2 px-4 answerRow">
-        <span class="font-semibold text-xl answerText">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</span>
-        <span class="font-bold text-xl answerPoints">-&infin;</span>
-    </li>
-</template>
-<script src="{{ url_for('static', filename='scripts/gameplay.js') }}" type="module"></script>
-<script src="{{ url_for('static', filename='scripts/checkScreen.js') }}" type="module"></script>
-
-</body>
-</html>
+    </main>
+    <template id="answerRowClosed">
+        <li class="bg-base-200 rounded-xl py-2 px-4 font-bold text-xl text-center"></li>
+    </template>
+    <template id="answerRowOpened">
+        <li class="flex justify-between max-w-full bg-slate-700 text-lg text-white rounded-xl py-2 px-4 answerRow flip-in">
+            <span class="font-semibold text-xl answerText">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</span>
+            <span class="font-bold text-xl answerPoints">-&infin;</span>
+        </li>
+    </template>
+    <script src="{{ url_for('static', filename='scripts/gameplay.js') }}" type="module"></script>
+    <script src="{{ url_for('static', filename='scripts/checkScreen.js') }}" type="module"></script>
+{% endblock %}

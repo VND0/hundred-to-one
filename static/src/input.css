@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+@plugin "daisyui" {
+    themes: "retro --default";
+}
+
+.flip-in {
+    @apply rotate-y-90 opacity-0 transition-all duration-500 [backface-visibility:hidden];
+}
+
+.flip-active {
+    @apply rotate-y-0 opacity-100;
+}

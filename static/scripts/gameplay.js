@@ -96,6 +96,9 @@ class Draw {
                 openedAnswer.querySelector(".answerText").innerText = answer.answer
                 openedAnswer.querySelector(".answerPoints").innerText = points
                 answersList.replaceChild(openedAnswer, answerRow)
+                requestAnimationFrame(() => {
+                    openedAnswer.classList.add("flip-active")
+                })
                 if (!this.firstScore) {
                     this.firstScore = points
                 }
@@ -186,6 +189,9 @@ class Round {
         openedAnswer.querySelector(".answerText").innerText = answer.answer
         openedAnswer.querySelector(".answerPoints").innerText = points
         answersList.replaceChild(openedAnswer, evt.target)
+        requestAnimationFrame(() => {
+            openedAnswer.classList.add("flip-active")
+        })
         this.openedQuestions++
         bank.innerText = Number.parseInt(bank.innerText) + points
         const inBank = Number.parseInt(bank.innerText)

@@ -142,9 +142,11 @@ class Draw {
 }
 
 
-class SimpleGame {
-    constructor() {
-        this.question = gameInfo.questions[1]
+class Round {
+    constructor(index, title, multiplier) {
+        this.question = gameInfo.questions[index]
+        this.mult = multiplier
+        this.title = title
 
         this.mistakes = {1: 0, 2: 0}
         this.sumPoints = 0
@@ -158,7 +160,7 @@ class SimpleGame {
 
     game(winner, callback) {
         clearElements()
-        round.innerText = "Простая игра"
+        round.innerText = this.title
         questionTitle.innerText = this.question.question
 
         this.winner = winner
@@ -180,7 +182,7 @@ class SimpleGame {
 
     onRowOpened(evt, answer) {
         const openedAnswer = openedAnswerTemplate.content.cloneNode(true).childNodes[1]
-        const points = Math.round(100.0 * answer.quantity / this.sumPoints)
+        const points = Math.round(100.0 * this.mult * answer.quantity / this.sumPoints)
         openedAnswer.querySelector(".answerText").innerText = answer.answer
         openedAnswer.querySelector(".answerPoints").innerText = points
         answersList.replaceChild(openedAnswer, evt.target)
@@ -232,4 +234,15 @@ class SimpleGame {
     }
 }
 
-new Draw(0).draw((winner) => new SimpleGame().game(winner, clearElements))
+
+const drawB4Simple = new Draw(0)
+const simpleGame = new Round(1, "Простая игра", 1)
+
+const drawB4Double = new Draw(2)
+const doubleGame = new Round(3, "Двойная игра", 2)
+
+const drawB4Triple = new Draw(4)
+const tripleGame = new Round(5, "Тройная игра", 3)
+
+drawB4Simple.draw((winner) => simpleGame.game(winner, () => drawB4Double.draw((winner) => doubleGame.game(winner, () =>
+    drawB4Triple.draw((winner) => tripleGame.game(winner, () => alert("To the reversed game")))))))

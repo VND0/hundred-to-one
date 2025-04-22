@@ -90,21 +90,23 @@ class Draw {
 
         this.question.answers.forEach((answer, index) => {
             const answerRow = answersList.childNodes.item(index)
-            answerRow.addEventListener("click", () => {
-                const openedAnswer = openedAnswerTemplate.content.cloneNode(true).childNodes[1]
-                const points = Math.round(100.0 * answer.quantity / this.votesSum)
-                openedAnswer.querySelector(".answerText").innerText = answer.answer
-                openedAnswer.querySelector(".answerPoints").innerText = points
-                answersList.replaceChild(openedAnswer, answerRow)
-                requestAnimationFrame(() => {
-                    openedAnswer.classList.add("flip-active")
-                })
-                if (!this.firstScore) {
-                    this.firstScore = points
-                }
-                this.addHandlersToTeams(() => this.clickOnTeam(1), () => this.clickOnTeam(2))
-            })
+            answerRow.addEventListener("click", () => this.onRowOpened(answer, answerRow))
         })
+    }
+
+    onRowOpened(answer, answerRow) {
+        const openedAnswer = openedAnswerTemplate.content.cloneNode(true).childNodes[1]
+        const points = Math.round(100.0 * answer.quantity / this.votesSum)
+        openedAnswer.querySelector(".answerText").innerText = answer.answer
+        openedAnswer.querySelector(".answerPoints").innerText = points
+        answersList.replaceChild(openedAnswer, answerRow)
+        requestAnimationFrame(() => {
+            openedAnswer.classList.add("flip-active")
+        })
+        if (!this.firstScore) {
+            this.firstScore = points
+        }
+        this.addHandlersToTeams(() => this.clickOnTeam(1), () => this.clickOnTeam(2))
     }
 
     clickOnTeam(team) {

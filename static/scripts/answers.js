@@ -1,7 +1,6 @@
 import {formError, getJwt} from "./tools.js";
 
 const tmplt = document.querySelector("#answerTemplate")
-const backLink = document.querySelector("#backLink")
 
 const addForm = document.querySelector("#addForm")
 const addInput = document.querySelector("#addInput")
@@ -9,6 +8,9 @@ const addInput = document.querySelector("#addInput")
 const allAnswers = document.querySelector("#allAnswers")
 const popularAnswers = document.querySelector("#popularAnswers")
 const otherAnswers = document.querySelector("#otherAnswers")
+
+const dialog = document.querySelector("#deleteDialog")
+const confirmDeleting = document.querySelector("#confirmDeleting")
 
 const questionId = allAnswers.dataset.questionId
 
@@ -87,7 +89,28 @@ function loadAnswers(answersList) {
             }
         }
 
-        newElem.querySelector("button").addEventListener("click", () => deleteAnswerRequest(answer.id, newElem))
+        newElem.querySelector("button").addEventListener("click", async () => {
+            if (answersList.length === 6) {
+                console.log(confirmDeleting)
+                dialog.showModal()
+                confirmDeleting.onclick = async function (evt) {
+                    evt.preventDefault()
+
+                    const success = await deleteAnswerRequest(answer.id)
+                    if (success) {
+                        newElem.remove()
+                        dialog.close()
+                        window.location.reload()
+                    }
+                }
+            } else {
+                const success = await deleteAnswerRequest(answer.id)
+                if (success) {
+                    newElem.remove()
+                    window.location.reload()
+                }
+            }
+        })
     })
 }
 
@@ -113,14 +136,17 @@ async function addAnswerRequest(value) {
     return response.ok
 }
 
-async function deleteAnswerRequest(answerId, toBeDeleted) {
+async function deleteAnswerRequest(answerId) {
     const response = await fetch(`/api/answers/${answerId}`, {
-        method: "DELETE", headers: {"Content-Type": "application/json", "Authorization": `Bearer ${jwtToken}`}
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${jwtToken}`
+        }
     })
-    if (response.ok) {
-        toBeDeleted.remove()
-        window.location.reload()
-    }
+
+    await handleApiError(response)
+    return response.ok
 }
 
 addForm.addEventListener("submit", async function (evt) {

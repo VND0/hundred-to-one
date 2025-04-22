@@ -40,6 +40,22 @@
         </div>
     </main>
 
+    <dialog class="modal" id="deleteDialog">
+        <div class="modal-box bg-base-300 space-y-4">
+            <h3 class="font-bold text-xl">Предупреждение</h3>
+
+            <p class="font-semibold text-justify">
+                У вопроса останется меньше шести уникальных ответов и он будет автоматически убран из всех игр, если данный
+                ответ будет удалён.
+            </p>
+
+            <form method="dialog" class="flex justify-around">
+                <button class="btn btn-soft btn-error" id="confirmDeleting">Удалить</button>
+                <button class="btn btn-soft btn-info">Отменить</button>
+            </form>
+        </div>
+    </dialog>
+
     <template id="answerTemplate">
         <li class="flex items-center max-sm:flex-col-reverse gap-2 w-full bg-base-200 rounded-xl py-1.5 px-4">
             <span class="flex-1 font-semibold text-base max-sm:text-center text-wrap break-all answer-text"></span>

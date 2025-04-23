@@ -23,7 +23,8 @@
 
         <ul id="questionsList" class="space-y-5 px-2">
             {% for question in questions %}
-                <li class="flex items-center gap-4 w-full bg-base-300 rounded-lg shadow-sm px-4 py-2" data-id="{{ question.id }}">
+                <li class="flex items-center gap-4 w-full bg-base-300 rounded-lg shadow-sm px-4 py-2" data-id="{{ question.id }}"
+                    data-games-amount="{{ question.games | length }}">
                     <span class="flex-1 font-semibold text-wrap">
                         {{ question.question }}
                     </span>
@@ -50,7 +51,7 @@
         </ul>
     </main>
 
-    <dialog class="modal">
+    <dialog class="modal" id="editDialog">
         <div class="modal-box bg-base-300">
             <h3 class="font-bold text-xl">Изменение вопроса</h3>
             <input type="text" minlength="4" maxlength="250" id="editInput"
@@ -61,6 +62,21 @@
                     <button class="btn ml-2">Отменить</button>
                 </form>
             </div>
+        </div>
+    </dialog>
+
+    <dialog class="modal" id="deleteDialog">
+        <div class="modal-box bg-base-300 space-y-4">
+            <h3 class="font-bold text-xl">Предупреждение</h3>
+
+            <p class="font-semibold text-justify">
+                Игры, в которых содержится данный вопрос, станут недоступны после его удаления.
+            </p>
+
+            <form method="dialog" class="flex justify-around">
+                <button class="btn btn-soft btn-error" id="confirmDeleting">Удалить</button>
+                <button class="btn btn-soft btn-info">Отменить</button>
+            </form>
         </div>
     </dialog>
 {% endblock %}

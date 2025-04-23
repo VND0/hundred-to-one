@@ -9,10 +9,11 @@ const allAnswers = document.querySelector("#allAnswers")
 const popularAnswers = document.querySelector("#popularAnswers")
 const otherAnswers = document.querySelector("#otherAnswers")
 
-const dialog = document.querySelector("#deleteDialog")
+const deleteDialog = document.querySelector("#deleteDialog")
 const confirmDeleting = document.querySelector("#confirmDeleting")
 
 const questionId = allAnswers.dataset.questionId
+const gamesAmount = allAnswers.dataset.gamesAmount
 
 const params = new URLSearchParams()
 params.append("question_id", questionId)
@@ -90,16 +91,15 @@ function loadAnswers(answersList) {
         }
 
         newElem.querySelector("button").addEventListener("click", async () => {
-            if (answersList.length === 6) {
-                console.log(confirmDeleting)
-                dialog.showModal()
+            if (answersList.length === 6 && gamesAmount > 0) {
+                deleteDialog.showModal()
                 confirmDeleting.onclick = async function (evt) {
                     evt.preventDefault()
 
                     const success = await deleteAnswerRequest(answer.id)
                     if (success) {
                         newElem.remove()
-                        dialog.close()
+                        deleteDialog.close()
                         window.location.reload()
                     }
                 }

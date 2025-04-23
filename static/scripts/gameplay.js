@@ -181,8 +181,8 @@ class Round {
             answersList.childNodes.item(index).addEventListener("click", (evt) => this.onRowOpened(evt, answer))
         })
 
-        this.onMistakeMakeBound = this.onMistakeMade.bind(this)
-        mistakeButtons.forEach((elem) => elem.addEventListener("click", this.onMistakeMakeBound))
+        this.onMistakeMadeBound = this.onMistakeMade.bind(this)
+        mistakeButtons.forEach((elem) => elem.addEventListener("click", this.onMistakeMadeBound))
     }
 
     onRowOpened(evt, answer) {
@@ -191,9 +191,7 @@ class Round {
         openedAnswer.querySelector(".answerText").innerText = answer.answer
         openedAnswer.querySelector(".answerPoints").innerText = points
         answersList.replaceChild(openedAnswer, evt.target)
-        requestAnimationFrame(() => {
-            openedAnswer.classList.add("flip-active")
-        })
+        requestAnimationFrame(() => openedAnswer.classList.add("flip-active"))
         this.openedQuestions++
         bank.innerText = Number.parseInt(bank.innerText) + points
         const inBank = Number.parseInt(bank.innerText)
@@ -222,7 +220,7 @@ class Round {
 
         if (!this.finalAttempt) {
             const teamNumber = evt.currentTarget.dataset.teamNumber
-            evt.currentTarget.removeEventListener("click", this.onMistakeMakeBound)
+            evt.currentTarget.removeEventListener("click", this.onMistakeMadeBound)
 
             this.mistakes[teamNumber]++
             if (this.mistakes[teamNumber] === 3) {
@@ -243,6 +241,101 @@ class Round {
 }
 
 
+class InverseGame {
+    constructor(index) {
+        this.question = gameInfo.questions[index]
+        this.mistakes = {1: 0, 2: 0}
+        this.openedQuestions = 0
+        this.pointsDistr = [15, 30, 60, 120, 180, 240]
+        this.roundFinished = false
+    }
+
+    game() {
+        clearElements()
+        round.innerText = "Игра наоборот"
+        questionTitle.innerText = this.question.question
+
+        const current1Score = Number.parseInt(team1Score.innerText)
+        const current2Score = Number.parseInt(team2Score.innerText)
+        if (current1Score < current2Score) {
+            this.firstPlayer = 1
+            this.secondPlayer = 2
+        } else if (current2Score < current1Score) {
+            this.firstPlayer = 2
+            this.secondPlayer = 1
+        } else {
+            // TODO: добавить обработку жеребьевки при равных очках
+            alert("Очки равны")
+        }
+        this.finalAttempt = false
+
+
+        fillClosedAnswers()
+        this.question.answers.forEach((answer, index) => {
+            answersList.childNodes.item(index).addEventListener("click", (evt) => this.onRowOpened(evt, index, answer))
+        })
+
+        this.onMistakeMadeBound = this.onMistakeMade.bind(this)
+        mistakeButtons.forEach((elem) => elem.addEventListener("click", this.onMistakeMadeBound))
+    }
+
+    onRowOpened(evt, index, answer) {
+        const openedAnswer = openedAnswerTemplate.content.cloneNode(true).childNodes[1]
+        openedAnswer.querySelector(".answerText").innerText = answer.answer
+        openedAnswer.querySelector(".answerPoints").innerText = this.pointsDistr[index]
+        answersList.replaceChild(openedAnswer, evt.target)
+        requestAnimationFrame(() => openedAnswer.classList.add("flip-active"))
+        this.openedQuestions++
+        bank.innerText = Number.parseInt(bank.innerText) + this.pointsDistr[index]
+        const inBank = Number.parseInt(bank.innerText)
+
+        if (this.finalAttempt) {
+            if (this.secondPlayer === 1) {
+                team1Score.innerText = Number.parseInt(team1Score.innerText) + inBank
+            } else {
+                team2Score.innerText = Number.parseInt(team2Score.innerText) + inBank
+            }
+
+            alert("GameOver")
+            bank.innerText = "0"
+        } else if (this.openedQuestions === 6) {
+            if (this.firstPlayer === 1) {
+                team1Score.innerText = Number.parseInt(team1Score.innerText) + inBank
+            } else {
+                team2Score.innerText = Number.parseInt(team2Score.innerText) + inBank
+            }
+
+            alert("GameOver")
+            bank.innerText = "0"
+        }
+    }
+
+    onMistakeMade(evt) {
+        if (this.roundFinished) return
+        evt.currentTarget.removeEventListener("click", this.onMistakeMadeBound)
+
+
+        if (!this.finalAttempt) {
+            const teamNumber = evt.currentTarget.dataset.teamNumber
+            this.mistakes[teamNumber]++
+            if (this.mistakes[teamNumber] === 3) {
+                this.finalAttempt = true
+            }
+        } else {
+            const inBank = Number.parseInt(bank.innerText)
+            bank.innerText = "0"
+            if (this.finalAttempt === 1) {
+                team1Score.innerText = Number.parseInt(team1Score.innerText) + inBank
+            } else {
+                team2Score.innerText = Number.parseInt(team2Score.innerText) + inBank
+            }
+
+            alert("GameOver")
+        }
+    }
+}
+
+
 const drawB4Simple = new Draw(0)
 const simpleGame = new Round(1, "Простая игра", 1)
 
@@ -252,5 +345,7 @@ const doubleGame = new Round(3, "Двойная игра", 2)
 const drawB4Triple = new Draw(4)
 const tripleGame = new Round(5, "Тройная игра", 3)
 
+const inverseGame = new InverseGame(6)
+
 drawB4Simple.draw((winner) => simpleGame.game(winner, () => drawB4Double.draw((winner) => doubleGame.game(winner, () =>
-    drawB4Triple.draw((winner) => tripleGame.game(winner, () => alert("To the reversed game")))))))
+    drawB4Triple.draw((winner) => tripleGame.game(winner, () => inverseGame.game()))))))

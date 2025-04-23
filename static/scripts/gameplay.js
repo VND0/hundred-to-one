@@ -263,6 +263,29 @@ class Round {
     }
 }
 
+function showWinnerBanner() {
+    const current1Score = Number.parseInt(team1Score.innerText)
+    const current2Score = Number.parseInt(team2Score.innerText)
+    const overlay = document.querySelector("#overlay")
+    const banner = document.querySelector("#winnerBanner")
+    const winnerText = document.querySelector("#winnerTeam")
+
+    if (current1Score > current2Score) {
+        winnerText.innerText = "1"
+    } else if (current2Score > current1Score) {
+        winnerText.innerText = "2"
+    } else {
+        winnerText.innerText = "никто, ничья"
+    }
+    confetti({
+        particleCount: 1500,
+        spread: 80,
+        origin: { y: 0.7 },
+    });
+    overlay.classList.remove("hidden")
+    banner.classList.remove("hidden")
+
+}
 
 const drawB4Simple = new Draw(0)
 const simpleGame = new Round(1, "Простая игра", 1)
@@ -276,4 +299,4 @@ const tripleGame = new Round(5, "Тройная игра", 3)
 const inverseGame = new Round(6, "Игра наоборот", 1, [15, 30, 60, 120, 180, 240])
 
 drawB4Simple.draw((winner) => simpleGame.game(winner, () => drawB4Double.draw((winner) => doubleGame.game(winner, () =>
-    drawB4Triple.draw((winner) => tripleGame.game(winner, () => inverseGame.game(null, () => alert("GameOver"))))))))
+    drawB4Triple.draw((winner) => tripleGame.game(winner, () => inverseGame.game(null, () => showWinnerBanner())))))))

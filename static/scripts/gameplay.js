@@ -148,19 +148,27 @@ class Draw {
 
 
 class Round {
-    constructor(index, title, multiplier) {
+    constructor(index, title, multiplier, scoresDistribution) {
         this.question = gameInfo.questions[index]
-        this.mult = multiplier
         this.title = title
 
         this.mistakes = {1: 0, 2: 0}
-        this.sumPoints = 0
         this.openedQuestions = 0
         this.roundFinished = false
 
-        this.question.answers.forEach((answer) => {
-            this.sumPoints += answer.quantity
-        })
+        if (scoresDistribution) {
+            this.scoresDistribution = scoresDistribution
+        } else {
+            let sumPoints = 0
+            this.question.answers.forEach((answer) => {
+                sumPoints += answer.quantity
+            })
+            this.scoresDistribution = []
+            this.question.answers.forEach((answer) => {
+                this.scoresDistribution.push(Math.round(100.0 * multiplier * answer.quantity / sumPoints))
+            })
+        }
+
     }
 
     game(winner, callback) {
@@ -168,8 +176,23 @@ class Round {
         round.innerText = this.title
         questionTitle.innerText = this.question.question
 
-        this.winner = winner
-        this.loser = winner === 1 ? 2 : 1
+        if (winner !== null) {
+            this.winner = winner
+            this.loser = winner === 1 ? 2 : 1
+        } else {
+            const current1Score = Number.parseInt(team1Score.innerText)
+            const current2Score = Number.parseInt(team2Score.innerText)
+            if (current1Score < current2Score) {
+                this.winner = 1
+                this.loser = 2
+            } else if (current2Score < current1Score) {
+                this.winner = 2
+                this.loser = 1
+            } else {
+                // TODO: добавить обработку жеребьевки при равных очках
+                alert("Очки равны")
+            }
+        }
         this.callback = () => {
             this.roundFinished = true;
             callback()
@@ -178,16 +201,16 @@ class Round {
 
         fillClosedAnswers()
         this.question.answers.forEach((answer, index) => {
-            answersList.childNodes.item(index).addEventListener("click", (evt) => this.onRowOpened(evt, answer))
+            answersList.childNodes.item(index).addEventListener("click", (evt) => this.onRowOpened(evt, answer, index))
         })
 
         this.onMistakeMadeBound = this.onMistakeMade.bind(this)
         mistakeButtons.forEach((elem) => elem.addEventListener("click", this.onMistakeMadeBound))
     }
 
-    onRowOpened(evt, answer) {
+    onRowOpened(evt, answer, index) {
         const openedAnswer = openedAnswerTemplate.content.cloneNode(true).childNodes[1]
-        const points = Math.round(100.0 * this.mult * answer.quantity / this.sumPoints)
+        const points = this.scoresDistribution[index]
         openedAnswer.querySelector(".answerText").innerText = answer.answer
         openedAnswer.querySelector(".answerPoints").innerText = points
         answersList.replaceChild(openedAnswer, evt.target)
@@ -241,101 +264,6 @@ class Round {
 }
 
 
-class InverseGame {
-    constructor(index) {
-        this.question = gameInfo.questions[index]
-        this.mistakes = {1: 0, 2: 0}
-        this.openedQuestions = 0
-        this.pointsDistr = [15, 30, 60, 120, 180, 240]
-        this.roundFinished = false
-    }
-
-    game() {
-        clearElements()
-        round.innerText = "Игра наоборот"
-        questionTitle.innerText = this.question.question
-
-        const current1Score = Number.parseInt(team1Score.innerText)
-        const current2Score = Number.parseInt(team2Score.innerText)
-        if (current1Score < current2Score) {
-            this.firstPlayer = 1
-            this.secondPlayer = 2
-        } else if (current2Score < current1Score) {
-            this.firstPlayer = 2
-            this.secondPlayer = 1
-        } else {
-            // TODO: добавить обработку жеребьевки при равных очках
-            alert("Очки равны")
-        }
-        this.finalAttempt = false
-
-
-        fillClosedAnswers()
-        this.question.answers.forEach((answer, index) => {
-            answersList.childNodes.item(index).addEventListener("click", (evt) => this.onRowOpened(evt, index, answer))
-        })
-
-        this.onMistakeMadeBound = this.onMistakeMade.bind(this)
-        mistakeButtons.forEach((elem) => elem.addEventListener("click", this.onMistakeMadeBound))
-    }
-
-    onRowOpened(evt, index, answer) {
-        const openedAnswer = openedAnswerTemplate.content.cloneNode(true).childNodes[1]
-        openedAnswer.querySelector(".answerText").innerText = answer.answer
-        openedAnswer.querySelector(".answerPoints").innerText = this.pointsDistr[index]
-        answersList.replaceChild(openedAnswer, evt.target)
-        requestAnimationFrame(() => openedAnswer.classList.add("flip-active"))
-        this.openedQuestions++
-        bank.innerText = Number.parseInt(bank.innerText) + this.pointsDistr[index]
-        const inBank = Number.parseInt(bank.innerText)
-
-        if (this.finalAttempt) {
-            if (this.secondPlayer === 1) {
-                team1Score.innerText = Number.parseInt(team1Score.innerText) + inBank
-            } else {
-                team2Score.innerText = Number.parseInt(team2Score.innerText) + inBank
-            }
-
-            alert("GameOver")
-            bank.innerText = "0"
-        } else if (this.openedQuestions === 6) {
-            if (this.firstPlayer === 1) {
-                team1Score.innerText = Number.parseInt(team1Score.innerText) + inBank
-            } else {
-                team2Score.innerText = Number.parseInt(team2Score.innerText) + inBank
-            }
-
-            alert("GameOver")
-            bank.innerText = "0"
-        }
-    }
-
-    onMistakeMade(evt) {
-        if (this.roundFinished) return
-        evt.currentTarget.removeEventListener("click", this.onMistakeMadeBound)
-
-
-        if (!this.finalAttempt) {
-            const teamNumber = evt.currentTarget.dataset.teamNumber
-            this.mistakes[teamNumber]++
-            if (this.mistakes[teamNumber] === 3) {
-                this.finalAttempt = true
-            }
-        } else {
-            const inBank = Number.parseInt(bank.innerText)
-            bank.innerText = "0"
-            if (this.finalAttempt === 1) {
-                team1Score.innerText = Number.parseInt(team1Score.innerText) + inBank
-            } else {
-                team2Score.innerText = Number.parseInt(team2Score.innerText) + inBank
-            }
-
-            alert("GameOver")
-        }
-    }
-}
-
-
 const drawB4Simple = new Draw(0)
 const simpleGame = new Round(1, "Простая игра", 1)
 
@@ -345,7 +273,7 @@ const doubleGame = new Round(3, "Двойная игра", 2)
 const drawB4Triple = new Draw(4)
 const tripleGame = new Round(5, "Тройная игра", 3)
 
-const inverseGame = new InverseGame(6)
+const inverseGame = new Round(6, "Игра наоборот", 1, [15, 30, 60, 120, 180, 240])
 
 drawB4Simple.draw((winner) => simpleGame.game(winner, () => drawB4Double.draw((winner) => doubleGame.game(winner, () =>
-    drawB4Triple.draw((winner) => tripleGame.game(winner, () => inverseGame.game()))))))
+    drawB4Triple.draw((winner) => tripleGame.game(winner, () => inverseGame.game(null, () => alert("GameOver"))))))))

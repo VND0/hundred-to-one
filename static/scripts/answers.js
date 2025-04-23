@@ -71,6 +71,18 @@ function fillAnswerElem(answer, elem, ind, points) {
     }
 }
 
+function recalculatePoints(answersList, answersAmount, pointsSum) {
+    if (pointsSum < 100) {
+        const newPoints = Math.round(1.0 * answersList[0].quantity / answersAmount * 100) + 100 - pointsSum
+        popularAnswers.firstElementChild.querySelector(".points-stats").innerText = `Очки: ${newPoints}`
+    }
+    else if (pointsSum > 100) {
+        let ind = popularAnswers.childNodes.length - 1
+        const newPoints = Math.round(1.0 * answersList[ind].quantity / answersAmount * 100) - pointsSum + 100
+        popularAnswers.lastElementChild.querySelector(".points-stats").innerText = `Очки: ${newPoints}`
+    }
+}
+
 function loadAnswers(answersList) {
     let pointsSum = 0
     let answersAmount = 0
@@ -92,24 +104,14 @@ function loadAnswers(answersList) {
             otherAnswers.appendChild(newElem)
         }
 
-        if (ind === 5) {
-            if (pointsSum < 100) {
-                const newPoints = Math.round(1.0 * answersList[0].quantity / answersAmount * 100) + 100 - pointsSum
-                popularAnswers.firstElementChild.querySelector(".points-stats").innerText = `Очки: ${newPoints}`
-            }
-            else if (pointsSum > 100) {
-                const newPoints = Math.round(1.0 * answersList[5].quantity / answersAmount * 100) - pointsSum + 100
-                popularAnswers.lastElementChild.querySelector(".points-stats").innerText = `Очки: ${newPoints}`
-            }
-        }
-
         const deleteBtn = newElem.querySelector("button")
         deleteBtn.onclick = () => deleteAnswer(newElem, answer.id, answersList.length, gamesAmount)
     })
+
+    recalculatePoints(answersList, answersAmount, pointsSum)
 }
 
 function updateAnswers(answersList) {
-    console.log(answersList)
     let pointsSum = 0
     let answersAmount = 0
 
@@ -126,7 +128,6 @@ function updateAnswers(answersList) {
             pointsSum += points
         } else {
             elem = otherAnswers.childNodes[ind - 6]
-            console.log(elem)
         }
 
         if (!elem) {
@@ -140,17 +141,6 @@ function updateAnswers(answersList) {
 
         fillAnswerElem(answer, elem, ind, points)
 
-        if (ind === 5) {
-            if (pointsSum < 100) {
-                const newPoints = Math.round(1.0 * answersList[0].quantity / answersAmount * 100) + 100 - pointsSum
-                popularAnswers.firstElementChild.querySelector(".points-stats").innerText = `Очки: ${newPoints}`
-            }
-            else if (pointsSum > 100) {
-                const newPoints = Math.round(1.0 * answersList[5].quantity / answersAmount * 100) - pointsSum + 100
-                popularAnswers.lastElementChild.querySelector(".points-stats").innerText = `Очки: ${newPoints}`
-            }
-        }
-
         const deleteBtn = elem.querySelector("button")
         deleteBtn.onclick = async() => await deleteAnswer(elem, answer.id, answersList.length, gamesAmount)
     })
@@ -158,6 +148,8 @@ function updateAnswers(answersList) {
     if (answersList.length < popularAnswers.childNodes.length + otherAnswers.childNodes.length) {
         otherAnswers.removeChild(otherAnswers.lastChild)
     }
+
+    recalculatePoints(answersList, answersAmount, pointsSum)
 }
 
 async function getAnswersRequest() {

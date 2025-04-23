@@ -20,20 +20,6 @@ params.append("question_id", questionId)
 
 let jwtToken = getJwt()
 
-fetch(`/api/answers?${params}`, {
-    method: "GET",
-    headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${jwtToken}`
-    }
-}).then((response) => response.json()).then((data) => {
-    if (data.length === 0) {
-        allAnswers.innerHTML = "<h2 class='text-xl font-bold text-center'>Список ответов пустой</h2>"
-    } else {
-        loadAnswers(data)
-    }
-})
-
 async function handleApiError(response) {
     if (!response.ok) {
         if (response.status === 404) {
@@ -43,6 +29,40 @@ async function handleApiError(response) {
             const body = await response.json()
             return formError(body.message)
         }
+    }
+}
+
+async function refreshContent(state) {
+    let response = await getAnswersRequest()
+    let data = await response.json()
+
+    if (data.length === 0) {
+        allAnswers.innerHTML = "<h2 class='text-xl font-bold text-center'>Список ответов пустой</h2>"
+    }
+    else if (state === "start") {
+        loadAnswers(data)
+    }
+    else if (state === "update") {
+        updateAnswers(data)
+    }
+
+    allAnswers.classList.remove("hidden")
+}
+
+function fillAnswerElem(answer, elem, ind, points) {
+    const answerText = elem.querySelector("span")
+    const answerQuantity = elem.querySelector(".answer-quantity")
+    const pointsStats = elem.querySelector(".points-stats")
+
+    answerText.innerHTML = `${answer.answer}`
+    answerQuantity.innerHTML = `Кол-во: ${answer.quantity}`
+
+    if (ind < 6) {
+        elem.classList.add("border")
+        elem.classList.add("border-accent")
+
+        pointsStats.innerText = `Очки: ${points}`
+        pointsStats.classList.remove("hidden")
     }
 }
 
@@ -56,24 +76,12 @@ function loadAnswers(answersList) {
 
     answersList.forEach((answer, ind) => {
         const newElem = tmplt.content.cloneNode(true).childNodes[1]
-
         const points = Math.round(1.0 * answer.quantity / answersAmount * 100)
-        const pointsStats = newElem.querySelector(".points-stats")
 
-        const answerQuantity = newElem.querySelector(".answer-quantity")
-
-        newElem.querySelector("span").innerHTML = `${answer.answer}`
-        answerQuantity.innerHTML = `Кол-во: ${answer.quantity}`
+        fillAnswerElem(answer, newElem, ind, points)
 
         if (ind < 6) {
             pointsSum += points
-
-            newElem.classList.add("border")
-            newElem.classList.add("border-accent")
-
-            pointsStats.innerText = `Очки: ${points}`
-            pointsStats.classList.remove("hidden")
-
             popularAnswers.appendChild(newElem)
         } else {
             otherAnswers.appendChild(newElem)
@@ -100,18 +108,95 @@ function loadAnswers(answersList) {
                     if (success) {
                         newElem.remove()
                         deleteDialog.close()
-                        window.location.reload()
+                        refreshContent("update")
                     }
                 }
             } else {
                 const success = await deleteAnswerRequest(answer.id)
                 if (success) {
                     newElem.remove()
-                    window.location.reload()
+                    refreshContent("update")
                 }
             }
         })
     })
+}
+
+function updateAnswers(answersList) {
+    let pointsSum = 0
+    let answersAmount = 0
+
+    for (let ind = 0; ind < Math.min(6, answersList.length); ind++) {
+        answersAmount += answersList[ind].quantity
+    }
+
+    answersList.forEach((answer, ind) => {
+        let elem
+        const points = Math.round(1.0 * answer.quantity / answersAmount * 100)
+
+        if (ind < 6) {
+            elem = popularAnswers.childNodes[ind]
+            pointsSum += points
+        } else {
+            elem = otherAnswers.childNodes[ind - 6]
+        }
+
+        if (!elem) {
+            elem = tmplt.content.cloneNode(true).childNodes[1]
+
+            if (ind < 6) {
+                popularAnswers.appendChild(elem)
+            } else {
+                otherAnswers.appendChild(elem)
+            }
+
+            elem.querySelector("button").addEventListener("click", async () => {
+                if (answersList.length === 6 && gamesAmount > 0) {
+                    deleteDialog.showModal()
+                    confirmDeleting.onclick = async function (evt) {
+                        evt.preventDefault()
+
+                        const success = await deleteAnswerRequest(answer.id)
+                        if (success) {
+                            elem.remove()
+                            deleteDialog.close()
+                            refreshContent("update")
+                        }
+                    }
+                } else {
+                    const success = await deleteAnswerRequest(answer.id)
+                    if (success) {
+                        elem.remove()
+                        refreshContent("update")
+                    }
+                }
+            })
+        }
+
+        fillAnswerElem(answer, elem, ind, points)
+
+        if (ind === 5) {
+            if (pointsSum < 100) {
+                const newPoints = Math.round(1.0 * answersList[0].quantity / answersAmount * 100) + 100 - pointsSum
+                popularAnswers.firstElementChild.querySelector(".points-stats").innerText = `Очки: ${newPoints}`
+            }
+            else if (pointsSum > 100) {
+                const newPoints = Math.round(1.0 * answersList[5].quantity / answersAmount * 100) - pointsSum + 100
+                popularAnswers.lastElementChild.querySelector(".points-stats").innerText = `Очки: ${newPoints}`
+            }
+        }
+    })
+}
+
+async function getAnswersRequest() {
+    let response = await fetch(`/api/answers?${params}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${jwtToken}`
+        }
+    })
+    return response
 }
 
 async function addAnswerRequest(value) {
@@ -154,6 +239,9 @@ addForm.addEventListener("submit", async function (evt) {
 
     const success = await addAnswerRequest(addInput.value)
     if (success) {
-        window.location.reload()
+        addInput.value = ""
+        refreshContent("update")
     }
 })
+
+refreshContent("start")

@@ -13,6 +13,7 @@ const dialog = document.querySelector("#deleteDialog")
 const confirmDeleting = document.querySelector("#confirmDeleting")
 
 const questionId = allAnswers.dataset.questionId
+const gamesAmount = allAnswers.dataset.gamesAmount
 
 const params = new URLSearchParams()
 params.append("question_id", questionId)
@@ -90,8 +91,7 @@ function loadAnswers(answersList) {
         }
 
         newElem.querySelector("button").addEventListener("click", async () => {
-            if (answersList.length === 6) {
-                console.log(confirmDeleting)
+            if (answersList.length === 6 && gamesAmount > 0) {
                 dialog.showModal()
                 confirmDeleting.onclick = async function (evt) {
                     evt.preventDefault()

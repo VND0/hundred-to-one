@@ -5,6 +5,7 @@ const tmplt = document.querySelector("#answerTemplate")
 const addForm = document.querySelector("#addForm")
 const addInput = document.querySelector("#addInput")
 
+const noAnswers = document.querySelector("#noAnswers")
 const allAnswers = document.querySelector("#allAnswers")
 const popularAnswers = document.querySelector("#popularAnswers")
 const otherAnswers = document.querySelector("#otherAnswers")
@@ -37,16 +38,20 @@ async function refreshContent(state) {
     let data = await response.json()
 
     if (data.length === 0) {
-        allAnswers.innerHTML = "<h2 class='text-xl font-bold text-center'>Список ответов пустой</h2>"
-    }
-    else if (state === "start") {
-        loadAnswers(data)
-    }
-    else if (state === "update") {
-        updateAnswers(data)
-    }
+        noAnswers.classList.remove("hidden")
+        allAnswers.classList.add("hidden")
 
-    allAnswers.classList.remove("hidden")
+    } else {
+        noAnswers.classList.add("hidden")
+        allAnswers.classList.remove("hidden")
+
+        if (state === "start") {
+            loadAnswers(data)
+        }
+        else if (state === "update") {
+            updateAnswers(data)
+        }
+    }
 }
 
 function fillAnswerElem(answer, elem, ind, points) {
@@ -98,31 +103,13 @@ function loadAnswers(answersList) {
             }
         }
 
-        newElem.querySelector("button").addEventListener("click", async () => {
-            if (answersList.length === 6 && gamesAmount > 0) {
-                deleteDialog.showModal()
-                confirmDeleting.onclick = async function (evt) {
-                    evt.preventDefault()
-
-                    const success = await deleteAnswerRequest(answer.id)
-                    if (success) {
-                        newElem.remove()
-                        deleteDialog.close()
-                        refreshContent("update")
-                    }
-                }
-            } else {
-                const success = await deleteAnswerRequest(answer.id)
-                if (success) {
-                    newElem.remove()
-                    refreshContent("update")
-                }
-            }
-        })
+        const deleteBtn = newElem.querySelector("button")
+        deleteBtn.onclick = () => deleteAnswer(newElem, answer.id, answersList.length, gamesAmount)
     })
 }
 
 function updateAnswers(answersList) {
+    console.log(answersList)
     let pointsSum = 0
     let answersAmount = 0
 
@@ -139,38 +126,16 @@ function updateAnswers(answersList) {
             pointsSum += points
         } else {
             elem = otherAnswers.childNodes[ind - 6]
+            console.log(elem)
         }
 
         if (!elem) {
             elem = tmplt.content.cloneNode(true).childNodes[1]
-
             if (ind < 6) {
                 popularAnswers.appendChild(elem)
             } else {
                 otherAnswers.appendChild(elem)
             }
-
-            elem.querySelector("button").addEventListener("click", async () => {
-                if (answersList.length === 6 && gamesAmount > 0) {
-                    deleteDialog.showModal()
-                    confirmDeleting.onclick = async function (evt) {
-                        evt.preventDefault()
-
-                        const success = await deleteAnswerRequest(answer.id)
-                        if (success) {
-                            elem.remove()
-                            deleteDialog.close()
-                            refreshContent("update")
-                        }
-                    }
-                } else {
-                    const success = await deleteAnswerRequest(answer.id)
-                    if (success) {
-                        elem.remove()
-                        refreshContent("update")
-                    }
-                }
-            })
         }
 
         fillAnswerElem(answer, elem, ind, points)
@@ -185,18 +150,24 @@ function updateAnswers(answersList) {
                 popularAnswers.lastElementChild.querySelector(".points-stats").innerText = `Очки: ${newPoints}`
             }
         }
+
+        const deleteBtn = elem.querySelector("button")
+        deleteBtn.onclick = async() => await deleteAnswer(elem, answer.id, answersList.length, gamesAmount)
     })
+
+    if (answersList.length < popularAnswers.childNodes.length + otherAnswers.childNodes.length) {
+        otherAnswers.removeChild(otherAnswers.lastChild)
+    }
 }
 
 async function getAnswersRequest() {
-    let response = await fetch(`/api/answers?${params}`, {
+    return await fetch(`/api/answers?${params}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${jwtToken}`
         }
     })
-    return response
 }
 
 async function addAnswerRequest(value) {
@@ -221,6 +192,28 @@ async function addAnswerRequest(value) {
     return response.ok
 }
 
+async function deleteAnswer(elem, answerId, answersAmount, gamesAmount) {
+    if (answersAmount === 6 && gamesAmount > 0) {
+        deleteDialog.showModal()
+        confirmDeleting.onclick = async function (evt) {
+            evt.preventDefault()
+
+            const success = await deleteAnswerRequest(answerId)
+            if (success) {
+                elem.remove()
+                deleteDialog.close()
+                await refreshContent("update")
+            }
+        }
+    } else {
+        const success = await deleteAnswerRequest(answerId)
+        if (success) {
+            elem.remove()
+            await refreshContent("update")
+        }
+    }
+}
+
 async function deleteAnswerRequest(answerId) {
     const response = await fetch(`/api/answers/${answerId}`, {
         method: "DELETE",
@@ -240,8 +233,8 @@ addForm.addEventListener("submit", async function (evt) {
     const success = await addAnswerRequest(addInput.value)
     if (success) {
         addInput.value = ""
-        refreshContent("update")
+        await refreshContent("update")
     }
 })
 
-refreshContent("start")
+await refreshContent("start")

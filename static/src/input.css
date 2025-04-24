@@ -11,3 +11,11 @@
 .flip-active {
     @apply rotate-y-0 opacity-100;
 }
+
+.mistake-active {
+    @apply bg-[var(--color-yellow-500)] hover:bg-[var(--color-yellow-400)]
+}
+
+.mistake-disabled {
+    @apply disabled:bg-[var(--color-yellow-400)]
+}

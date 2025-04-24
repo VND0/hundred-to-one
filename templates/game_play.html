@@ -9,7 +9,7 @@
                 <h2 class="font-bold text-2xl">Команда 1</h2>
                 <span class="font-bold text-3xl text-white tracking-wider" id="team1Score">0</span>
                 {% for _ in range(3) %}
-                    <button class="btn btn-md bg-[var(--color-yellow-400)] hover:bg-[var(--color-yellow-500)] border-none mistake-button"
+                    <button class="btn btn-md border-none mistake-button mistake-active"
                             data-team-number="1">
                         <svg class="w-10 text-red-400" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"
                              fill="none"
@@ -37,8 +37,8 @@
                 <h2 class="font-bold text-2xl">Команда 2</h2>
                 <span class="font-bold text-3xl text-white tracking-wider" id="team2Score">0</span>
                 {% for _ in range(3) %}
-                    <button class="btn btn-md bg-[var(--color-yellow-400)] hover:bg-[var(--color-yellow-500)] border-none mistake-button"
-                            data-team-number="2">
+                    <button class="btn btn-md border-none mistake-button mistake-disabled"
+                            data-team-number="2" disabled>
                         <svg class="w-10 text-red-400" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"
                              fill="none"
                              stroke="currentColor" stroke-width="10" stroke-linecap="round">

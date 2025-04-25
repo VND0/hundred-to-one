@@ -64,7 +64,7 @@ class Answer(BaseModel):
 
 
 class AnswerCreate(Answer):
-    pass
+    quantity: int = Field(ge=1, le=10)
 
 
 class Game(BaseModel):

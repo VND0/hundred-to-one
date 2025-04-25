@@ -12,18 +12,22 @@
         </span>
 
         <div class="bg-base-300 rounded-lg shadow-md space-y-6 mt-4 p-6">
-            <form id="addForm">
-                <h2 class="text-xl font-bold text-center mb-4">Добавить свой ответ</h2>
+            <h2 class="text-xl font-bold text-center mb-4">Добавить свой ответ</h2>
 
-                <div class="join w-full">
-                    <div class="flex-1">
-                        <label class="input join-item w-full">
-                            <input type="text" placeholder="Текст ответа" minlength="1" maxlength="40" required
-                                   class="text-base" id="addInput" />
-                        </label>
-                    </div>
-                    <button class="btn btn-accent join-item">Добавить</button>
-                </div>
+            <form id="addForm" class="flex gap-1">
+                <label class="flex-1 floating-label">
+                    <span>Текст ответа</span>
+                    <input type="text" placeholder="Текст ответа" minlength="1" maxlength="40"
+                           class="input input-md w-full text-base" id="answerInput" required />
+                </label>
+
+                <label class="floating-label">
+                    <span>Кол-во</span>
+                    <input type="number" placeholder="Кол-во" min="1" max="10" value="1"
+                           class="input input-md w-full text-base" id="quantityInput" required />
+                </label>
+
+                <button class="btn btn-accent rounded-md">Добавить</button>
             </form>
 
             <h2 id="noAnswers" class="hidden text-xl font-bold text-center">Список ответов пустой</h2>

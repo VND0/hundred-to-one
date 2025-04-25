@@ -33,6 +33,8 @@ def get_errors(e: ValidationError) -> str:
             errors.append("Допустимая длина вопроса - от 4 до 250 символов")
         elif "answer" in loc:
             errors.append("Допустимая длина ответа - от 1 до 40 символов")
+        elif "quantity" in loc:
+            errors.append("Можно добавить ответ только в количестве от 1 до 10 за раз")
         elif "game" in loc:
             errors.append("Допустимая длина названия игры - от 5 до 50 символов")
         else:
@@ -183,7 +185,8 @@ def handle_poll_form(poll_id: str) -> str | Response:
         create_answer = True
         try:
             model = AnswerCreate(
-                answer=form.get(f"answer-{index + 1}")
+                answer=form.get(f"answer-{index + 1}"),
+                quantity=1
             )
         except ValidationError as e:
             return get_errors(e)
@@ -198,7 +201,7 @@ def handle_poll_form(poll_id: str) -> str | Response:
                 id=str(uuid.uuid4()),
                 answer=model.answer,
                 question_id=question.id,
-                quantity=1
+                quantity=model.quantity
             )
             db.session.add(new_answer)
     db.session.commit()

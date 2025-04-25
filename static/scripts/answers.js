@@ -3,7 +3,8 @@ import {formError, getJwt} from "./tools.js";
 const tmplt = document.querySelector("#answerTemplate")
 
 const addForm = document.querySelector("#addForm")
-const addInput = document.querySelector("#addInput")
+const answerInput = document.querySelector("#answerInput")
+const quantityInput = document.querySelector("#quantityInput")
 
 const noAnswers = document.querySelector("#noAnswers")
 const allAnswers = document.querySelector("#allAnswers")
@@ -162,7 +163,7 @@ async function getAnswersRequest() {
     })
 }
 
-async function addAnswerRequest(value) {
+async function addAnswerRequest(answer, quantity) {
     let response;
     try {
         response = await fetch(`/api/answers?${params}`, {
@@ -172,7 +173,8 @@ async function addAnswerRequest(value) {
                 "Authorization": `Bearer ${jwtToken}`
             },
             body: JSON.stringify({
-                answer: value
+                answer: answer,
+                quantity: quantity
             })
         })
     } catch (error) {
@@ -222,9 +224,10 @@ async function deleteAnswerRequest(answerId) {
 addForm.addEventListener("submit", async function (evt) {
     evt.preventDefault()
 
-    const success = await addAnswerRequest(addInput.value)
+    const success = await addAnswerRequest(answerInput.value, quantityInput.value)
     if (success) {
-        addInput.value = ""
+        answerInput.value = ""
+        quantityInput.value = 1
         await refreshContent("update")
     }
 })

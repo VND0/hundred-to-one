@@ -63,7 +63,6 @@ class AnswersListResource(Resource):
 
         question = db.session.query(Question).filter(Question.id == args.question_id and
                                              Question.user_id == jwt_user_id).one_or_none()
-
         if question is None:
             abort(404, message=f"Question {args.question_id} not found")
 
@@ -73,10 +72,9 @@ class AnswersListResource(Resource):
             error = get_errors(e)
             abort(400, message=error)
 
-
         for answer in question.answers:
             if answer.answer == model.answer:
-                answer.quantity += 1
+                answer.quantity += model.quantity
                 db.session.commit()
                 return jsonify(201, {"answer_id": answer.id})
 
@@ -84,7 +82,7 @@ class AnswersListResource(Resource):
             id=str(uuid.uuid4()),
             answer=model.answer,
             question_id=question.id,
-            quantity=1
+            quantity=model.quantity
         )
         db.session.add(new_answer)
         db.session.commit()

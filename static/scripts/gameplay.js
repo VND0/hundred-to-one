@@ -78,6 +78,17 @@ function clearElements() {
     })
 }
 
+async function revealAnswers() {
+    for (const a of answersList.children) {
+        if (!a.classList.contains("answerRow")) {
+            a.click()
+            await new Promise((p) => setTimeout(p, 1000))
+        }
+    }
+    await new Promise((p) => setTimeout(p, 1000))
+
+}
+
 
 class Draw {
     constructor(questionIndex) {
@@ -92,7 +103,7 @@ class Draw {
     }
 
     draw(callback) {
-        this.callback = callback
+        this.callback = (winner) => revealAnswers().then(() => callback(winner))
 
         clearElements()
         round.innerText = "Розыгрыш"
@@ -206,7 +217,7 @@ class Round {
         }
         this.callback = () => {
             this.roundFinished = true;
-            callback()
+            revealAnswers().then(callback)
         }
         this.finalAttempt = false
 
@@ -227,6 +238,9 @@ class Round {
         answersList.replaceChild(openedAnswer, evt.target)
         requestAnimationFrame(() => openedAnswer.classList.add("flip-active"))
         this.openedQuestions++
+
+        if (this.roundFinished) return
+
         bank.innerText = Number.parseInt(bank.innerText) + points
         const inBank = Number.parseInt(bank.innerText)
 

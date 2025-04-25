@@ -13,6 +13,10 @@ const team2Block = document.querySelector("#team2Block")
 const team1Score = document.querySelector("#team1Score")
 const team2Score = document.querySelector("#team2Score")
 
+const overlay = document.querySelector("#overlay")
+const banner = document.querySelector("#overlayBanner")
+const overlayText = document.querySelector("#overlayText")
+
 const mistakeClasses = {active: "mistake-active", disabled: "mistake-disabled"}
 const borderClasses = {two: "border-2", four: "border-4", "accent": "border-accent"}
 
@@ -259,10 +263,11 @@ class Round {
                 this.winner = 2
                 this.loser = 1
             } else {
-                // TODO: добавить обработку жеребьевки при равных очках
-                alert("Очки равны")
+                this.winner = this.selectRandomTeam()
+                this.loser = this.winner === 1 ? 2 : 1
             }
         }
+
         this.callback = () => {
             this.roundFinished = true;
             revealAnswers().then(callback)
@@ -282,6 +287,20 @@ class Round {
         } else {
             outline.toggle2()
         }
+    }
+
+    selectRandomTeam() {
+        const team = Math.random() * 10 <= 5 ? 1 : 2
+
+        overlayText.innerHTML = `Очки равны. Случайно выбрана команда <span class="text-primary-content">${team}</span>!`
+        const toggler = function () {
+            overlay.classList.toggle("hidden")
+            banner.classList.toggle("hidden")
+        }
+        toggler()
+        setTimeout(toggler, 3000)
+
+        return team
     }
 
     onRowOpened(evt, answer, index) {
@@ -347,16 +366,13 @@ class Round {
 function showWinnerBanner() {
     const current1Score = Number.parseInt(team1Score.innerText)
     const current2Score = Number.parseInt(team2Score.innerText)
-    const overlay = document.querySelector("#overlay")
-    const banner = document.querySelector("#winnerBanner")
-    const winnerText = document.querySelector("#winnerTeam")
 
     if (current1Score > current2Score) {
-        winnerText.innerText = "Победила команда 1"
+        overlayText.innerText = "🎉 Победила команда 1!"
     } else if (current2Score > current1Score) {
-        winnerText.innerText = "Победила команда 2"
+        overlayText.innerText = "🎉 Победила команда 2!"
     } else {
-        winnerText.innerText = "Ничья"
+        overlayText.innerText = "🎉 Ничья!"
     }
     confetti({
         particleCount: 1500,

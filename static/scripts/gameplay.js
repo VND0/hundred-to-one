@@ -14,6 +14,8 @@ const team1Score = document.querySelector("#team1Score")
 const team2Score = document.querySelector("#team2Score")
 
 const mistakeClasses = {active: "mistake-active", disabled: "mistake-disabled"}
+const borderClasses = {two: "border-2", four: "border-4", "accent": "border-accent"}
+
 const mistakeButtons = document.querySelectorAll(".mistake-button")
 mistakeButtons.forEach((elem) => elem.addEventListener("click", () => {
     elem.classList.add(mistakeClasses.disabled)
@@ -63,16 +65,16 @@ function clearElements() {
     questionTitle.innerText = ""
     bank.innerText = "0"
     mistakeButtons.forEach((elem) => {
-        elem.classList.remove("mistake-disabled")
-        elem.classList.add("mistake-active")
+        elem.classList.remove(mistakeClasses.disabled)
+        elem.classList.add(mistakeClasses.active)
         elem.disabled = false
     })
 
     const teamBlocks = [team1Block, team2Block]
     teamBlocks.forEach((block) => {
-        block.classList.remove("border-accent")
-        block.classList.remove("border-4")
-        block.classList.add("border-2")
+        block.classList.remove(borderClasses.accent)
+        block.classList.remove(borderClasses.four)
+        block.classList.add(borderClasses.two)
     })
 }
 
@@ -89,7 +91,7 @@ async function revealAnswers() {
 
 
 class OutlineMaker {
-    classes = ["border-2", "border-4", "border-accent"]
+    classes = Object.values(borderClasses)
 
     toggle1() {
         for (const c of this.classes) team1Block.classList.toggle(c)

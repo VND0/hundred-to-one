@@ -13,7 +13,13 @@ const team2Block = document.querySelector("#team2Block")
 const team1Score = document.querySelector("#team1Score")
 const team2Score = document.querySelector("#team2Score")
 
+const mistakeClasses = {active: "mistake-active", disabled: "mistake-disabled"}
 const mistakeButtons = document.querySelectorAll(".mistake-button")
+mistakeButtons.forEach((elem) => elem.addEventListener("click", () => {
+    elem.classList.add(mistakeClasses.disabled)
+    elem.classList.remove(mistakeClasses.active)
+    elem.disabled = true
+}))
 
 const jwtToken = getJwt()
 const urlParts = document.URL.split("/")
@@ -65,6 +71,11 @@ function clearElements() {
     answersList.innerHTML = ""
     questionTitle.innerText = ""
     bank.innerText = "0"
+    mistakeButtons.forEach((elem) => {
+        elem.classList.remove("mistake-disabled")
+        elem.classList.add("mistake-active")
+        elem.disabled = false
+    })
 }
 
 
@@ -280,7 +291,7 @@ function showWinnerBanner() {
     confetti({
         particleCount: 1500,
         spread: 80,
-        origin: { y: 0.7 },
+        origin: {y: 0.7},
     });
     overlay.classList.remove("hidden")
     banner.classList.remove("hidden")

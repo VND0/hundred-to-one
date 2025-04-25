@@ -13,9 +13,9 @@
 }
 
 .mistake-active {
-    @apply bg-[var(--color-yellow-500)] hover:bg-[var(--color-yellow-400)];
+    @apply bg-[var(--color-yellow-500)] hover:bg-[var(--color-yellow-300)]
 }
 
 .mistake-disabled {
-    @apply disabled:bg-[var(--color-yellow-400)];
+    @apply disabled:bg-[var(--color-yellow-300)]
 }

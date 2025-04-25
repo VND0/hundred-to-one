@@ -27,7 +27,7 @@ def get_errors(e: ValidationError) -> str:
             errors.append("В пароле разрешены цифры, латиница и специальные символы. Длина - от 8 до 60 символов")
         elif "poll" in loc:
             errors.append("Допустимая длина названия опроса - от 2 до 70 символов")
-        elif "game_question" in loc:
+        elif "questions_identifiers" in loc:
             errors.append("У игры может быть только 7 вопросов")
         elif "question" in loc:
             errors.append("Допустимая длина вопроса - от 4 до 250 символов")

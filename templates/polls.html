@@ -40,6 +40,15 @@
                         <button class="btn btn-xs btn-square btn-error delete-btn">✕</button>
                     </div>
 
+                    {% if poll.questions | length == 0 %}
+                        <div role="alert" class="alert alert-soft alert-warning mt-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            <span>Опрос не может быть использован из-за отсутствия вопросов в нём</span>
+                        </div>
+                    {% endif %}
+
                     <div class="divider horizontal-divider text-lg font-semibold">Информация об опросе</div>
 
                     <div class="flex justify-around">
@@ -52,7 +61,8 @@
 
                         <div class="flex flex-1 flex-col items-center gap-2">
                             <span class="flex-1 font-semibold">Ссылка на опрос</span>
-                            <a class="btn btn-sm btn-block btn-soft btn-success max-w-1/2 max-sm:max-w-2/3 to-clipboard">
+                            <a class="btn btn-sm btn-block btn-soft btn-success max-w-1/2 max-sm:max-w-2/3 to-clipboard
+                               {{ 'btn-disabled' if poll.questions | length == 0 else '' }}">
                                 Копировать
                             </a>
                         </div>

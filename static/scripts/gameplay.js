@@ -56,15 +56,6 @@ function fillClosedAnswers() {
     }
 }
 
-function toggleTeamOutlines() {
-    team1Block.classList.toggle("border-2")
-    team1Block.classList.toggle("border-4")
-    team1Block.classList.toggle("border-accent")
-    team2Block.classList.toggle("border-2")
-    team2Block.classList.toggle("border-4")
-    team2Block.classList.toggle("border-accent")
-}
-
 function clearElements() {
     round.innerText = ""
     questionTitle.innerText = ""
@@ -75,6 +66,13 @@ function clearElements() {
         elem.classList.remove("mistake-disabled")
         elem.classList.add("mistake-active")
         elem.disabled = false
+    })
+
+    const teamBlocks = [team1Block, team2Block]
+    teamBlocks.forEach((block) => {
+        block.classList.remove("border-accent")
+        block.classList.remove("border-4")
+        block.classList.add("border-2")
     })
 }
 
@@ -88,6 +86,56 @@ async function revealAnswers() {
     await new Promise((p) => setTimeout(p, 1000))
 
 }
+
+
+class OutlineMaker {
+    classes = ["border-2", "border-4", "border-accent"]
+
+    toggle1() {
+        for (const c of this.classes) team1Block.classList.toggle(c)
+    }
+
+    #wrapper1() {
+        this.toggle1()
+        team1Block.removeEventListener("click", this.#wrapper1Bound)
+        if (this.team === null) {
+            this.toggle2()
+            team2Block.removeEventListener("click", this.#wrapper2Bound)
+        }
+    }
+
+    #wrapper1Bound = this.#wrapper1.bind(this)
+
+    toggle2() {
+        for (const c of this.classes) team2Block.classList.toggle(c)
+    }
+
+    #wrapper2() {
+        this.toggle2()
+        team2Block.removeEventListener("click", this.#wrapper2Bound)
+        if (this.team === null) {
+            this.toggle1()
+            team2Block.removeEventListener("click", this.#wrapper1Bound)
+        }
+    }
+
+    #wrapper2Bound = this.#wrapper2.bind(this)
+
+    toggleWithClick(team) {
+        this.team = team
+        if (team === 1 || team === null) {
+            this.toggle1()
+            team1Block.addEventListener("click", this.#wrapper1Bound)
+        }
+        if (team === 2 || team === null) {
+            this.toggle2()
+            team2Block.addEventListener("click", this.#wrapper2Bound)
+        }
+    }
+}
+
+
+const outline = new OutlineMaker()
 
 
 class Draw {
@@ -146,10 +194,9 @@ class Draw {
         } else {
             this.handlersAdded = true
         }
-        toggleTeamOutlines()
+        outline.toggleWithClick(null)
 
         function forTeam1() {
-            toggleTeamOutlines()
             callback1()
             team1Block.removeEventListener("click", forTeam1)
             team2Block.removeEventListener("click", forTeam2)
@@ -158,7 +205,6 @@ class Draw {
         team1Block.addEventListener("click", forTeam1)
 
         function forTeam2() {
-            toggleTeamOutlines()
             callback2()
             team1Block.removeEventListener("click", forTeam1)
             team2Block.removeEventListener("click", forTeam2)
@@ -228,6 +274,12 @@ class Round {
 
         this.onMistakeMadeBound = this.onMistakeMade.bind(this)
         mistakeButtons.forEach((elem) => elem.addEventListener("click", this.onMistakeMadeBound))
+
+        if (this.winner === 1) {
+            outline.toggle1()
+        } else {
+            outline.toggle2()
+        }
     }
 
     onRowOpened(evt, answer, index) {
@@ -272,6 +324,8 @@ class Round {
 
             this.mistakes[teamNumber]++
             if (this.mistakes[teamNumber] === 3) {
+                outline.toggle1()
+                outline.toggle2()
                 this.finalAttempt = true
             }
         } else {
@@ -296,11 +350,11 @@ function showWinnerBanner() {
     const winnerText = document.querySelector("#winnerTeam")
 
     if (current1Score > current2Score) {
-        winnerText.innerText = "1"
+        winnerText.innerText = "Победила команда 1"
     } else if (current2Score > current1Score) {
-        winnerText.innerText = "2"
+        winnerText.innerText = "Победила команда 2"
     } else {
-        winnerText.innerText = "никто, ничья"
+        winnerText.innerText = "Ничья"
     }
     confetti({
         particleCount: 1500,

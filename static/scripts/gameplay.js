@@ -385,9 +385,13 @@ function showWinnerBanner() {
         overlayText.innerText = "🎉 Ничья!"
     }
     confetti({
-        particleCount: 1500,
-        spread: 80,
-        origin: {y: 0.7},
+        particleCount: 2000,
+        spread: 170,
+        origin: {y: 1.3},
+        decay: 0.95,
+        scalar: 1.4,
+        startVelocity: 50,
+        ticks: 300
     });
     overlay.classList.remove("hidden")
     banner.classList.remove("hidden")

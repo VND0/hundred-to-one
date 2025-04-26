@@ -7,7 +7,7 @@
         </div>
 
         <form class="flex max-sm:flex-col gap-2 my-8" method="post" enctype="multipart/form-data">
-            <input type="file" class="flex-1 w-full file-input file-input-success" name="file" accept=".xlsx" required />
+            <input type="file" class="flex-1 w-full file-input file-input-success" name="file" accept=".xlsx" required/>
             <input type="submit" class="btn btn-success btn-soft" value="Отправить">
         </form>
 
@@ -17,15 +17,12 @@
 
         <div class="bg-base-300 text-center rounded-lg shadow-md space-y-4 p-6">
             <h2 class="font-bold text-xl">Инструкция по созданию</h2>
-
             <p class="text-lg font-semibold">
-                Для создания игры из шаблона вам необходимо скачать файл, нажав на кнопку ниже, и заполнить
-                его, соблюдая правила, и отправить с помощью формы.
+                Для создания игры из шаблона необходимо скачать файл, нажав на кнопку ниже, и отправить заполненный с
+                помощью формы.
+                <a class="btn btn-success" href="{{ url_for('static', filename='game_template.xlsx') }}"
+                   download="GameTemplate.xlsx">Скачать шаблон</a>
             </p>
-
-            <a class="btn btn-success" href="{{ url_for('static', filename='game_template.xlsx') }}" download="GameTemplate.xlsx">
-                Скачать шаблон
-            </a>
         </div>
     </main>
 {% endblock %}

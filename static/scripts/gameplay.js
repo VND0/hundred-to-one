@@ -89,7 +89,7 @@ async function revealAnswers() {
             await new Promise((p) => setTimeout(p, 1000))
         }
     }
-    await new Promise((p) => setTimeout(p, 1000))
+    await new Promise((p) => setTimeout(p, 2000))
 
 }
 
@@ -150,6 +150,7 @@ class Draw {
         this.handlersAdded = false
         this.votesSum = 0
         this.firstScore = null
+        this.mistakesCounter = 0
 
         this.question.answers.forEach((answer) => {
             this.votesSum += answer.quantity
@@ -168,6 +169,8 @@ class Draw {
             const answerRow = answersList.childNodes.item(index)
             answerRow.addEventListener("click", () => this.onRowOpened(answer, answerRow))
         })
+
+        mistakeButtons.forEach((btn) => btn.addEventListener("click", this.onMistakeMadeBound))
     }
 
     onRowOpened(answer, answerRow) {
@@ -218,6 +221,18 @@ class Draw {
 
         team2Block.addEventListener("click", forTeam2)
     }
+
+    onMistakeMade() {
+        this.mistakesCounter++
+        if (this.firstScore) return
+        if (this.mistakesCounter === 6) {
+            const returnArr = selectRandomTeam("")
+            mistakeButtons.forEach((btn) => btn.removeEventListener("click", this.onMistakeMadeBound))
+            returnArr[0].then((team) => this.callback(team))
+        }
+    }
+
+    onMistakeMadeBound = this.onMistakeMade.bind(this)
 }
 
 
@@ -263,7 +278,8 @@ class Round {
                 this.winner = 2
                 this.loser = 1
             } else {
-                this.winner = this.selectRandomTeam()
+                const returnArray = selectRandomTeam("Очки равны.")
+                this.winner = returnArray[1]
                 this.loser = this.winner === 1 ? 2 : 1
             }
         }
@@ -289,19 +305,6 @@ class Round {
         }
     }
 
-    selectRandomTeam() {
-        const team = Math.random() * 10 <= 5 ? 1 : 2
-
-        overlayText.innerHTML = `Очки равны. Случайно выбрана команда <span class="text-primary-content">${team}</span>!`
-        const toggler = function () {
-            overlay.classList.toggle("hidden")
-            banner.classList.toggle("hidden")
-        }
-        toggler()
-        setTimeout(toggler, 3000)
-
-        return team
-    }
 
     onRowOpened(evt, answer, index) {
         const openedAnswer = openedAnswerTemplate.content.cloneNode(true).childNodes[1]
@@ -361,6 +364,24 @@ class Round {
             this.callback()
         }
     }
+}
+
+function selectRandomTeam(alertText) {
+    const team = Math.random() * 10 <= 5 ? 1 : 2
+
+    overlayText.innerHTML = `${alertText} Случайно выбрана команда <span class="text-primary-content">${team}</span>!`
+    const toggler = function () {
+        overlay.classList.toggle("hidden")
+        banner.classList.toggle("hidden")
+    }
+    toggler()
+
+    return [new Promise((resolve, reject) => {
+        setTimeout(() => {
+            toggler()
+            resolve(team)
+        }, 3000)
+    }), team]
 }
 
 function showWinnerBanner() {

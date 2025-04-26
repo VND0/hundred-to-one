@@ -90,7 +90,6 @@ async function revealAnswers() {
         }
     }
     await new Promise((p) => setTimeout(p, 2000))
-
 }
 
 
@@ -182,10 +181,9 @@ class Draw {
         requestAnimationFrame(() => {
             openedAnswer.classList.add("flip-active")
         })
-        if (!this.firstScore) {
-            this.firstScore = points
-        }
-        this.addHandlersToTeams(() => this.clickOnTeam(1), () => this.clickOnTeam(2))
+
+        if (!this.firstScore) this.firstScore = points
+        if (!this.handlersAdded) this.addHandlersToTeams(() => this.clickOnTeam(1), () => this.clickOnTeam(2))
     }
 
     clickOnTeam(team) {
@@ -198,11 +196,7 @@ class Draw {
     }
 
     addHandlersToTeams(callback1, callback2) {
-        if (this.handlersAdded) {
-            return
-        } else {
-            this.handlersAdded = true
-        }
+        this.handlersAdded = true
         outline.toggleWithClick(null)
 
         function forTeam1() {
@@ -211,14 +205,13 @@ class Draw {
             team2Block.removeEventListener("click", forTeam2)
         }
 
-        team1Block.addEventListener("click", forTeam1)
-
         function forTeam2() {
             callback2()
             team1Block.removeEventListener("click", forTeam1)
             team2Block.removeEventListener("click", forTeam2)
         }
 
+        team1Block.addEventListener("click", forTeam1)
         team2Block.addEventListener("click", forTeam2)
     }
 
@@ -243,6 +236,7 @@ class Round {
 
         this.mistakes = {1: 0, 2: 0}
         this.openedQuestions = 0
+        this.finalAttempt = false
         this.roundFinished = false
 
         if (scoresDistribution) {
@@ -278,7 +272,7 @@ class Round {
                 this.winner = 2
                 this.loser = 1
             } else {
-                const returnArray = selectRandomTeam("Очки равны.")
+                const returnArray = selectRandomTeam("Очки равны. ")
                 this.winner = returnArray[1]
                 this.loser = this.winner === 1 ? 2 : 1
             }
@@ -288,21 +282,14 @@ class Round {
             this.roundFinished = true;
             revealAnswers().then(callback)
         }
-        this.finalAttempt = false
 
         fillClosedAnswers()
         this.question.answers.forEach((answer, index) => {
             answersList.childNodes.item(index).addEventListener("click", (evt) => this.onRowOpened(evt, answer, index))
         })
-
-        this.onMistakeMadeBound = this.onMistakeMade.bind(this)
         mistakeButtons.forEach((elem) => elem.addEventListener("click", this.onMistakeMadeBound))
 
-        if (this.winner === 1) {
-            outline.toggle1()
-        } else {
-            outline.toggle2()
-        }
+        this.winner === 1 ? outline.toggle1() : outline.toggle2()
     }
 
 
@@ -313,8 +300,8 @@ class Round {
         openedAnswer.querySelector(".answerPoints").innerText = points
         answersList.replaceChild(openedAnswer, evt.target)
         requestAnimationFrame(() => openedAnswer.classList.add("flip-active"))
-        this.openedQuestions++
 
+        this.openedQuestions++
         if (this.roundFinished) return
 
         bank.innerText = Number.parseInt(bank.innerText) + points
@@ -364,12 +351,14 @@ class Round {
             this.callback()
         }
     }
+
+    onMistakeMadeBound = this.onMistakeMade.bind(this)
 }
 
 function selectRandomTeam(alertText) {
     const team = Math.random() * 10 <= 5 ? 1 : 2
 
-    overlayText.innerHTML = `${alertText} Случайно выбрана команда <span class="text-primary-content">${team}</span>!`
+    overlayText.innerHTML = `${alertText}Случайно выбрана команда <span class="text-primary-content">${team}</span>!`
     const toggler = function () {
         overlay.classList.toggle("hidden")
         banner.classList.toggle("hidden")
@@ -417,4 +406,4 @@ const tripleGame = new Round(5, "Тройная игра", 3)
 const inverseGame = new Round(6, "Игра наоборот", 1, [15, 30, 60, 120, 180, 240])
 
 drawB4Simple.draw((winner) => simpleGame.game(winner, () => drawB4Double.draw((winner) => doubleGame.game(winner, () =>
-    drawB4Triple.draw((winner) => tripleGame.game(winner, () => inverseGame.game(null, () => showWinnerBanner())))))))
+    drawB4Triple.draw((winner) => tripleGame.game(winner, () => inverseGame.game(null, showWinnerBanner)))))))

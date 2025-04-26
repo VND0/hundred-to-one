@@ -219,6 +219,7 @@ class Draw {
         this.mistakesCounter++
         if (this.firstScore) return
         if (this.mistakesCounter === 6) {
+            this.handlersAdded = true
             const returnArr = selectRandomTeam("")
             mistakeButtons.forEach((btn) => btn.removeEventListener("click", this.onMistakeMadeBound))
             returnArr[0].then((team) => this.callback(team))

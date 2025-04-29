@@ -171,3 +171,30 @@
 
 Страница-шаблон включает в себя форму со всеми вопросами опроса, т. е. пользователь, попавший на эту страницу не
 имеет возможности переходить на другие страницы и как-либо взаимодействовать с сайтом, кроме как заполнить форму.
+
+## Используемые технологии
+
+Бэкенд написан на python. Сторонние библиотеки:
+
+- Flask
+- Flask-SQLAlchemy
+- Flask-JWT-Extended
+- Flask-Login
+- Flask-RESTful
+- Openpyxl
+- Pydantic
+- Sqlalchemy-serializer
+
+Эндпоинты api написаны как ресурсы Flask-RESTful. Для аутентификации используются JWT-токены.
+
+Роуты flask разбиты по логическим частям на blueprint-ы. Для хранения данных
+используется sqlite база данных, применяются ORM-модели всех сущностей. Openpyxl обрабатывает пользовательские файлы
+Excel.
+
+Фронтенд использует css-фреймворки Tailwind и daisyUI. Логика игры написана на JS. Для анимации ее окончания
+используется библиотека canvas-confetti.
+
+<img src="docs/main_page.png" alt="Главная страница" style="max-width: 500px">
+<img src="docs/question_data.png" alt="Данные вопроса" style="max-width: 500px">
+<img src="docs/game_preview.png" alt="Информация об игре" style="max-width: 500px">
+<img src="docs/game_itself.png" alt="Игровой процесс" style="max-width: 500px">

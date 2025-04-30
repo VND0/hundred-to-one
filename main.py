@@ -6,14 +6,11 @@ from flask_jwt_extended import JWTManager
 from flask_login import LoginManager, logout_user, login_required, current_user
 from flask_restful import Api
 
-import tools
-
 import games_bp
 import polls_system_bp
-
+import tools
 from database.database import db
 from database.db_models import User
-
 from resources.answers_resource import AnswersListResource, AnswersResource
 from resources.games_resource import GamesResource
 from resources.poll_questions_resource import PollQuestionResource
@@ -22,7 +19,13 @@ from resources.questions_resource import QuestionResource, QuestionListResource
 
 app = Flask(__name__)
 
-app.config["SECRET_KEY"] = app.config["JWT_SECRET_KEY"] = "1"
+# You may generate your own with command
+# $ openssl rand -hex 32
+env_secret_key = os.getenv("SECRET_KEY")
+if env_secret_key is None:
+    raise LookupError("'SECRET_KEY' variable not found in env")
+
+app.config["SECRET_KEY"] = app.config["JWT_SECRET_KEY"] = env_secret_key
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.getcwd()}/database/database.db"
 
@@ -135,4 +138,4 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     os.system("npx @tailwindcss/cli -i ./static/src/input.css -o ./static/dist/output.css")
-    app.run(host="0.0.0.0", port=8080, use_reloader=True)
+    app.run(host="0.0.0.0", port=80, use_reloader=True)

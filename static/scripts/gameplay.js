@@ -66,7 +66,10 @@ function clearElements() {
     round.innerText = ""
     questionTitle.innerText = ""
     answersList.innerHTML = ""
+
     questionTitle.innerText = ""
+    questionTitle.classList.remove("revealed")
+
     bank.innerText = "0"
     mistakeButtons.forEach((elem) => {
         elem.classList.remove(mistakeClasses.disabled)
@@ -416,6 +419,8 @@ document.addEventListener("keyup", (evt) => {
         answersList.children.item(key - 1)?.click()
     }
 })
+
+questionTitle.addEventListener("click", () => questionTitle.classList.toggle("revealed"))
 
 drawB4Simple.draw((winner) => simpleGame.game(winner, () => drawB4Double.draw((winner) => doubleGame.game(winner, () =>
     drawB4Triple.draw((winner) => tripleGame.game(winner, () => inverseGame.game(null, showWinnerBanner)))))))

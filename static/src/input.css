@@ -19,3 +19,12 @@
 .mistake-disabled {
     @apply disabled:bg-[var(--color-yellow-300)]
 }
+
+.spoiler {
+    @apply inline-block cursor-pointer px-1.5 py-0.5 rounded filter blur-sm transition duration-300 select-none
+    hover:blur-xs hover:duration-500;
+}
+
+.spoiler.revealed {
+    @apply filter-none;
+}

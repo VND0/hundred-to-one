@@ -148,7 +148,7 @@ class Draw {
         this.question = gameInfo.questions[questionIndex]
         this.handlersAdded = false
         this.votesSum = 0
-        this.firstScore = null
+        this.maxScore = null
         this.mistakesCounter = 0
 
         this.question.answers.forEach((answer) => {
@@ -182,15 +182,15 @@ class Draw {
             openedAnswer.classList.add("flip-active")
         })
 
-        if (!this.firstScore) this.firstScore = points
+        if (this.maxScore < points) this.maxScore = points
         if (!this.handlersAdded) this.addHandlersToTeams(() => this.clickOnTeam(1), () => this.clickOnTeam(2))
     }
 
     clickOnTeam(team) {
         if (team === 1) {
-            team1Score.innerText = Number.parseInt(team1Score.innerText) + this.firstScore
+            team1Score.innerText = Number.parseInt(team1Score.innerText) + this.maxScore
         } else {
-            team2Score.innerText = Number.parseInt(team2Score.innerText) + this.firstScore
+            team2Score.innerText = Number.parseInt(team2Score.innerText) + this.maxScore
         }
         this.callback(team)
     }
@@ -217,7 +217,7 @@ class Draw {
 
     onMistakeMade() {
         this.mistakesCounter++
-        if (this.firstScore) return
+        if (this.maxScore) return
         if (this.mistakesCounter === 6) {
             this.handlersAdded = true
             const returnArr = selectRandomTeam("")

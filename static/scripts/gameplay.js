@@ -95,6 +95,12 @@ async function revealAnswers() {
     await new Promise((p) => setTimeout(p, 2000))
 }
 
+function toggleTeamLock(team) {
+    mistakeButtons.forEach((btn) => {
+        if (btn.dataset.teamNumber == team) btn.disabled = !btn.disabled
+    })
+}
+
 
 class OutlineMaker {
     classes = Object.values(borderClasses)
@@ -294,6 +300,7 @@ class Round {
         mistakeButtons.forEach((elem) => elem.addEventListener("click", this.onMistakeMadeBound))
 
         this.winner === 1 ? outline.toggle1() : outline.toggle2()
+        toggleTeamLock(this.loser)
     }
 
 
@@ -342,6 +349,7 @@ class Round {
                 outline.toggle1()
                 outline.toggle2()
                 this.finalAttempt = true
+                toggleTeamLock(this.loser)
             }
         } else {
             const inBank = Number.parseInt(bank.innerText)
@@ -369,7 +377,7 @@ function selectRandomTeam(alertText) {
     }
     toggler()
 
-    return [new Promise((resolve, reject) => {
+    return [new Promise((resolve, _) => {
         setTimeout(() => {
             toggler()
             resolve(team)

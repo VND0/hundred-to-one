@@ -410,5 +410,12 @@ const tripleGame = new Round(5, "Тройная игра", 3)
 
 const inverseGame = new Round(6, "Игра наоборот", 1, [15, 30, 60, 120, 180, 240])
 
+document.addEventListener("keyup", (evt) => {
+    const key = Number.parseInt(evt.key)
+    if (!isNaN(key) && key > 0 && key < 7) {
+        answersList.children.item(key - 1)?.click()
+    }
+})
+
 drawB4Simple.draw((winner) => simpleGame.game(winner, () => drawB4Double.draw((winner) => doubleGame.game(winner, () =>
     drawB4Triple.draw((winner) => tripleGame.game(winner, () => inverseGame.game(null, showWinnerBanner)))))))

@@ -12,7 +12,7 @@
                 <div class="flex-1">
                     <label class="input join-item w-full">
                         <input type="text" placeholder="Текст вопроса" minlength="4" maxlength="250" required
-                               class="text-base" id="addInput" />
+                               class="text-base" id="addInput"/>
                     </label>
                 </div>
                 <button class="btn btn-accent join-item">Добавить</button>
@@ -23,9 +23,9 @@
 
         <ul id="questionsList" class="space-y-5 px-2">
             {% for question in questions %}
-                <li class="flex items-center gap-4 w-full bg-base-300 rounded-lg shadow-sm px-4 py-2" data-id="{{ question.id }}"
-                    data-games-amount="{{ question.games | length }}">
-                    <span class="flex-1 font-semibold text-wrap">
+                <li class="flex items-center gap-4 w-full bg-base-300 rounded-lg shadow-sm px-4 py-2"
+                    data-id="{{ question.id }}" data-games-amount="{{ question.games | length }}">
+                    <span class="flex-1 font-semibold break-all">
                         {{ question.question }}
                     </span>
 
@@ -55,7 +55,7 @@
         <div class="modal-box bg-base-300">
             <h3 class="font-bold text-xl">Изменение вопроса</h3>
             <input type="text" minlength="4" maxlength="250" id="editInput"
-                   class="input input-bordered w-full text-base mt-4" />
+                   class="input input-bordered w-full text-base mt-4"/>
             <div class="modal-action">
                 <form method="dialog">
                     <button class="btn btn-info" id="saveEdit">Сохранить</button>

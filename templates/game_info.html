@@ -14,11 +14,11 @@
                                'Тройная игра', 'Игра наоборот'] %}
             {% for question in game.questions %}
                 <li class="flex flex-col w-full bg-base-300 rounded-xl p-6">
-                    <h2 class="flex-1 text-xl font-bold text-wrap game-name">{{ question.question }}</h2>
+                    <h2 class="flex-1 text-xl font-bold game-name break-all">{{ question.question }}</h2>
                     <span class="font-semibold opacity-50 italic">{{ rotation[loop.index0] }}</span>
                     <ul class="space-y-2 mt-2">
                         {% for answer in question.answers %}
-                            <li class="w-full bg-base-200 rounded-lg font-semibold text-wrap py-2 px-4">
+                            <li class="w-full bg-base-200 rounded-lg font-semibold py-2 px-4 break-all">
                                 <span>{{ loop.index }}. {{ answer.answer }}</span>
                             </li>
                         {% endfor %}

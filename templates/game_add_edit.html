@@ -22,9 +22,7 @@
                 {% for question in questions %}
                     {% if question.answers | length >= 6 %}
                         <li class="flex items-center gap-2 w-full bg-base-200 rounded-lg px-4 py-2">
-                            <span class="flex-1 font-semibold text-wrap">
-                                {{ question.question }}
-                            </span>
+                            <span class="flex-1 font-semibold break-all">{{ question.question }}</span>
 
                             <div class="flex self-start items-center gap-2">
                                 <a href="/answers/{{ question.id }}" class="btn btn-xs btn-soft btn-info">

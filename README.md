@@ -30,6 +30,8 @@ docker run -it -e SECRET_KEY=[your-secret-key] -p 80:80 -v database:/usr/src/app
 распечатать. Открытие строк с ответами, промахи и прочее осуществляется пользователем мышкой. Сайт – лишь интерфейс и не
 заменяет ведущего.
 
+# Для Яндекса
+
 ## Техническое задание
 
 ### Регистрация и авторизация
@@ -60,7 +62,8 @@ docker run -it -e SECRET_KEY=[your-secret-key] -p 80:80 -v database:/usr/src/app
 1. Более простой - самостоятельно придумать данную статистику. В этом случае пользователь вводит 6 ответов и количество
    баллов для каждого из них (в сумме – 100).
 2. Можно собирать реальную статистику от респондентов, пользуясь встроенной на сайте системой опросов:
-   <img src="docs/answers_polls_questions_schema.png" alt="Отношение опросов, вопросов и ответов" style="max-width: 500px;">
+
+<img src="docs/answers_polls_questions_schema.png" alt="Отношение опросов, вопросов и ответов" style="max-width: 25rem;">
 
 Центральными объектами системы являются вопросы. Они являются независимыми объектами, из которых можно собирать опросы.
 Респонденты могут проходить опросы, переходя по ссылкам, которые им даст пользователя. Их ответы будут записываться в
@@ -200,7 +203,11 @@ Excel.
 Фронтенд использует css-фреймворки Tailwind и daisyUI. Логика игры написана на JS. Для анимации ее окончания
 используется библиотека canvas-confetti.
 
-<img src="docs/main_page.png" alt="Главная страница" style="max-width: 500px">
-<img src="docs/question_data.png" alt="Данные вопроса" style="max-width: 500px">
-<img src="docs/game_preview.png" alt="Информация об игре" style="max-width: 500px">
-<img src="docs/game_itself.png" alt="Игровой процесс" style="max-width: 500px">
+<img src="docs/main_page.png" alt="Главная страница" style="max-width: 40rem"> <br>
+<img src="docs/question_data.png" alt="Данные вопроса" style="max-width: 25rem">
+<img src="docs/game_preview.png" alt="Информация об игре" style="max-width: 25rem"> <br>
+<img src="docs/game_itself.png" alt="Игровой процесс" style="max-width: 40rem">
+
+## Презентация
+
+[https://docs.google.com/presentation/d/1biBKpVJSOEFupTUXYdGnOwUMP5XyU4WEQaKOhz2CaX8/edit?usp=sharing]()

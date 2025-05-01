@@ -428,6 +428,8 @@ document.addEventListener("keyup", (evt) => {
     }
 })
 
+window.addEventListener("beforeunload", (evt) => evt.preventDefault())
+
 questionTitle.addEventListener("click", () => questionTitle.classList.toggle("revealed"))
 
 drawB4Simple.draw((winner) => simpleGame.game(winner, () => drawB4Double.draw((winner) => doubleGame.game(winner, () =>

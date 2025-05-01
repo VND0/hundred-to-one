@@ -210,4 +210,4 @@ Excel.
 
 ## Презентация
 
-[https://docs.google.com/presentation/d/1biBKpVJSOEFupTUXYdGnOwUMP5XyU4WEQaKOhz2CaX8/edit?usp=sharing]()
+[https://docs.google.com/presentation/d/1biBKpVJSOEFupTUXYdGnOwUMP5XyU4WEQaKOhz2CaX8/edit?usp=sharing](https://docs.google.com/presentation/d/1biBKpVJSOEFupTUXYdGnOwUMP5XyU4WEQaKOhz2CaX8/edit?usp=sharing)

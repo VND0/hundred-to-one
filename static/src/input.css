@@ -28,3 +28,7 @@
 .spoiler.revealed {
     @apply filter-none;
 }
+
+.activeTeam {
+    @apply border-accent shadow-[0_0_10px_5px_rgba(209,135,0,1)] cursor-pointer;
+}

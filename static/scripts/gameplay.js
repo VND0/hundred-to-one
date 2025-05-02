@@ -18,7 +18,7 @@ const banner = document.querySelector("#overlayBanner")
 const overlayText = document.querySelector("#overlayText")
 
 const mistakeClasses = {active: "mistake-active", disabled: "mistake-disabled"}
-const borderClasses = {two: "border-2", four: "border-4", "accent": "border-accent"}
+const borderClasses = {two: "border-2", four: "border-4", "accent": "activeTeam"}
 
 const mistakeButtons = document.querySelectorAll(".mistake-button")
 mistakeButtons.forEach((elem) => elem.addEventListener("click", () => {

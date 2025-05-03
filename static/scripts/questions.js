@@ -106,7 +106,7 @@ questionsList.forEach((elem) => {
     deleteBtn.addEventListener("click", async function () {
         if (gamesAmount > 0) {
             deleteDialog.showModal()
-            deleteConfirm.onclick = async function() {
+            deleteConfirm.onclick = async function () {
                 const success = await deleteQuestionRequest(id)
                 if (success) {
                     deleteDialog.close()
@@ -122,11 +122,12 @@ questionsList.forEach((elem) => {
     })
 })
 
-searchInput.addEventListener("input", () => {
+searchInput.addEventListener("input", async () => {
     questionsList.forEach((elem) => {
-        const questionText = elem.querySelector("span").textContent
+        const searchValue = searchInput.value.trim()
+        const questionText = elem.querySelector("span").textContent.toLocaleLowerCase()
 
-        if (questionText.includes(searchInput.value)) {
+        if (questionText.includes(searchValue)) {
             elem.classList.remove("hidden")
         } else {
             elem.classList.add("hidden")

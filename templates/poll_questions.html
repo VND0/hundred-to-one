@@ -9,54 +9,63 @@
 
         <span class="font-semibold opacity-50 italic">{{ poll.poll }}</span>
 
-        <div class="mt-6">
-            <div class="divider divider-start text-xl font-semibold">Добавленные ({{ poll.questions | length }})</div>
-            <ul id="pollQuestions" class="space-y-4 px-2">
-                {% for question in poll.questions %}
-                    <li class="flex items-center gap-2 w-full bg-base-300 rounded-lg shadow-sm px-4 py-2 break-all"
-                        data-question-id="{{ question.id }}">
-                        <span class="flex-1 font-semibold text-wrap">
-                            {{ question.question }}
-                        </span>
+        <label class="input w-full text-base mt-6">
+            <svg class="h-5 opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.3-4.3"></path>
+                </g>
+            </svg>
+            <input type="text" placeholder="Найти вопросы по тексту..." maxlength="250" id="searchInput" />
+        </label>
 
-                        <div class="flex self-start items-center gap-2">
-                            <a href="/answers/{{ question.id }}" class="btn btn-xs btn-soft btn-info">
-                                Ответы: {{ question.answers | length }}
-                            </a>
+        <div class="divider divider-start text-xl font-semibold my-6">Добавленные ({{ poll.questions | length }})</div>
 
-                            <input type="checkbox" class="checkbox checkbox-sm checkbox-accent border-2" checked />
-                        </div>
-                    </li>
-                {% endfor %}
-            </ul>
+        <ul id="pollQuestions" class="space-y-4 px-2">
+            {% for question in poll.questions %}
+                <li class="flex items-center gap-2 w-full bg-base-300 rounded-lg shadow-sm px-4 py-2 break-all"
+                    data-question-id="{{ question.id }}">
+                    <span class="flex-1 font-semibold text-wrap">
+                        {{ question.question }}
+                    </span>
+
+                    <div class="flex self-start items-center gap-2">
+                        <a href="/answers/{{ question.id }}" class="btn btn-xs btn-soft btn-info">
+                            Ответы: {{ question.answers | length }}
+                        </a>
+
+                        <input type="checkbox" class="checkbox checkbox-sm checkbox-accent border-2" checked />
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="divider divider-start text-xl font-semibold my-6">Доступные ({{ other_questions | length }})</div>
+
+        <ul id="noPollQuestions" class="space-y-4 mb-6 px-2">
+            {% for question in other_questions %}
+                <li class="flex items-center gap-4 w-full bg-base-300 rounded-lg shadow-sm px-4 py-2 break-all"
+                    data-question-id="{{ question.id }}">
+                    <span class="flex-1 font-semibold text-wrap">
+                        {{ question.question }}
+                    </span>
+
+                    <div class="flex self-start items-center gap-2">
+                        <a href="/answers/{{ question.id }}"
+                           class="btn btn-xs btn-soft btn-info">
+                            Ответы: {{ question.answers | length }}
+                        </a>
+
+                        <input type="checkbox" class="checkbox checkbox-sm checkbox-accent border-2" />
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="flex justify-center">
+            <a href="/polls" class="btn btn-block btn-accent max-w-1/2">Вернуться к списку опросов</a>
         </div>
 
-        <div class="my-8">
-            <div class="divider divider-start text-xl font-semibold">Доступные ({{ other_questions | length }})</div>
-            <ul id="noPollQuestions" class="space-y-4 px-2">
-                {% for question in other_questions %}
-                    <li class="flex items-center gap-4 w-full bg-base-300 rounded-lg shadow-sm px-4 py-2 break-all"
-                        data-question-id="{{ question.id }}">
-                        <span class="flex-1 font-semibold text-wrap">
-                            {{ question.question }}
-                        </span>
-
-                        <div class="flex self-start items-center gap-2">
-                            <a href="/answers/{{ question.id }}"
-                               class="btn btn-xs btn-soft btn-info">
-                                Ответы: {{ question.answers | length }}
-                            </a>
-
-                            <input type="checkbox" class="checkbox checkbox-sm checkbox-accent border-2" />
-                        </div>
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
-
-        <a href="/polls" class="flex justify-center items-center btn btn-accent block max-w-1/2 mx-auto">
-            Вернуться к списку опросов
-        </a>
 
         <button class="btn btn-secondary fixed bottom-15 right-15" id="saveButton" data-poll-id="{{ poll.id }}">
             Сохранить

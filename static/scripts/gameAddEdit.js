@@ -4,6 +4,8 @@ const listTitle = document.querySelector("#listTitle")
 const questionsList = document.querySelectorAll("#questionsList>li")
 const addButton = document.querySelector("#addButton")
 
+const searchInput = document.querySelector("#searchInput")
+
 function changesCounterUpdate() {
     listTitle.innerText = `Вопросы для игры (${questionsCounter} / 7)`
 
@@ -35,6 +37,20 @@ questionsList.forEach((elem) => {
     input.addEventListener("change", () => {
         countCheckbox(input)
         changesCounterUpdate()
+    })
+})
+
+searchInput.addEventListener("input", async () => {
+    const searchValue = searchInput.value.trim().toLocaleLowerCase()
+
+    questionsList.forEach((elem) => {
+        const questionText = elem.querySelector("span").textContent.toLocaleLowerCase()
+
+        if (questionText.includes(searchValue)) {
+            elem.classList.remove("hidden")
+        } else {
+            elem.classList.add("hidden")
+        }
     })
 })
 

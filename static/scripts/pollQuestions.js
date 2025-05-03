@@ -11,6 +11,8 @@ const pollQuestions = document.querySelectorAll("#pollQuestions>li")
 const otherQuestions = document.querySelectorAll("#noPollQuestions>li")
 const saveButton = document.querySelector("#saveButton")
 
+const searchInput = document.querySelector("#searchInput")
+
 
 function changesCounterUpdate() {
     saveButton.style.display = changesCounter === 0 ? "none" : "block"
@@ -85,6 +87,30 @@ saveButton.addEventListener("click", async (evt) => {
     } else {
         formError(`${response.status}: ${body.message}`)
     }
+})
+
+searchInput.addEventListener("input", async () => {
+    const searchValue = searchInput.value.trim().toLocaleLowerCase()
+
+    pollQuestions.forEach((elem) => {
+        const questionText = elem.querySelector("span").textContent.toLocaleLowerCase()
+
+        if (questionText.includes(searchValue)) {
+            elem.classList.remove("hidden")
+        } else {
+            elem.classList.add("hidden")
+        }
+    })
+
+    otherQuestions.forEach((elem) => {
+        const questionText = elem.querySelector("span").textContent.toLocaleLowerCase()
+
+        if (questionText.includes(searchValue)) {
+            elem.classList.remove("hidden")
+        } else {
+            elem.classList.add("hidden")
+        }
+    })
 })
 
 changesCounterUpdate()

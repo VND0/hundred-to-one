@@ -123,8 +123,9 @@ questionsList.forEach((elem) => {
 })
 
 searchInput.addEventListener("input", async () => {
+    const searchValue = searchInput.value.trim().toLocaleLowerCase()
+
     questionsList.forEach((elem) => {
-        const searchValue = searchInput.value.trim()
         const questionText = elem.querySelector("span").textContent.toLocaleLowerCase()
 
         if (questionText.includes(searchValue)) {

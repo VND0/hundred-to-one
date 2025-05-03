@@ -13,10 +13,22 @@
             <label class="floating-label block w-full mb-6">
                 <span>Название игры</span>
                 <input type="text" placeholder="Название игры" minlength="5" maxlength="50" id="addInput" name="game"
-                       value="{{ game.game or '' }}" class="input w-full rounded-xl text-base" required/>
+                       value="{{ game.game or '' }}" class="input w-full rounded-xl text-base" required />
             </label>
 
             <div class="divider divider-error text-lg font-semibold" id="listTitle">Вопросы для игры (0 / 7)</div>
+
+            <div class="w-full mb-6 px-2">
+                <label class="input w-full rounded-xl text-base">
+                    <svg class="h-5 opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.3-4.3"></path>
+                        </g>
+                    </svg>
+                    <input type="text" placeholder="Найти вопросы по тексту..." maxlength="250" id="searchInput" />
+                </label>
+            </div>
 
             <ul id="questionsList" class="space-y-4 mb-4 px-2">
                 {% for question in questions %}
@@ -52,5 +64,5 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="{{ url_for('static', filename='scripts/gameAdd.js') }}" type="module"></script>
+    <script src="{{ url_for('static', filename='scripts/gameAddEdit.js') }}" type="module"></script>
 {% endblock %}

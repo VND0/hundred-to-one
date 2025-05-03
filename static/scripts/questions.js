@@ -1,15 +1,20 @@
 import {formError, getJwt} from "./tools.js";
 
-const form = document.querySelector("#addForm")
-const qInput = document.querySelector("#addInput")
 const questionsList = document.querySelectorAll("#questionsList>li")
+
+const addLink = document.querySelector("#addLink")
+const addDialog = document.querySelector("#addDialog")
+const addInput = document.querySelector("#addInput")
+const addConfirm = document.querySelector("#addConfirm")
 
 const editDialog = document.querySelector("#editDialog")
 const editInput = document.querySelector("#editInput")
-const saveEdit = document.querySelector("#saveEdit")
+const editConfirm = document.querySelector("#editConfirm")
 
 const deleteDialog = document.querySelector("#deleteDialog")
-const confirmDeleting = document.querySelector("#confirmDeleting")
+const deleteConfirm = document.querySelector("#deleteConfirm")
+
+const searchInput = document.querySelector("#searchInput")
 
 let jwtToken = getJwt()
 
@@ -64,9 +69,13 @@ async function changeQuestionRequest(questionId, newValue) {
     return response.ok
 }
 
-form.addEventListener("submit", async function (evt) {
+addLink.addEventListener("click", () => {
+    addDialog.showModal()
+})
+
+addConfirm.addEventListener("click", async function (evt) {
     evt.preventDefault()
-    const success = await addQuestionRequest(qInput.value)
+    const success = await addQuestionRequest(addInput.value)
     if (success) {
         window.location.reload()
     }
@@ -83,7 +92,7 @@ questionsList.forEach((elem) => {
     editBtn.addEventListener("click", () => {
         editDialog.showModal()
         editInput.value = questionValue.innerText
-        saveEdit.onclick = async function (evt) {
+        editConfirm.onclick = async function (evt) {
             evt.preventDefault()
             const value = editInput.value
             const success = await changeQuestionRequest(id, value)
@@ -97,7 +106,7 @@ questionsList.forEach((elem) => {
     deleteBtn.addEventListener("click", async function () {
         if (gamesAmount > 0) {
             deleteDialog.showModal()
-            confirmDeleting.onclick = async function() {
+            deleteConfirm.onclick = async function() {
                 const success = await deleteQuestionRequest(id)
                 if (success) {
                     deleteDialog.close()
@@ -109,6 +118,18 @@ questionsList.forEach((elem) => {
             if (success) {
                 elem.remove()
             }
+        }
+    })
+})
+
+searchInput.addEventListener("input", () => {
+    questionsList.forEach((elem) => {
+        const questionText = elem.querySelector("span").textContent
+
+        if (questionText.includes(searchInput.value)) {
+            elem.classList.remove("hidden")
+        } else {
+            elem.classList.add("hidden")
         }
     })
 })

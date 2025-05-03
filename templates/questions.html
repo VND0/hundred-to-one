@@ -4,30 +4,33 @@
     <main class="max-w-3xl mx-auto py-8 px-4">
         <div class="flex justify-between items-center">
             <h1 class="font-bold text-2xl">Вопросы</h1>
-            <a class="link link-info font-bold text-xl" href="/profile">Назад</a>
+            <div class="flex">
+                <a class="link link-info font-bold text-xl" id="addLink">Создать</a>
+                <div class="divider divider-horizontal"></div>
+                <a class="link link-info font-bold text-xl" href="/profile">Назад</a>
+            </div>
         </div>
 
-        <form id="addForm" class="my-8">
-            <div class="join w-full">
-                <div class="flex-1">
-                    <label class="input join-item w-full">
-                        <input type="text" placeholder="Текст вопроса" minlength="4" maxlength="250" required
-                               class="text-base" id="addInput"/>
-                    </label>
-                </div>
-                <button class="btn btn-accent join-item">Добавить</button>
-            </div>
-        </form>
+        <div class="divider text-xl font-semibold my-6">Список вопросов</div>
 
-        <div class="divider text-xl font-semibold mb-6">Список вопросов</div>
-
+        <div class="w-full mb-6 px-2">
+            <label class="input w-full text-base">
+                <svg class="h-5 opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.3-4.3"></path>
+                    </g>
+                </svg>
+                <input type="text" placeholder="Найти вопросы по тексту..." maxlength="250" id="searchInput" />
+            </label>
+        </div>
+        
         <ul id="questionsList" class="space-y-5 px-2">
             {% for question in questions %}
                 <li class="flex items-center gap-4 w-full bg-base-300 rounded-lg shadow-sm px-4 py-2"
                     data-id="{{ question.id }}" data-games-amount="{{ question.games | length }}">
-                    <span class="flex-1 font-semibold break-all">
-                        {{ question.question }}
-                    </span>
+
+                    <span class="flex-1 font-semibold break-all">{{ question.question }}</span>
 
                     <div class="flex self-start items-center gap-2">
                         <a href="/answers/{{ question.id }}" class="btn btn-xs btn-soft btn-info">
@@ -51,14 +54,32 @@
         </ul>
     </main>
 
+    <dialog class="modal" id="addDialog">
+        <div class="modal-box bg-base-300">
+            <h3 class="font-bold text-xl">Создание вопроса</h3>
+
+            <input type="text" placeholder="Текст вопроса" minlength="4" maxlength="250" required
+                   class="input input-bordered w-full text-base mt-4" id="addInput" />
+
+            <div class="modal-action">
+                <form method="dialog">
+                    <button class="btn btn-soft btn-success" id="addConfirm">Создать</button>
+                    <button class="btn ml-2">Отменить</button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+
     <dialog class="modal" id="editDialog">
         <div class="modal-box bg-base-300">
             <h3 class="font-bold text-xl">Изменение вопроса</h3>
-            <input type="text" minlength="4" maxlength="250" id="editInput"
-                   class="input input-bordered w-full text-base mt-4"/>
+
+            <input type="text" placeholder="Текст вопроса" minlength="4" maxlength="250" autocomplete="off"
+                   class="input input-bordered w-full text-base mt-4" id="editInput" />
+
             <div class="modal-action">
                 <form method="dialog">
-                    <button class="btn btn-info" id="saveEdit">Сохранить</button>
+                    <button class="btn btn-soft btn-info" id="editConfirm">Изменить</button>
                     <button class="btn ml-2">Отменить</button>
                 </form>
             </div>
@@ -73,10 +94,12 @@
                 Игры, в которых содержится данный вопрос, станут недоступны после его удаления.
             </p>
 
-            <form method="dialog" class="flex justify-around">
-                <button class="btn btn-soft btn-error" id="confirmDeleting">Удалить</button>
-                <button class="btn btn-soft btn-info">Отменить</button>
-            </form>
+            <div class="modal-action">
+                <form method="dialog">
+                    <button class="btn btn-soft btn-error" id="deleteConfirm">Удалить</button>
+                    <button class="btn ml-2">Отменить</button>
+                </form>
+            </div>
         </div>
     </dialog>
 {% endblock %}

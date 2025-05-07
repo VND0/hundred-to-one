@@ -3,12 +3,11 @@
 {% block content %}
     <main class="flex items-center min-h-[calc(100vh-5rem)] px-4">
         <div class="tabs tabs-lift max-w-lg mx-auto">
-            <!-- Регистрация -->
             <input type="radio" name="my_tabs_2" class="tab [--tab-bg:var(--color-base-300)] text-base"
                    aria-label="Регистрация" {{ "checked" if action_type == "registration" }} />
 
             <form class="tab-content bg-base-300 border-base-300 shadow-lg p-8" id="regForm" method="post">
-                <h1 class="text-2xl font-bold mb-8">Добро пожаловать!</h1>
+                <h2 class="text-2xl font-bold mb-8">Добро пожаловать!</h2>
 
                 <label class="floating-label block w-full mb-6">
                     <span>Никнейм</span>
@@ -45,12 +44,11 @@
 
             </form>
 
-            <!-- Авторизация -->
             <input type="radio" name="my_tabs_2" class="tab [--tab-bg:var(--color-base-300)] text-base"
                    aria-label="Авторизация" {{ "checked" if action_type == "login" }} />
 
             <form class="tab-content bg-base-300 border-base-300 shadow-lg p-8" id="loginForm" method="post">
-                <h1 class="text-2xl font-bold mb-6">С возвращением!</h1>
+                <h2 class="text-2xl font-bold mb-6">С возвращением!</h2>
 
                 <label class="floating-label block w-full mb-6">
                     <span>Почта</span>

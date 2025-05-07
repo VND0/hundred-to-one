@@ -3,7 +3,7 @@
 {% block content %}
     <main class="max-w-3xl mx-auto py-8 px-4">
         <div class="flex justify-between items-center">
-            <h1 class="font-bold text-2xl">Отчёт по игре</h1>
+            <h2 class="font-bold text-2xl">Отчёт по игре</h2>
             <a class="link link-info font-bold text-xl" href="/games">Назад</a>
         </div>
 
@@ -14,7 +14,7 @@
                                'Тройная игра', 'Игра наоборот'] %}
             {% for question in game.questions %}
                 <li class="flex flex-col w-full bg-base-300 rounded-xl p-6">
-                    <h2 class="flex-1 text-xl font-bold game-name break-all">{{ question.question }}</h2>
+                    <h3 class="flex-1 text-xl font-bold game-name break-all">{{ question.question }}</h3>
                     <span class="font-semibold opacity-50 italic">{{ rotation[loop.index0] }}</span>
                     <ul class="space-y-2 mt-2">
                         {% for answer in question.answers %}

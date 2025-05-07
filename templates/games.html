@@ -3,7 +3,7 @@
 {% block content %}
     <main class="max-w-3xl mx-auto py-8 px-4">
         <div class="flex justify-between items-center">
-            <h1 class="font-bold text-2xl">Игры</h1>
+            <h2 class="font-bold text-2xl">Игры</h2>
             <a class="link link-info font-bold text-xl" href="/profile">Назад</a>
         </div>
 
@@ -25,7 +25,7 @@
             {% for game in games %}
                 <li class="flex flex-col gap-4 w-full bg-base-300 rounded-xl shadow-md py-4 px-6" data-id="{{ game.id }}">
                     <div class="flex gap-2 items-center">
-                        <h2 class="flex-1 text-xl font-bold truncate game-name">{{ game.game }}</h2>
+                        <h3 class="flex-1 text-xl font-bold truncate game-name">{{ game.game }}</h3>
 
                         <a class="btn btn-xs btn-ghost btn-square edit-btn" href="/games/game-edit/{{ game.id }}">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" stroke-width="2"

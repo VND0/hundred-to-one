@@ -3,7 +3,7 @@
 {% block content %}
     <main class="max-w-3xl mx-auto py-8 px-4">
         <div class="flex justify-between items-center">
-            <h1 class="font-bold text-2xl">Ответы на вопрос</h1>
+            <h2 class="font-bold text-2xl">Ответы на вопрос</h2>
             <a class="link link-info font-bold text-xl" id="backLink" onclick="history.back()">Назад</a>
         </div>
 
@@ -12,7 +12,7 @@
         </span>
 
         <div class="bg-base-300 rounded-lg shadow-md space-y-6 mt-4 p-6">
-            <h2 class="text-xl font-bold text-center mb-4">Добавить свой ответ</h2>
+            <h3 class="text-xl font-bold text-center mb-4">Добавить свой ответ</h3>
 
             <form id="addForm" class="flex gap-1">
                 <label class="flex-1 floating-label">
@@ -30,11 +30,11 @@
                 <button class="btn btn-accent rounded-md">Добавить</button>
             </form>
 
-            <h2 id="noAnswers" class="hidden text-xl font-bold text-center">Список ответов пустой</h2>
+            <h3 id="noAnswers" class="hidden text-xl font-bold text-center">Список ответов пустой</h3>
 
             <div id="allAnswers" class="hidden space-y-6" data-question-id="{{ question.id }}"
                  data-games-amount="{{ question.games | length }}">
-                <h2 class="text-xl font-bold text-center mb-4">Список ответов</h2>
+                <h3 class="text-xl font-bold text-center mb-4">Список ответов</h3>
 
                 <div class="divider divider-start text-lg font-semibold">Топ-6 популярных ответов</div>
 

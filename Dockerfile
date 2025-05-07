@@ -14,5 +14,4 @@ RUN npm install --no-audit --no-fund
 
 COPY . .
 
-EXPOSE 80
-ENTRYPOINT ["python", "main.py"]
+ENTRYPOINT ["gunicorn", "-b", "0.0.0.0:8000", "main:app"]

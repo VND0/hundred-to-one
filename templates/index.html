@@ -2,43 +2,46 @@
 
 {% block content %}
     <main class="flex items-center min-h-[calc(100vh-5rem)] py-8 px-4">
-        <div class="flex items-stretch flex-wrap gap-y-10 max-w-7xl bg-base-300 rounded-md shadow-lg mx-auto p-8">
-            <div class="flex-4">
-                <h1 class="text-2xl font-bold mb-8">Устраивайте свои игры формата Сто к Одному!</h1>
-                <p class="text-lg text-gray-500 mb-4">
-                    <span class="font-bold">Hundred To One</span> &ndash; это сайт, предоставляющий инструменты для создания и
-                    проведения игр в формате "Сто к одному".
-                </p>
-                <p class="text-lg text-gray-500 mb-4">
-                    На сайте вы можете создавать вопросы и собирать для них ответы с помощью
-                    <span class="font-bold">системы опросов</span>.
-                </p>
-                <p class="text-lg text-gray-500 mb-4">
-                    Затем вопросы со статистикой ответов можно использовать в играх. Наш сайт предоставляет
-                    <span class="font-bold">удобный интерфейс для проведения игр</span>.
-                </p>
-                <p class="text-lg text-gray-500">
-                    Если вам нужно провести интересное мероприятие для небольшой компании,
-                    <span class="font-bold">Hundred To One</span> станет вашим главным помощником!
-                </p>
+        <div class="flex max-sm:flex-col gap-y-4 max-w-7xl bg-base-300 rounded-md shadow-lg mx-auto p-8">
+            <div class="flex-4 max-sm:text-center">
+                <h2 class="text-2xl font-bold mb-6">Устраивайте свои игры Сто к Одному!</h2>
+
+                <div class="text-lg space-y-4">
+                    <p>
+                        <span class="font-semibold">Hundred To One</span> &ndash; это сайт, предоставляющий инструменты для создания и
+                        проведения игр в формате "Сто к одному".
+                    </p>
+                    <p>
+                        На сайте вы можете создавать вопросы и собирать для них ответы с помощью
+                        <span class="font-semibold">системы опросов</span>.
+                    </p>
+                    <p>
+                        Затем вопросы со статистикой ответов можно использовать в играх. Наш сайт предоставляет
+                        <span class="font-semibold">удобный интерфейс для проведения игр</span>.
+                    </p>
+                    <p>
+                        Если вам нужно провести интересное мероприятие для небольшой компании,
+                        <span class="font-semibold">Hundred To One</span> станет вашим главным помощником!
+                    </p>
+                </div>
             </div>
 
             <div class="divider divider-horizontal"></div>
 
-            <div class="flex-3 flex flex-col justify-between">
-                <h1 class="text-2xl font-bold">Как пользоваться сайтом:</h1>
+            <div class="flex-3 flex flex-col justify-between gap-4 max-sm:text-center">
+                <h2 class="text-2xl font-bold">Как пользоваться сайтом:</h2>
                 <ul class="steps steps-vertical text-lg font-semibold">
                     <li class="step step-accent">
                         <span class="font-semibold">Авторизуйтесь в системе сайта</span>
                     </li>
                     <li class="step step-accent">
-                        <span class="font-semibold">Создавайте вопросы и собирайте статистику</span>
+                        <span class="font-semibold">Создавайте вопросы и опросы</span>
                     </li>
                     <li class="step step-accent">
-                        <span class="font-semibold">Формируйте пакеты из вопросов со статистикой</span>
+                        <span class="font-semibold">Собирайте статистику ответов</span>
                     </li>
                     <li class="step step-accent">
-                        <span class="font-semibold">Проводите игры в формате "Сто к одному"</span>
+                        <span class="font-semibold">Проводите игры "Сто к одному"</span>
                     </li>
                 </ul>
                 <a class="block" href="/auth">

@@ -16,6 +16,7 @@ const team2Score = document.querySelector("#team2Score")
 const overlay = document.querySelector("#overlay")
 const banner = document.querySelector("#overlayBanner")
 const overlayText = document.querySelector("#overlayText")
+const overlayBtn = document.querySelector("#overlayBtn")
 
 const mistakeClasses = {active: "mistake-active", disabled: "mistake-disabled"}
 const borderClasses = {two: "border-2", four: "border-4", "accent": "activeTeam"}
@@ -407,7 +408,7 @@ function showWinnerBanner() {
     });
     overlay.classList.remove("hidden")
     banner.classList.remove("hidden")
-
+    overlayBtn.classList.remove("hidden")
 }
 
 const drawB4Simple = new Draw(0)

@@ -10,6 +10,8 @@ docker run -it -e SECRET_KEY=[your-secret-key] -p 80:80 -v database:/usr/src/app
 
 **Hundred to One** - сайт, помогающий ведущему проводить аналог телеигры "Сто к одному".
 
+[http://hundred-to-one.ru](http://hundred-to-one.ru)
+
 ### Фичи
 
 #### Система опросов

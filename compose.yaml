@@ -24,27 +24,27 @@ services:
       - ./nginx/key.pem:/etc/key.pem
     depends_on:
       - app
-#      - certbot
+      - certbot
     networks:
       - network
     restart: always
 
-#  certbot:
-#    ports:
-#      - "6000:80"
-#    env_file:
-#      - secret.env
-#    volumes:
-#      - ./nginx/:/etc/nginx/
-#    build:
-#      context: ./certbot
-#      dockerfile: Dockerfile
-#      args:
-#        DOMAIN_EMAIL: ${DOMAIN_EMAIL}
-#        DOMAIN_URL: ${DOMAIN_URL}
-#    networks:
-#      - network
-#
+  certbot:
+    ports:
+      - "6000:80"
+    env_file:
+      - secret.env
+    volumes:
+      - ./nginx/:/etc/nginx/
+    build:
+      context: ./certbot
+      dockerfile: Dockerfile
+      args:
+        DOMAIN_EMAIL: ${DOMAIN_EMAIL}
+        DOMAIN_URL: ${DOMAIN_URL}
+    networks:
+      - network
+
 networks:
   network:
     driver: bridge

@@ -9,6 +9,7 @@ services:
       - secret.env
     networks:
       - network
+    restart: always
 
   nginx:
     image: nginx
@@ -20,6 +21,7 @@ services:
       - app
     networks:
       - network
+    restart: always
 
 networks:
   network:

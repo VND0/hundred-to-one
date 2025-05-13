@@ -1,9 +1,10 @@
 # Сто к одному
 
 ## Запуск
+
 ```shell
-docker build -t hundred-to-one .
-docker run -it -e SECRET_KEY=[your-secret-key] -p 80:80 -v database:/usr/src/app/database hundred-to-one
+echo 'SECRET_KEY=[your_secret_key]' > secret.env
+docker compose up --build
 ```
 
 ## Описание

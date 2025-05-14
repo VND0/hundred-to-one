@@ -89,6 +89,7 @@ pollsList.forEach((elem) => {
     const toClipboardBtn = elem.querySelector(".to-clipboard")
 
     const href = `/public/polls/${id}`
+    publicLinkA.href = href
     const publicLink = window.location.host + href;
 
     toClipboardBtn.addEventListener("click", () => {

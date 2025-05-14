@@ -56,11 +56,11 @@
                         </div>
 
                         <div class="flex flex-1 flex-col items-center gap-2">
-                            <span class="flex-1 font-semibold">Ссылка на опрос</span>
-                            <a class="btn btn-sm btn-block btn-soft btn-success max-w-1/2 max-sm:max-w-2/3 to-clipboard
+                            <a class="flex-1 font-semibold link link-info public-link">Ссылка на опрос</a>
+                            <button class="btn btn-sm btn-block btn-soft btn-success max-w-1/2 max-sm:max-w-2/3 to-clipboard
                                {{ 'btn-disabled' if poll.questions | length == 0 else '' }}">
                                 Копировать
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </li>

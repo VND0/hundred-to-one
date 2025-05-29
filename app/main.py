@@ -1,7 +1,8 @@
+import datetime
 import os
 from datetime import timedelta
 
-from flask import Flask, render_template, request, redirect, abort, Response
+from flask import Flask, render_template, request, redirect, abort, Response, session
 from flask_jwt_extended import JWTManager
 from flask_login import LoginManager, logout_user, login_required, current_user
 from flask_restful import Api
@@ -28,6 +29,7 @@ if env_secret_key is None:
 app.config["SECRET_KEY"] = app.config["JWT_SECRET_KEY"] = env_secret_key
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.getcwd()}/database/database.db"
+app.config["PERMANENT_SESSION_LIFETIME"] = datetime.timedelta(days=365)
 
 app.jinja_env.auto_reload = True
 db.init_app(app)
@@ -96,6 +98,8 @@ def auth():
 @app.route("/logout")
 @login_required
 def logout():
+    session.permanent = True
+
     logout_user()
     response = redirect("/")
     response.set_cookie("jwtToken", expires=0)

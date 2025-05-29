@@ -1,7 +1,7 @@
 import uuid
 
 import openpyxl
-from flask import request, Response, redirect
+from flask import request, Response, redirect, session
 from flask_jwt_extended import create_access_token
 from flask_login import login_user, current_user, logout_user
 from pydantic import ValidationError
@@ -80,6 +80,7 @@ def handle_registration() -> str | Response:
     if not new_user:
         return f"Пользователь с почтой {model.email} уже существует"
 
+    session.permanent = True
     login_user(new_user)
     add_questions(new_user.id)
 
@@ -105,6 +106,7 @@ def handle_login() -> str | Response:
     if not user.check_password(model.password):
         return f"Неверный пароль"
 
+    session.permanent = True
     login_user(user)
 
     access_token = create_access_token(identity=user.id)
@@ -173,6 +175,7 @@ def handle_remove_account() -> str | Response:
     db.session.delete(user)
     db.session.commit()
 
+    session.permanent = True
     logout_user()
     return redirect("/")
 

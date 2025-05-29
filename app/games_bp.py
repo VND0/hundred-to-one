@@ -93,3 +93,9 @@ def game_play(game_id: str):
     if not game or len(game.questions) != 7:
         return redirect("/games")
     return render_template("game_play.html", title=game.game)
+
+
+@bp.get("/rules")
+@login_required
+def rules():
+    return render_template("rules.html", title="Правила")

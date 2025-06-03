@@ -188,7 +188,7 @@ def handle_poll_form(poll_id: str) -> str | Response:
         create_answer = True
         try:
             model = AnswerCreate(
-                answer=form.get(f"answer-{index + 1}"),
+                answer=format_response(form.get(f"answer-{index + 1}")),
                 quantity=1
             )
         except ValidationError as e:
@@ -210,6 +210,13 @@ def handle_poll_form(poll_id: str) -> str | Response:
     db.session.commit()
 
     return redirect("/public/polls/done")
+
+
+def format_response(raw: str) -> str:
+    raw = raw.strip()
+    if not raw:
+        return raw
+    return raw[0].upper() + raw[1:]
 
 
 def handle_game_form() -> str | Response:
